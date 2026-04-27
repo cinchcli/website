@@ -1,0 +1,20 @@
+# Lefthook config — git hooks for cinchcli/website (Astro + Starlight)
+# Install: brew install lefthook && lefthook install
+
+pre-commit:
+  parallel: true
+  commands:
+    eslint:
+      glob: "*.{ts,tsx,astro,js,mjs,cjs}"
+      run: npx eslint --no-warn-ignored {staged_files}
+      fail_text: "Run: npx eslint --fix <file>"
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      glob: "*.{ts,tsx,astro}"
+      run: npm run typecheck
+    test:
+      glob: "*.{ts,tsx,astro}"
+      run: npm test
