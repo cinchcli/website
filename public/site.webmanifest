@@ -1,0 +1,21 @@
+{
+  "name": "Cinch",
+  "short_name": "Cinch",
+  "description": "Remote clipboard for developers. Push from any terminal, pull on any machine.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07080a",
+  "theme_color": "#4FB3A9",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

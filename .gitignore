@@ -1,0 +1,13 @@
+.planning/
+planning/
+.gstack/
+.claude/
+.omc/
+.omx/
+dist/
+node_modules/
+.astro/
+.wrangler/
+.env
+*.db
+.dev.vars

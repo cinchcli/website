@@ -1,0 +1,36 @@
+# Cinch
+
+> Remote clipboard for developers. Push from any terminal, pull on any machine.
+
+Cinch is an open-source CLI tool that pipes remote terminal output straight to your local clipboard. It uses a self-hostable WebSocket relay with SQLite persistence for reliable, real-time clipboard delivery across machines.
+
+## Core Commands
+
+- `cinch push` — Pipe any command output to the relay (e.g., `cat file.txt | cinch push`)
+- `cinch pull` — Pull the latest clip to stdout or your local clipboard
+- `cinch auth` — Pair devices, check status, or logout
+
+## Key Features
+
+- Unix-native: composable with pipes, works with any command
+- WebSocket relay: real-time delivery with SQLite persistence
+- Self-hostable: run your own relay server via Docker or binary
+- Desktop agent: automatic clipboard sync on macOS
+- MIT licensed, fully open source
+
+## Links
+
+- Homepage: https://cinch.jinmu.me
+- Documentation: https://cinch.jinmu.me/docs/
+- Getting Started: https://cinch.jinmu.me/docs/getting-started/
+- CLI Reference (push): https://cinch.jinmu.me/docs/cli/push/
+- CLI Reference (pull): https://cinch.jinmu.me/docs/cli/pull/
+- CLI Reference (auth): https://cinch.jinmu.me/docs/cli/auth/
+- Self-hosting Guide: https://cinch.jinmu.me/docs/relay/self-hosting/
+- Source Code: https://github.com/JinmuGo/cinch
+
+## Installation
+
+```bash
+curl -fsSL cinch.jinmu.me/install.sh | sh
+```

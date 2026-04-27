@@ -1,0 +1,162 @@
+---
+// Features component — 2-column grid, evolu-inspired minimal
+---
+
+<section class="features" aria-labelledby="features-heading">
+  <div class="features-inner">
+    <div class="features-header">
+      <p class="section-label" id="features-heading">Features</p>
+      <h2 class="section-title">Everything the pipe needs</h2>
+      <p class="section-lead">
+        Cinch is infrastructure for moving data between machines — starting with developers,
+        extending to AI agents.
+      </p>
+    </div>
+
+    <div class="feat-grid">
+
+      <div class="feat-item">
+        <h3>Unix-native</h3>
+        <p>Reads stdin, writes stdout. No SDK, no clipboard API. Drop it anywhere in an existing shell pipeline.</p>
+      </div>
+
+      <div class="feat-item">
+        <h3>Real-time delivery</h3>
+        <p>WebSocket relay delivers clips the moment they arrive. No polling, no round-trips.</p>
+      </div>
+
+      <div class="feat-item">
+        <h3>Self-hostable relay</h3>
+        <p>Single Go binary. Deploy on any VPS, Fly.io, or Docker. Your data stays on your server.</p>
+      </div>
+
+      <div class="feat-item">
+        <h3>Cross-platform CLI</h3>
+        <p>macOS, Linux, Windows. If it has a shell, it works. Binaries available for all three platforms.</p>
+      </div>
+
+      <div class="feat-item">
+        <h3>Desktop agent</h3>
+        <p>cinchd lives in your menu bar. Every push lands in your system clipboard before you reach Cmd+V.</p>
+      </div>
+
+      <div class="feat-item">
+        <h3>Open source</h3>
+        <p>MIT licensed. CLI, relay, and protocol are fully open. Self-host for free, forever.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .features {
+    border-top: 1px solid var(--border);
+    padding: 6rem 2rem 7rem;
+    position: relative;
+  }
+
+  /* Subtle accent glow on border */
+  .features::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,179,169,0.2) 50%, transparent);
+    pointer-events: none;
+  }
+
+  .features-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ─── HEADER ────────────────────────────────────── */
+  .features-header {
+    max-width: 560px;
+    margin-bottom: 4rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-lead {
+    font-size: 1rem;
+    color: var(--text-2);
+    line-height: 1.75;
+    letter-spacing: 0.2px;
+    max-width: 52ch;
+  }
+
+  /* ─── GRID ──────────────────────────────────────── */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .feat-item {
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    padding-right: 3rem;
+    transition: border-color 0.2s;
+  }
+
+  /* Right column items get left padding */
+  .feat-item:nth-child(even) {
+    padding-left: 3rem;
+    padding-right: 0;
+    border-left: 1px solid var(--border);
+  }
+
+  .feat-item h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+    color: var(--text-1);
+  }
+
+  .feat-item p {
+    font-size: 0.9375rem;
+    color: var(--text-2);
+    line-height: 1.72;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    max-width: 44ch;
+    margin: 0;
+  }
+
+  /* ─── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 768px) {
+    .features {
+      padding: 4rem 1.5rem 5rem;
+    }
+
+    .feat-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .feat-item:nth-child(even) {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+</style>

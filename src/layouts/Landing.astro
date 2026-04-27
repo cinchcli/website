@@ -1,0 +1,180 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://cinchcli.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cinchcli.com/" />
+  <meta property="og:site_name" content="Cinch" />
+  <meta property="og:image" content="https://cinchcli.com/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content="https://cinchcli.com/og-image.png" />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#4FB3A9">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Inter (body · everywhere) + JetBrains Mono (code · kbd · tabular) per DESIGN.md -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Cinch",
+          "description": "Open-source remote clipboard tool for developers. Push from any terminal, pull on any machine via WebSocket relay.",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "macOS, Linux",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "license": "https://opensource.org/licenses/MIT",
+          "url": "https://cinchcli.com",
+          "downloadUrl": "https://cinchcli.com/install.sh",
+          "author": {
+            "@id": "#organization"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "#organization",
+          "name": "Cinch",
+          "url": "https://cinchcli.com",
+          "sameAs": [
+            "https://github.com/JinmuGo/cinch"
+          ]
+        }
+      ]
+    }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <main id="main-content">
+    <slot />
+  </main>
+</body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 300;
+    padding: 0.5rem 1rem;
+    background: var(--text-1);
+    color: var(--bg);
+    border-radius: 0 0 8px 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+
+  :root {
+    /* Enables `light-dark()` CSS function + correct form-control colors */
+    color-scheme: light dark;
+
+    /* ─── DARK MODE (default) ─── DESIGN.md §2.2 */
+    --bg:           #07080a;
+    --bg-card:      #101111;
+    --bg-card-2:    #1b1c1e;
+    --border:       rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.10);
+    /* Interaction — Deep @ 8% hover, Deep @ 15% selected */
+    --hover:        rgba(79,179,169,0.08);
+    --selected:     rgba(79,179,169,0.15);
+    /* Text */
+    --text-1:       #F0EBE0;
+    --text-2:       #9c9c9d;
+    --text-3:       #6a6b6c;
+    /* Porcelain brand — dual token · Deep splits per mode (see DESIGN.md §2.3) */
+    --accent:       #4FB3A9; /* Porcelain Deep — dark base, CTAs · focus · live */
+    --accent-muted: #3E928A; /* Deep Muted — pressed/secondary */
+    --accent-subtle: rgba(79,179,169,0.1);
+    --accent-pastel: #BED9D7; /* Porcelain Pastel — tints, ambient */
+    --accent-on:    #07080a; /* text color when using --accent as background */
+    /* Typography — Inter everywhere + JetBrains Mono for code */
+    --sans:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+    --body:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+    --mono:         'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+  }
+
+  /* ─── LIGHT MODE ─── DESIGN.md §2.3 · follows system preference */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:           #FBFBFA; /* warm bone */
+      --bg-card:      #FFFFFF;
+      --bg-card-2:    #F7F6F3;
+      --border:       rgba(0,0,0,0.06);
+      --border-hover: rgba(0,0,0,0.12);
+      /* Interaction — Pastel carries mug color (@ 25% hover, @ 45% selected) */
+      --hover:        rgba(190,217,215,0.25);
+      --selected:     rgba(190,217,215,0.45);
+      /* Text */
+      --text-1:       #2F3437; /* charcoal */
+      --text-2:       #787774;
+      --text-3:       #B4B4B0;
+      /* Porcelain Deep · Light — deeper shade so foreground punch survives light canvas */
+      --accent:       #2F7F78; /* Deep·Light */
+      --accent-muted: #1F5F59; /* Even darker — hover deepens on light */
+      --accent-subtle: rgba(47,127,120,0.1);
+      --accent-on:    #FFFFFF; /* white required on deeper accent for AA contrast */
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--bg);
+    color: var(--text-1);
+    /* Inter OpenType features — calt, kern, liga, ss03 per DESIGN.md */
+    font-feature-settings: 'calt' 1, 'kern' 1, 'liga' 1, 'ss03' 1;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+
+</style>

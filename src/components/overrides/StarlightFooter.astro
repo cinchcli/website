@@ -1,0 +1,82 @@
+---
+// Starlight Footer override — adds "Was this page helpful?" before standard footer
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<div class="page-feedback">
+  <p class="feedback-label">Was this page helpful?</p>
+  <div class="feedback-buttons">
+    <button class="feedback-btn" id="feedback-yes" type="button" aria-label="Yes, this page was helpful">Yes</button>
+    <button class="feedback-btn" id="feedback-no"  type="button" aria-label="No, this page was not helpful">No</button>
+  </div>
+  <span class="feedback-status" id="feedback-status" role="status" aria-live="polite"></span>
+</div>
+
+<Default {...Astro.props} />
+
+<style>
+  .page-feedback {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    margin-bottom: 0.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .feedback-label {
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-3);
+    margin: 0;
+  }
+
+  .feedback-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .feedback-btn {
+    padding: 0.3125rem 0.875rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font-size: 0.8125rem;
+    font-family: var(--sl-font);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .feedback-btn:hover {
+    color: var(--sl-color-text-accent);
+    border-color: var(--sl-color-text-accent);
+    background: var(--sl-color-accent-low);
+  }
+
+  .feedback-btn.selected {
+    color: var(--sl-color-text-accent);
+    border-color: var(--sl-color-text-accent);
+    background: var(--sl-color-accent-low);
+  }
+
+  .feedback-status {
+    font-size: 0.8125rem;
+    color: var(--sl-color-gray-3);
+  }
+</style>
+
+<script>
+  const yes    = document.getElementById('feedback-yes');
+  const no     = document.getElementById('feedback-no');
+  const status = document.getElementById('feedback-status');
+
+  function pick(helpful: boolean) {
+    document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+    (helpful ? yes : no)?.classList.add('selected');
+    if (status) status.textContent = 'Thanks for your feedback!';
+  }
+
+  yes?.addEventListener('click', () => pick(true));
+  no?.addEventListener('click',  () => pick(false));
+</script>

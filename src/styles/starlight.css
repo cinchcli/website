@@ -1,0 +1,290 @@
+/* ══════════════════════════════════════════════════════════
+   Cinch — Starlight theme · DESIGN.md token alignment
+   Porcelain palette · Inter + JetBrains Mono
+   ══════════════════════════════════════════════════════════ */
+
+/* ─── LOGO ───────────────────────────────────────────────── */
+.site-title img {
+  height: 1.75rem;
+  width: auto;
+}
+
+/* ─── FONTS ──────────────────────────────────────────────── */
+:root {
+  --sl-font:      'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+}
+
+/* ─── LIGHT MODE ─────────────────────────────────────────── */
+:root[data-theme='light'],
+[data-theme='light'] {
+  /* Canvas + surfaces — DESIGN.md §2.3 */
+  --sl-color-bg:             #FBFBFA;
+  --sl-color-bg-nav:         rgba(251,251,250,0.92);
+  --sl-color-bg-sidebar:     #FFFFFF;
+  --sl-color-bg-inline-code: #F7F6F3;
+
+  /* Porcelain Deep · Light — #2F7F78 */
+  --sl-color-accent-low:     rgba(47, 127, 120, 0.10);
+  --sl-color-accent:         #2F7F78;
+  --sl-color-accent-high:    #1F5F59;
+  --sl-color-text-accent:    #2F7F78;
+
+  /* Gray scale — maps to DESIGN.md text tokens */
+  --sl-color-white:          #FBFBFA;
+  --sl-color-black:          #2F3437;
+  --sl-color-gray-1:         #2F3437;   /* text-primary */
+  --sl-color-gray-2:         #4A4A50;
+  --sl-color-gray-3:         #787774;   /* text-muted */
+  --sl-color-gray-4:         #B4B4B0;   /* text-faint */
+  --sl-color-gray-5:         #D0D0CC;
+  --sl-color-gray-6:         #F7F6F3;   /* surface-200 */
+  --sl-color-gray-7:         #FBFBFA;   /* canvas */
+
+  /* Borders */
+  --sl-color-hairline:       rgba(0, 0, 0, 0.07);
+  --sl-color-hairline-light: rgba(0, 0, 0, 0.04);
+}
+
+/* ─── DARK MODE ──────────────────────────────────────────── */
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  /* Canvas + surfaces — DESIGN.md §2.2 */
+  --sl-color-bg:             #07080a;
+  --sl-color-bg-nav:         rgba(7,8,10,0.92);
+  --sl-color-bg-sidebar:     #101111;
+  --sl-color-bg-inline-code: #1b1c1e;
+
+  /* Porcelain Deep — #4FB3A9 */
+  --sl-color-accent-low:     rgba(79, 179, 169, 0.12);
+  --sl-color-accent:         #4FB3A9;
+  --sl-color-accent-high:    #5FC5BA;
+  --sl-color-text-accent:    #4FB3A9;
+
+  /* Gray scale — maps to DESIGN.md text tokens */
+  --sl-color-white:          #F0EBE0;
+  --sl-color-black:          #07080a;
+  --sl-color-gray-1:         #F0EBE0;   /* text-primary warm cream */
+  --sl-color-gray-2:         #D0C8BC;
+  --sl-color-gray-3:         #9c9c9d;   /* text-muted */
+  --sl-color-gray-4:         #6a6b6c;   /* text-faint */
+  --sl-color-gray-5:         #434345;
+  --sl-color-gray-6:         #101111;   /* surface-100 */
+  --sl-color-gray-7:         #07080a;   /* canvas */
+
+  /* Borders */
+  --sl-color-hairline:       rgba(255, 255, 255, 0.07);
+  --sl-color-hairline-light: rgba(255, 255, 255, 0.04);
+}
+
+/* ─── GLOBAL TYPOGRAPHY ──────────────────────────────────── */
+/* Inter OpenType features per DESIGN.md §3 */
+body,
+.sl-markdown-content,
+.sidebar-content,
+starlight-toc {
+  font-feature-settings: 'calt' 1, 'kern' 1, 'liga' 1, 'ss03' 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Body text: +0.2px letter-spacing (DESIGN.md signature) */
+.sl-markdown-content {
+  letter-spacing: 0.2px;
+  line-height: 1.75;
+}
+
+.sl-markdown-content p {
+  color: var(--sl-color-gray-2);
+  font-weight: 400;
+}
+
+/* ─── HEADINGS ───────────────────────────────────────────── */
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4 {
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--sl-color-gray-1);
+}
+
+.sl-markdown-content h2 {
+  border-bottom: 1px solid var(--sl-color-hairline);
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+/* ─── LINKS ──────────────────────────────────────────────── */
+.sl-markdown-content a:not([class]) {
+  color: var(--sl-color-text-accent);
+  text-decoration-color: color-mix(in srgb, var(--sl-color-text-accent) 40%, transparent);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s;
+}
+
+.sl-markdown-content a:not([class]):hover {
+  text-decoration-color: var(--sl-color-text-accent);
+}
+
+/* ─── CODE ───────────────────────────────────────────────── */
+/* Inline code */
+.sl-markdown-content :not(pre) > code {
+  font-family: var(--sl-font-mono);
+  font-size: 0.875em;
+  background: var(--sl-color-bg-inline-code);
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  letter-spacing: 0.2px;
+}
+
+/* Code blocks */
+.sl-markdown-content pre {
+  border: 1px solid var(--sl-color-hairline) !important;
+  border-radius: 10px;
+  font-family: var(--sl-font-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.2px;
+  line-height: 1.65;
+}
+
+/* expressive-code override */
+.expressive-code .frame {
+  border-radius: 10px;
+  border: 1px solid var(--sl-color-hairline) !important;
+  box-shadow: none !important;
+}
+
+/* ─── TOP NAV / HEADER ───────────────────────────────────── */
+header.header {
+  border-bottom: 1px solid var(--sl-color-hairline);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────── */
+/* Section group labels */
+.group-label span {
+  letter-spacing: 0.05em;
+  font-size: 0.6875rem !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--sl-color-gray-3) !important;
+}
+
+/* Sidebar links */
+.sidebar-content a {
+  color: var(--sl-color-gray-3);
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  font-size: 0.875rem;
+}
+
+.sidebar-content a:hover {
+  color: var(--sl-color-gray-1);
+  background: var(--sl-color-accent-low);
+}
+
+/* Active sidebar item */
+.sidebar-content a[aria-current='page'] {
+  color: var(--sl-color-text-accent) !important;
+  background: var(--sl-color-accent-low) !important;
+  font-weight: 500;
+}
+
+/* ─── TABLE OF CONTENTS ──────────────────────────────────── */
+starlight-toc a {
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-3);
+  transition: color 0.15s;
+  letter-spacing: 0.1px;
+}
+
+starlight-toc a:hover,
+starlight-toc a[aria-current='true'] {
+  color: var(--sl-color-text-accent);
+}
+
+/* ─── PAGINATION ─────────────────────────────────────────── */
+.pagination-links a {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pagination-links a:hover {
+  border-color: var(--sl-color-text-accent);
+  background: var(--sl-color-accent-low);
+}
+
+/* ─── TABLES ─────────────────────────────────────────────── */
+.sl-markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.sl-markdown-content th {
+  border-bottom: 2px solid var(--sl-color-hairline);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.625rem 0.875rem;
+  color: var(--sl-color-gray-1);
+}
+
+.sl-markdown-content td {
+  border-bottom: 1px solid var(--sl-color-hairline);
+  padding: 0.5rem 0.875rem;
+  color: var(--sl-color-gray-2);
+}
+
+/* ─── CALLOUT / ASIDE ────────────────────────────────────── */
+.sl-markdown-content .starlight-aside {
+  border-radius: 8px;
+  border: 1px solid var(--sl-color-hairline);
+}
+
+.sl-markdown-content .starlight-aside--note {
+  border-left: 3px solid var(--sl-color-accent);
+}
+
+/* ─── LAST UPDATED ───────────────────────────────────────── */
+.last-updated {
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-3);
+}
+
+/* ─── EDIT LINK ──────────────────────────────────────────── */
+.edit-link a {
+  color: var(--sl-color-gray-3);
+  font-size: 0.875rem;
+  transition: color 0.15s;
+}
+
+.edit-link a:hover {
+  color: var(--sl-color-text-accent);
+}
+
+/* ─── SEARCH BAR ─────────────────────────────────────────── */
+/* Force search button to follow site theme, not OS color-scheme */
+:root[data-theme='light'] site-search,
+:root[data-theme='light'] site-search button[data-open-modal] {
+  color-scheme: light;
+}
+
+:root[data-theme='light'] site-search button[data-open-modal] {
+  background-color: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-3);
+  border-color: var(--sl-color-hairline);
+}
+
+:root[data-theme='light'] site-search button[data-open-modal]:hover {
+  background-color: var(--sl-color-gray-5);
+  color: var(--sl-color-gray-1);
+}
+
+:root[data-theme='light'] site-search button[data-open-modal] kbd {
+  color: var(--sl-color-gray-4);
+  background-color: var(--sl-color-gray-7);
+  border-color: var(--sl-color-hairline);
+}

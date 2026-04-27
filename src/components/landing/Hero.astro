@@ -1,0 +1,241 @@
+---
+// Hero component — evolu-inspired minimal split layout
+import LiveDemo from './LiveDemo.astro';
+---
+
+<section class="hero" aria-label="Cinch introduction">
+  <!-- Left: content -->
+  <div class="hero-content">
+    <p class="hero-eyebrow">
+      <span class="eyebrow-dot" aria-hidden="true"></span>
+      MIT · Open source
+    </p>
+
+    <h1 class="hero-title">
+      Remote clipboard<br>
+      <span class="title-muted">for developers</span>
+    </h1>
+
+    <p class="hero-description">
+      Pipe from any terminal. Land on any machine.<br>
+      No SDK. No clipboard API. Just pipes.
+    </p>
+
+    <div class="hero-actions">
+      <!-- Install command strip -->
+      <div
+        class="install-strip"
+        id="install-strip"
+        role="button"
+        tabindex="0"
+        aria-label="Install command — click to copy"
+      >
+        <span class="dollar">$</span>
+        <span class="cmd">curl -fsSL https://cinchcli.com/install.sh | sh</span>
+        <button class="copy-btn" id="copy-btn" aria-label="Copy install command" type="button">
+          <svg id="icon-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <svg id="icon-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4FB3A9" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <a href="/docs/getting-started/" class="btn-primary">
+        Get started
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Right: live push/pull demo -->
+  <div class="hero-demo" aria-label="Live push and pull demo">
+    <LiveDemo />
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 7rem 2rem 5rem;
+    gap: 5rem;
+  }
+
+  /* ─── LEFT: CONTENT ─────────────────────────────── */
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    animation: dot-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.72); }
+  }
+
+  .hero-title {
+    font-family: var(--sans);
+    font-size: clamp(2.5rem, 4vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    /* Prevent ligatures on hero display per DESIGN.md */
+    font-feature-settings: 'liga' 0, 'calt' 1, 'ss02' 1, 'ss08' 1;
+    text-wrap: balance;
+  }
+
+  .title-muted {
+    color: var(--text-2);
+  }
+
+  .hero-description {
+    font-size: 1.0625rem;
+    color: var(--text-2);
+    line-height: 1.75;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    max-width: 40ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* Install command strip */
+  .install-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-hover);
+    border-radius: 8px;
+    padding: 0.625rem 0.75rem 0.625rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+
+  .install-strip:hover {
+    border-color: light-dark(rgba(0,0,0,0.2), rgba(255,255,255,0.18));
+    background: light-dark(#F2F0EC, #131417);
+  }
+
+  .dollar { color: var(--text-3); }
+  .cmd    { color: var(--text-1); }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:hover {
+    color: var(--text-2);
+    background: light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.06));
+  }
+
+  /* Primary CTA */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
+    padding: 0.625rem 1.125rem;
+    background: var(--accent);
+    color: var(--accent-on);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 8px;
+    transition: background 0.15s, transform 0.12s;
+  }
+
+  .btn-primary:hover  { background: var(--accent-muted); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* ─── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 6rem 1.5rem 3rem;
+      gap: 3rem;
+    }
+
+    .hero-demo {
+      max-width: 540px;
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .install-strip {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+  const strip  = document.getElementById('install-strip');
+  const btn    = document.getElementById('copy-btn');
+  const copy   = document.getElementById('icon-copy');
+  const check  = document.getElementById('icon-check');
+
+  async function copyInstall() {
+    try {
+      await navigator.clipboard.writeText('curl -fsSL https://cinchcli.com/install.sh | sh');
+      if (copy)  copy.style.display  = 'none';
+      if (check) check.style.display = 'block';
+      setTimeout(() => {
+        if (copy)  copy.style.display  = '';
+        if (check) check.style.display = 'none';
+      }, 2000);
+    } catch (_) {}
+  }
+
+  btn?.addEventListener('click', (e) => { e.stopPropagation(); copyInstall(); });
+  strip?.addEventListener('click', copyInstall);
+  strip?.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+      e.preventDefault();
+      copyInstall();
+    }
+  });
+</script>

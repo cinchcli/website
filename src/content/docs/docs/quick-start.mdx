@@ -1,0 +1,93 @@
+---
+title: Quick Start
+description: Push your first clip in under 5 minutes.
+---
+
+import { Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+This guide walks you through installing Cinch, pairing two machines, and moving your first clip end-to-end.
+
+<Steps>
+
+1. **Install the CLI**
+
+   <Tabs>
+   <TabItem label="macOS / Linux">
+   ```bash
+   curl -fsSL https://cinchcli.com/install.sh | sh
+   ```
+   This installs the `cinch` binary to `/usr/local/bin`.
+   </TabItem>
+   <TabItem label="Docker (relay only)">
+   ```bash
+   docker run -d -p 8080:8080 -v cinch-data:/data \
+     ghcr.io/jinmugo/cinch-relay:latest
+   ```
+   </TabItem>
+   </Tabs>
+
+   Verify the install:
+   ```bash
+   cinch --version
+   ```
+
+2. **Configure the relay**
+
+   By default, `cinch` points at the hosted relay `api.cinchcli.com`. To use your own relay, set the URL:
+
+   ```bash
+   cinch config set relay-url https://your-relay.example.com
+   ```
+
+   <Aside type="note">
+   Skip this step if you want to use the hosted relay. It's free during beta.
+   </Aside>
+
+3. **Pair your machines**
+
+   On **machine A** (e.g. your remote server), generate a pairing token:
+
+   ```bash
+   cinch auth pair
+   # → Token: abc123xyz
+   ```
+
+   On **machine B** (e.g. your laptop), complete the pair using the token:
+
+   ```bash
+   cinch auth pair abc123xyz
+   # → Paired with relay. Ready to push and pull.
+   ```
+
+4. **Push your first clip**
+
+   On machine A:
+
+   ```bash
+   echo "hello from $(hostname)" | cinch push
+   # → ✓ Pushed 28 B
+   ```
+
+5. **Pull it on the other end**
+
+   On machine B:
+
+   ```bash
+   cinch pull
+   # → hello from my-server
+   ```
+
+   Or pipe directly to the clipboard:
+
+   ```bash
+   cinch pull | pbcopy   # macOS
+   cinch pull | xclip    # Linux (X11)
+   ```
+
+</Steps>
+
+## What's next?
+
+- Run `cinchd` to have every push land in your Mac clipboard automatically — no manual `cinch pull` needed.
+- See the full [CLI Reference](/docs/cli/push/) for flags like `--binary` and `--image`.
+- [Self-host the relay](/docs/relay/self-hosting/) if you want your data on your own server.

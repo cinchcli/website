@@ -1,0 +1,48 @@
+---
+title: Cinch Documentation
+description: Remote clipboard for developers — CLI tool, relay server, and desktop agent.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Cinch is a remote clipboard tool built for developers. Push from any terminal, pull on any machine. This documentation covers the CLI, relay server, and desktop agent.
+
+## What is Cinch?
+
+Cinch has two distinct parts that work together:
+
+**The CLI tool** — a Unix pipe. Reads stdin, writes stdout. Drop it into any shell workflow:
+
+```bash
+git diff HEAD~1 | cinch push   # on your server
+cinch pull                      # on your local machine
+```
+
+**The relay server** — a single Go binary that holds clips until they are pulled. Self-host it on any VPS or Docker host, or use the hosted instance at `api.cinchcli.com`.
+
+---
+
+## Get started
+
+<CardGrid>
+  <Card title="Installation" icon="terminal">
+    Install the CLI in 30 seconds with a single curl command. Works on macOS, Linux, and Windows.
+
+    [Get started →](/docs/getting-started/)
+  </Card>
+  <Card title="Quick Start" icon="open-book">
+    A focused 5-minute walkthrough: install, pair your machines, push your first clip, and pull it.
+
+    [Quick Start →](/docs/quick-start/)
+  </Card>
+  <Card title="CLI Reference" icon="document">
+    Full reference for `cinch push`, `cinch pull`, and `cinch auth`.
+
+    [CLI Reference →](/docs/cli/push/)
+  </Card>
+  <Card title="Self-hosting the Relay" icon="setting">
+    Run your own relay with Docker or a single Go binary. One command to deploy.
+
+    [Relay docs →](/docs/relay/self-hosting/)
+  </Card>
+</CardGrid>
