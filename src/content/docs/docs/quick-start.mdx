@@ -5,7 +5,7 @@ description: Push your first clip in under 5 minutes.
 
 import { Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 
-This guide walks you through installing Cinch, pairing two machines, and moving your first clip end-to-end.
+This guide walks you through installing Cinch, authenticating, and moving your first clip end-to-end.
 
 <Steps>
 
@@ -21,45 +21,32 @@ This guide walks you through installing Cinch, pairing two machines, and moving 
    <TabItem label="Docker (relay only)">
    ```bash
    docker run -d -p 8080:8080 -v cinch-data:/data \
-     ghcr.io/jinmugo/cinch-relay:latest
+     ghcr.io/cinchcli/relay:latest
    ```
    </TabItem>
    </Tabs>
 
    Verify the install:
    ```bash
-   cinch --version
+   cinch version
    ```
 
-2. **Configure the relay**
-
-   By default, `cinch` points at the hosted relay `api.cinchcli.com`. To use your own relay, set the URL:
+2. **Sign in**
 
    ```bash
-   cinch config set relay-url https://your-relay.example.com
+   cinch auth login
    ```
+
+   A browser window opens. Sign in with GitHub or Google.
 
    <Aside type="note">
-   Skip this step if you want to use the hosted relay. It's free during beta.
+   To use a self-hosted relay instead of the hosted service, pass `--relay`:
+   ```bash
+   cinch auth login --relay https://your-relay.example.com
+   ```
    </Aside>
 
-3. **Pair your machines**
-
-   On **machine A** (e.g. your remote server), generate a pairing token:
-
-   ```bash
-   cinch auth pair
-   # → Token: abc123xyz
-   ```
-
-   On **machine B** (e.g. your laptop), complete the pair using the token:
-
-   ```bash
-   cinch auth pair abc123xyz
-   # → Paired with relay. Ready to push and pull.
-   ```
-
-4. **Push your first clip**
+3. **Push your first clip**
 
    On machine A:
 
@@ -68,9 +55,9 @@ This guide walks you through installing Cinch, pairing two machines, and moving 
    # → ✓ Pushed 28 B
    ```
 
-5. **Pull it on the other end**
+4. **Pull it on the other end**
 
-   On machine B:
+   On machine B (also signed in):
 
    ```bash
    cinch pull
@@ -84,10 +71,18 @@ This guide walks you through installing Cinch, pairing two machines, and moving 
    cinch pull | xclip    # Linux (X11)
    ```
 
+5. **Pair a remote machine (optional)**
+
+   To set up cinch on a remote server in one command — SSH in, install, and pair:
+
+   ```bash
+   cinch pair user@remotehost
+   ```
+
 </Steps>
 
 ## What's next?
 
-- Run `cinchd` to have every push land in your Mac clipboard automatically — no manual `cinch pull` needed.
-- See the full [CLI Reference](/docs/cli/push/) for flags like `--binary` and `--image`.
+- Install the [desktop app](https://github.com/cinchcli/desktop) to have every push land in your Mac clipboard automatically.
+- See the full [CLI Reference](/docs/cli/push/) for all flags.
 - [Self-host the relay](/docs/relay/self-hosting/) if you want your data on your own server.
