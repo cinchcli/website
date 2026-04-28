@@ -1,0 +1,6 @@
+# Copy this file to .dev.vars and fill in real values for local Pages Function dev.
+# Run: npx wrangler pages dev dist
+# .dev.vars is gitignored — never commit the real file.
+
+RESEND_API_KEY=re_...
+RESEND_AUDIENCE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

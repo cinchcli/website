@@ -1,0 +1,10 @@
+name = "cinchcli-website"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Secrets (RESEND_API_KEY, RESEND_AUDIENCE_ID) are set in the Cloudflare dashboard
+# under Settings → Environment Variables → encrypted — never put them here.
+
+# Local dev: copy .dev.vars.example → .dev.vars and fill in values.
+# Run: npx wrangler pages dev dist --compatibility-flag nodejs_compat

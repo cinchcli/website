@@ -9,20 +9,32 @@ description: Install Cinch and send your first clipboard in 30 seconds.
 curl -fsSL https://cinchcli.com/install.sh | sh
 ```
 
-This installs the `cinch` CLI binary to `/usr/local/bin`.
+This installs the `cinch` binary to `/usr/local/bin`.
 
-### Pair your machines
-
-On the relay (or public instance), generate a pairing token:
+Verify the install:
 
 ```bash
-cinch auth pair
+cinch version
 ```
 
-On each client machine, pair using the token:
+## Authenticate
+
+Sign in to your Cinch account (or create one):
 
 ```bash
-cinch auth pair <TOKEN>
+cinch auth login
+```
+
+This opens a browser window. Sign in with GitHub or Google — once complete, the terminal confirms:
+
+```
+✓ Signed in. Proceeding...
+```
+
+To use a self-hosted relay instead of the hosted service:
+
+```bash
+cinch auth login --relay https://your-relay.example.com
 ```
 
 ## Quick start
@@ -44,10 +56,14 @@ cinch pull
 # → hello from my-server
 ```
 
-### Desktop agent
+### Pair a remote machine
 
-Run `cinchd` to have incoming clips automatically land in your Mac clipboard:
+To set up cinch on a remote server in one command — SSH in, install, and pair automatically:
 
 ```bash
-cinchd
+cinch pair user@remotehost
 ```
+
+This regenerates a pair token, SSHes in, installs cinch if needed, and pairs the machine with your account. No manual steps on the remote end.
+
+For automatic clipboard receiving on macOS, install the [desktop app](https://github.com/cinchcli/desktop).

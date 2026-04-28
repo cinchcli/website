@@ -17,7 +17,7 @@ The CLI (`cinch push` / `cinch pull` / `cinch auth`) runs on:
 - Linux (x86_64, ARM64)
 - Windows (x86_64)
 
-The desktop agent (`cinchd`) is macOS-only in the current release. Linux and Windows desktop builds are planned.
+The [desktop app](https://github.com/cinchcli/desktop) (macOS) receives clips automatically and copies them to your clipboard. Linux and Windows builds are planned.
 
 ### Does Cinch support binary data and images?
 
@@ -49,6 +49,34 @@ The hosted relay deletes clips after **7 days**. Self-hosted relays default to 7
 ### Is the connection encrypted?
 
 Yes. All HTTP and WebSocket traffic is over TLS (HTTPS / WSS). The hosted relay enforces TLS. If you self-host, terminating TLS at a reverse proxy (Caddy, nginx, Cloudflare Tunnel) is recommended.
+
+---
+
+## CI / Automation
+
+### How do I use Cinch in GitHub Actions or other CI systems?
+
+Set `CINCH_TOKEN` and `CINCH_RELAY_URL` as environment variables. The CLI reads them automatically — no config file needed.
+
+```yaml
+# .github/workflows/deploy.yml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cinch
+        run: curl -fsSL https://cinchcli.com/install.sh | sh
+
+      - name: Push build status
+        env:
+          CINCH_TOKEN: ${{ secrets.CINCH_TOKEN }}
+          CINCH_RELAY_URL: ${{ vars.CINCH_RELAY_URL }}
+        run: echo "Build ${{ github.run_number }} passed" | cinch push --label "ci"
+```
+
+Get your token from `cinch auth status` or generate a dedicated one with `cinch auth regenerate-pair-token`.
 
 ---
 
