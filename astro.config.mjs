@@ -1,5 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://cinchcli.com',
@@ -23,10 +25,10 @@ export default defineConfig({
         light: './src/assets/lockup-light-icon.svg',
       },
       social: [
-        { icon: 'github',  label: 'GitHub',  href: 'https://github.com/JinmuGo/cinch' },
+        { icon: 'github',  label: 'GitHub',  href: 'https://github.com/cinchcli/cinch' },
       ],
       editLink: {
-        baseUrl: 'https://github.com/JinmuGo/cinch/edit/main/web/',
+        baseUrl: 'https://github.com/cinchcli/website/edit/main/',
       },
       lastUpdated: true,
       sidebar: [
@@ -55,6 +57,12 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Integrations',
+          items: [
+            { label: 'cinch.vim', slug: 'docs/vim-plugin' },
+          ],
+        },
+        {
           label: 'More',
           items: [
             { label: 'Why Cinch',           slug: 'docs/why-cinch' },
@@ -63,7 +71,12 @@ export default defineConfig({
             { label: 'Comparison',          slug: 'docs/comparison' },
             {
               label: 'Changelog',
-              link:  'https://github.com/JinmuGo/cinch/releases',
+              link:  'https://github.com/cinchcli/cinch/releases',
+              attrs: { target: '_blank', rel: 'noopener noreferrer' },
+            },
+            {
+              label: 'Discussions',
+              link:  'https://github.com/cinchcli/cinch/discussions',
               attrs: { target: '_blank', rel: 'noopener noreferrer' },
             },
           ],
@@ -101,5 +114,7 @@ export default defineConfig({
       ],
       disable404Route: false,
     }),
+    mdx(),
+    sitemap(),
   ],
 });
