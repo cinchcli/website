@@ -265,6 +265,30 @@ starlight-toc a[aria-current='true'] {
   color: var(--sl-color-text-accent);
 }
 
+/* ─── CARDS ──────────────────────────────────────────────── */
+article.card {
+  background-color: var(--sl-color-bg-sidebar);
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 10px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+article.card:hover {
+  border-color: var(--sl-color-accent);
+}
+
+:root[data-theme='light'] article.card {
+  background-color: #FFFFFF;
+}
+
+article.card .card-title {
+  color: var(--sl-color-gray-1);
+}
+
+article.card p {
+  color: var(--sl-color-gray-3) !important;
+}
+
 /* ─── SEARCH BAR ─────────────────────────────────────────── */
 /* Force search button to follow site theme, not OS color-scheme */
 :root[data-theme='light'] site-search,

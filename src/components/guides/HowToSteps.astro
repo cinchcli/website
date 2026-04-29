@@ -1,0 +1,95 @@
+---
+interface HowToStep {
+  name: string;
+  text: string;
+  code?: string;
+}
+
+interface Props {
+  steps: HowToStep[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="howto-steps">
+  {steps.map((step, i) => (
+    <li class="step">
+      <span class="step-number">{i + 1}</span>
+      <div class="step-content">
+        <strong class="step-name">{step.name}</strong>
+        <p class="step-text">{step.text}</p>
+        {step.code && (
+          <pre class="step-code"><code>{step.code}</code></pre>
+        )}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .howto-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--accent-subtle);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.1rem;
+  }
+
+  .step-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .step-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 0.375rem;
+  }
+
+  .step-text {
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .step-code {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .step-code code {
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    color: var(--text-1);
+  }
+</style>

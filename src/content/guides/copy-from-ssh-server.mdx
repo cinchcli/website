@@ -1,0 +1,107 @@
+---
+type: use-case
+title: "Copy Text from an SSH Server to Your Local Clipboard"
+description: "Standard pbcopy and xclip don't work over SSH. Here's how to copy output from any remote server to your local clipboard instantly using Cinch."
+publishedAt: 2026-04-29
+environment: ssh
+os: [macos, linux]
+steps:
+  - name: Install Cinch on the remote server
+    text: Download and install the cinch binary on your remote machine.
+    code: "curl -fsSL https://cinchcli.com/install.sh | sh"
+  - name: Authenticate with your relay
+    text: Run cinch auth login on the remote. Use the default hosted relay or point to your self-hosted one.
+    code: "cinch auth login"
+  - name: Push clipboard content from the remote
+    text: Pipe any command output into cinch push. The content is sent to the relay instantly.
+    code: "cat ~/.ssh/id_ed25519.pub | cinch push"
+  - name: Pull on your local machine
+    text: On your laptop or any other machine, run cinch pull. The content lands in your system clipboard.
+    code: "cinch pull"
+faqs:
+  - q: "Why doesn't pbcopy work over SSH?"
+    a: "pbcopy writes to the macOS pasteboard, which only exists on the local machine. When you run pbcopy inside an SSH session, there is no pasteboard to write to — the command either errors or silently does nothing."
+  - q: "Does Cinch require any SSH config changes?"
+    a: "No. Cinch communicates over HTTPS, not through the SSH connection. No AllowAgentForwarding, no X11Forwarding, no special SSH flags needed."
+---
+
+## Why `pbcopy` and `xclip` Don't Work Over SSH
+
+When you SSH into a remote server, you're running commands in a shell on that machine. The shell has no access to your local machine's clipboard — `pbcopy` writes to macOS's pasteboard, which doesn't exist on the remote server. `xclip` writes to the X11 clipboard, which requires a display connection that SSH sessions don't forward by default.
+
+The common workarounds all have tradeoffs:
+
+- **OSC 52** — works in simple SSH sessions but breaks inside tmux, Docker, and CI environments
+- **SSH port forwarding** — requires `AllowAgentForwarding` and per-machine SSH config changes
+- **Manual copy** — works, but you're doing it hundreds of times a day
+
+Cinch uses a different approach: a relay server over HTTPS that any machine can reach.
+
+## How It Works
+
+```
+remote server  →  cinch push  →  relay (HTTPS)  →  cinch pull  →  your laptop
+```
+
+The remote pushes content to a relay server over HTTPS. Your local machine pulls from the same relay. No SSH tunnel, no special configuration.
+
+## Setup
+
+The steps above walk through the full setup. If you already have Cinch installed on both machines, it's just two commands:
+
+```bash
+# On the remote
+some-command | cinch push
+
+# On your laptop
+cinch pull
+```
+
+## Common Patterns
+
+**Copy a file's contents:**
+```bash
+cat /etc/nginx/nginx.conf | cinch push
+```
+
+**Copy command output:**
+```bash
+docker logs my-container 2>&1 | tail -50 | cinch push
+```
+
+**Copy your SSH public key:**
+```bash
+cat ~/.ssh/id_ed25519.pub | cinch push
+# Then cinch pull on your laptop and paste into GitHub
+```
+
+**Copy a one-liner from history:**
+```bash
+history | grep "kubectl" | tail -5 | cinch push
+```
+
+## Works Everywhere SSH Does
+
+Because Cinch uses HTTPS, it works in all the places OSC 52 doesn't:
+
+- Inside tmux and GNU screen
+- In `docker exec` sessions
+- In VS Code Remote SSH
+- Across nested SSH hops
+- In non-interactive shells and scripts
+
+## Self-Hosting
+
+If you'd rather not use the default relay, run your own:
+
+```bash
+docker run -p 8080:8080 ghcr.io/jinmugo/cinch-relay:latest
+```
+
+Then point Cinch at it:
+
+```bash
+cinch auth login --relay https://your-relay.example.com
+```
+
+See the [relay self-hosting guide](/docs/relay/self-hosting/) for full instructions.
