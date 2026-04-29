@@ -1,0 +1,114 @@
+---
+type: compare
+title: "Cinch vs OSC 52: Which Should You Use?"
+description: "OSC 52 works in simple SSH sessions but breaks in tmux, Docker, and CI. Cinch works everywhere via HTTPS. Here's when to use each."
+publishedAt: 2026-04-29
+competitor:
+  name: OSC 52
+  rows:
+    - feature: Works in interactive SSH (modern terminal)
+      cinch: "✅ Yes"
+      competitor: "✅ Yes"
+    - feature: Works inside tmux / screen
+      cinch: "✅ Yes"
+      competitor: "❌ Broken"
+      note: tmux intercepts the escape sequence
+    - feature: Works in Docker exec
+      cinch: "✅ Yes"
+      competitor: "❌ Broken"
+      note: no terminal escape passthrough
+    - feature: Works in CI/CD runners
+      cinch: "✅ Yes"
+      competitor: "❌ Broken"
+      note: non-interactive, no PTY
+    - feature: Works across SSH hops
+      cinch: "✅ Yes"
+      competitor: "❌ Broken at first hop"
+    - feature: Pull (remote → local)
+      cinch: "✅ Yes"
+      competitor: "❌ Push-only"
+    - feature: Self-hostable
+      cinch: "✅ Yes"
+      competitor: "N/A"
+    - feature: Requires terminal support
+      cinch: "❌ No"
+      competitor: "✅ Required"
+    - feature: Install required
+      cinch: "One binary"
+      competitor: "None"
+faqs:
+  - q: "Should I use Cinch or OSC 52?"
+    a: "If you only use interactive SSH sessions in a modern terminal like iTerm2 or Ghostty with no tmux, OSC 52 is fine — it requires zero setup. Use Cinch when you work inside tmux, Docker containers, CI/CD runners, or across nested SSH hops."
+  - q: "Does Cinch replace OSC 52 completely?"
+    a: "Cinch is a superset. It handles everything OSC 52 does plus the cases where OSC 52 breaks. You can run both — Cinch doesn't interfere with OSC 52."
+  - q: "Why does OSC 52 break in tmux?"
+    a: "tmux intercepts terminal escape sequences and doesn't forward them to the outer terminal's clipboard. There are workarounds (setting allow-passthrough), but they require tmux configuration and still fail in some setups."
+  - q: "Is Cinch slower than OSC 52?"
+    a: "For interactive clipboard use, the latency difference is imperceptible. Both are effectively instant. OSC 52 skips the network entirely, but Cinch via a self-hosted relay on the same network adds only a few milliseconds."
+---
+
+## The Problem with OSC 52
+
+OSC 52 is a terminal escape sequence that asks your terminal emulator to write to the local clipboard. In the ideal case — an interactive SSH session in a terminal that supports it, with no multiplexer in the way — it works beautifully. Zero install, zero config.
+
+The problem is that "the ideal case" excludes a large slice of real developer workflows:
+
+| Environment | OSC 52 status |
+|---|---|
+| iTerm2 or Ghostty over direct SSH | Works |
+| SSH inside tmux | Broken — tmux intercepts the sequence |
+| SSH inside GNU screen | Broken |
+| `docker exec` / `docker attach` | Broken — no escape passthrough |
+| GitHub Actions, GitLab CI | Broken — no PTY |
+| Nested SSH hops | Broken at the first hop |
+| VS Code Remote SSH | Works sometimes |
+
+If your workflow touches any of these, OSC 52 will silently fail and you'll be back to copying output manually.
+
+## How Cinch Works Differently
+
+Cinch doesn't use terminal escape sequences at all. It's plain HTTPS:
+
+```bash
+# On the remote machine
+echo "some output" | cinch push
+
+# On your local machine (or another remote)
+cinch pull
+```
+
+`cinch push` sends the clip to a relay server over HTTPS. `cinch pull` retrieves it. Because it's HTTP, it works in any environment that has outbound internet access — no PTY, no terminal support, no SSH forwarding flags required.
+
+## The Comparison
+
+The table above covers the key differences. The short version:
+
+- **OSC 52**: zero-install, works in simple interactive SSH sessions, breaks everywhere else
+- **Cinch**: one binary to install, works everywhere, supports pull (OSC 52 is push-only)
+
+## When to Use OSC 52
+
+OSC 52 is the right choice when:
+- You only copy from a single SSH session, never inside tmux
+- You use a modern terminal that supports it (iTerm2, Ghostty, WezTerm, Kitty)
+- You never need to pull content from your local machine to a remote
+
+There's no reason to switch something that's working. OSC 52's zero-install advantage is real.
+
+## When to Use Cinch
+
+Use Cinch when:
+- You work inside tmux or screen
+- You use Docker, containers, or CI/CD environments
+- You need bidirectional clipboard sync (pull from local to remote)
+- You want a solution that works regardless of terminal or SSH setup
+
+## Self-Hosting
+
+Cinch's relay is a single Go binary you can run on any server:
+
+```bash
+docker run -p 8080:8080 ghcr.io/jinmugo/cinch-relay:latest
+```
+
+Your clips never leave infrastructure you control. See the [self-hosting guide](/docs/relay/self-hosting/) for full setup instructions.

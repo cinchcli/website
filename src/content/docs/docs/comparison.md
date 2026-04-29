@@ -3,6 +3,12 @@ title: Comparison
 description: How Cinch compares to OSC 52, Apple Universal Clipboard, KDE Connect, and local clipboard managers.
 ---
 
+For in-depth comparisons with worked examples and FAQs, see the [Guides](/guides/) section:
+
+- [Cinch vs OSC 52](/guides/cinch-vs-osc-52/) — when OSC 52 breaks and how Cinch handles those cases
+
+---
+
 ## Cinch vs OSC 52
 
 OSC 52 is a terminal escape sequence that lets a remote process write to the local clipboard. It works well in some environments and fails silently in others.

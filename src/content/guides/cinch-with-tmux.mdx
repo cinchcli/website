@@ -1,0 +1,102 @@
+---
+type: tutorial
+title: "Using Cinch with tmux: Clipboard Sync That Actually Works"
+description: "tmux breaks OSC 52 and makes clipboard sharing painful. Cinch works inside any tmux session with no special config. This guide shows you how."
+publishedAt: 2026-04-29
+environment: tmux
+os: [macos, linux]
+---
+
+## The tmux Clipboard Problem
+
+If you've tried to copy text from a tmux session to your local clipboard, you've probably run into one of these:
+
+- OSC 52 escape sequences get swallowed by tmux and never reach your terminal
+- `xclip` / `xdotool` solutions require a display and break over SSH
+- The tmux `allow-passthrough` workaround is fragile and version-dependent
+
+Cinch sidesteps all of this. It communicates over HTTPS — completely independent of the terminal, tmux, or SSH — so it works the same whether you're inside tmux or not.
+
+## Prerequisites
+
+- Cinch installed on the remote machine (`curl -fsSL https://cinchcli.com/install.sh | sh`)
+- Cinch installed locally and authenticated (`cinch auth login`)
+
+## Basic Usage Inside tmux
+
+Nothing special is required. Inside any tmux pane, pipe output to `cinch push`:
+
+```bash
+cat some-file.txt | cinch push
+```
+
+Then on your local machine:
+
+```bash
+cinch pull
+# content is now in your system clipboard
+```
+
+That's it. No tmux plugin, no escape sequence hacks.
+
+## Copy tmux Pane Output
+
+To copy the visible contents of the current pane, use `tmux capture-pane`:
+
+```bash
+tmux capture-pane -p | cinch push
+```
+
+Or add it as a tmux keybinding. In your `~/.tmux.conf`:
+
+```
+bind-key y run-shell "tmux capture-pane -p | cinch push"
+```
+
+Then `prefix + y` pushes the current pane output to your clipboard.
+
+## Copy tmux Selection
+
+In copy mode (`prefix + [`), after making a selection, you can pipe it through cinch. Add this to `~/.tmux.conf`:
+
+```
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "cinch push"
+bind-key -T copy-mode Enter send-keys -X copy-pipe-and-cancel "cinch push"
+```
+
+Now pressing `y` (vi mode) or `Enter` (emacs mode) in copy mode sends the selection to your relay and cancels copy mode.
+
+## With tmux Plugin Manager (TPM)
+
+If you use TPM, there's no dedicated Cinch plugin yet — but the keybinding approach above works alongside `tmux-yank` and other clipboard plugins. Cinch and `tmux-yank` don't conflict; you can have both bound to different keys.
+
+## Why This Works When OSC 52 Doesn't
+
+OSC 52 sends an escape sequence through the terminal stream: `remote shell → SSH → terminal emulator → clipboard`. tmux sits in the middle of this stream and, by default, strips or ignores escape sequences it doesn't recognize.
+
+Cinch skips the terminal stream entirely:
+
+```
+remote shell → cinch push → HTTPS → relay → cinch pull → local clipboard
+```
+
+tmux has no opportunity to interfere because Cinch never touches the terminal protocol.
+
+## Automating with Scripts
+
+Because `cinch push` is just a command, you can use it in any script running inside tmux:
+
+```bash
+#!/bin/bash
+# Run a build and push the result summary to clipboard
+npm run build 2>&1 | tail -20 | cinch push
+echo "Build output pushed to clipboard"
+```
+
+## Troubleshooting
+
+**`cinch push` hangs:** Check that the relay is reachable from the remote machine. Run `curl https://cinchcli.com/health` (or your relay URL) to verify connectivity.
+
+**Content doesn't appear on `cinch pull`:** Make sure both machines are authenticated to the same relay and the same account. Run `cinch auth status` on both machines to verify.
+
+**Want to keep clipboard history?** The Cinch desktop app (`cinchd`) shows a history of recent clips pulled from the relay. See the [desktop app docs](/docs/) for setup.

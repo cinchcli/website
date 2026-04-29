@@ -1,17 +1,19 @@
 ---
-import Landing  from '../layouts/Landing.astro';
-import Nav      from '../components/landing/Nav.astro';
-import Hero     from '../components/landing/Hero.astro';
-import Features from '../components/landing/Features.astro';
-import Footer   from '../components/landing/Footer.astro';
+import Landing   from '../layouts/Landing.astro';
+import Nav       from '../components/landing/Nav.astro';
+import Hero      from '../components/landing/Hero.astro';
+import UseCases  from '../components/landing/UseCases.astro';
+import Features  from '../components/landing/Features.astro';
+import Footer    from '../components/landing/Footer.astro';
 ---
 
 <Landing
-  title="Cinch — Remote Clipboard for Developers"
-  description="Pipe from any terminal, pull on any machine. Cinch is an open-source remote clipboard tool with WebSocket delivery and a self-hostable relay."
+  title="Cinch — Copy from any terminal. Paste anywhere."
+  description="Push from any SSH session, Vim, or tmux pane — pull on any machine. Open-source clipboard relay with WebSocket delivery."
 >
   <Nav />
   <Hero />
+  <UseCases />
   <Features />
   <Footer />
 </Landing>

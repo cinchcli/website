@@ -2,9 +2,22 @@
 interface Props {
   title: string;
   description: string;
+  canonical?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname, Astro.site).href,
+  ogType = 'website',
+  ogImage = 'https://cinchcli.com/og-image.png',
+  noindex = false,
+  jsonLd,
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -16,21 +29,22 @@ const { title, description } = Astro.props;
   <meta name="description" content={description} />
 
   <!-- Canonical -->
-  <link rel="canonical" href="https://cinchcli.com/" />
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex,follow" />}
 
   <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://cinchcli.com/" />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonical} />
   <meta property="og:site_name" content="Cinch" />
-  <meta property="og:image" content="https://cinchcli.com/og-image.png" />
+  <meta property="og:image" content={ogImage} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content="https://cinchcli.com/og-image.png" />
+  <meta name="twitter:image" content={ogImage} />
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -39,48 +53,47 @@ const { title, description } = Astro.props;
   <meta name="theme-color" content="#4FB3A9">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Inter (body · everywhere) + JetBrains Mono (code · kbd · tabular) per DESIGN.md -->
+  <!-- Inter (body · UI) + JetBrains Mono (code · kbd) + Geist (display headline) per DESIGN.md -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   </noscript>
+  <!-- Geist — display weight for hero headline (engineered personality, not on blocklist) -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" rel="stylesheet">
+  </noscript>
 
   <!-- Structured Data -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "SoftwareApplication",
-          "name": "Cinch",
-          "description": "Open-source remote clipboard tool for developers. Push from any terminal, pull on any machine via WebSocket relay.",
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "macOS, Linux",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+  {jsonLd
+    ? <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
+    : <script type="application/ld+json">{JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "Cinch",
+            "description": "Open-source remote clipboard tool for developers. Push from any terminal, pull on any machine via WebSocket relay.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "macOS, Linux",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "license": "https://opensource.org/licenses/AGPL-3.0",
+            "url": "https://cinchcli.com",
+            "downloadUrl": "https://cinchcli.com/install.sh",
+            "author": { "@id": "#organization" }
           },
-          "license": "https://opensource.org/licenses/MIT",
-          "url": "https://cinchcli.com",
-          "downloadUrl": "https://cinchcli.com/install.sh",
-          "author": {
-            "@id": "#organization"
+          {
+            "@type": "Organization",
+            "@id": "#organization",
+            "name": "Cinch",
+            "url": "https://cinchcli.com",
+            "sameAs": ["https://github.com/JinmuGo/cinch"]
           }
-        },
-        {
-          "@type": "Organization",
-          "@id": "#organization",
-          "name": "Cinch",
-          "url": "https://cinchcli.com",
-          "sameAs": [
-            "https://github.com/JinmuGo/cinch"
-          ]
-        }
-      ]
-    }
-  </script>
+        ]
+      })}</script>
+  }
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>

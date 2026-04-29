@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cinch.jinmu.me/sitemap-index.xml
+Sitemap: https://cinchcli.com/sitemap-index.xml
