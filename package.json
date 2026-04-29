@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "typecheck": "astro check",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",

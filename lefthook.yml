@@ -14,7 +14,7 @@ pre-push:
   commands:
     typecheck:
       glob: "*.{ts,tsx,astro}"
-      run: npm run typecheck
+      run: pnpm typecheck
     test:
       glob: "*.{ts,tsx,astro}"
-      run: npm test
+      run: pnpm test
