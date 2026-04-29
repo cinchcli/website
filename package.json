@@ -10,7 +10,7 @@
     "typecheck": "astro check",
     "lint": "eslint .",
     "test": "vitest run",
-    "prepare": "lefthook install"
+    "prepare": "is-ci || lefthook install"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",
@@ -25,6 +25,7 @@
     "@typescript-eslint/parser": "^8.59.1",
     "eslint": "^10.2.1",
     "eslint-plugin-astro": "^1.3.0",
+    "is-ci": "^4.1.0",
     "typescript": "~5.8.3",
     "vitest": "^4.1.5"
   }
