@@ -95,7 +95,7 @@ export default defineConfig({
         { tag: 'meta', attrs: { property: 'og:site_name',content: 'Cinch' } },
         { tag: 'meta', attrs: { name: 'twitter:card',    content: 'summary_large_image' } },
         { tag: 'meta', attrs: { name: 'twitter:image',   content: 'https://cinchcli.com/og-image.png' } },
-        // Inter + JetBrains Mono fonts per DESIGN.md §3 — async to avoid render-blocking
+        // Inter + JetBrains Mono + Geist — async to avoid render-blocking
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' } },
         {
@@ -103,13 +103,13 @@ export default defineConfig({
           attrs: {
             rel:    'preload',
             as:     'style',
-            href:   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap',
+            href:   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@700;800&display=swap',
             onload: "this.rel='stylesheet'",
           },
         },
         {
           tag: 'noscript',
-          content: '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">',
+          content: '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@700;800&display=swap">',
         },
       ],
       disable404Route: false,
