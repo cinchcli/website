@@ -11,3 +11,8 @@ node_modules/
 .env
 *.db
 .dev.vars
+
+# Local design references and AI/tooling artifacts
+.DS_Store
+.designs/
+.playwright-mcp/
