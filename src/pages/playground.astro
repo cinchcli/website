@@ -522,6 +522,11 @@ echo "hello from $(hostname)" | cinch push`;
       try { ws.close(); } catch (_) { /* ignore */ }
     }
     const url = new URL(wsURL);
+    // Browsers block ws:// from an https:// page (mixed content). Upgrade
+    // defensively so a relay that misreports its public scheme still works.
+    if (window.location.protocol === 'https:' && url.protocol === 'ws:') {
+      url.protocol = 'wss:';
+    }
     url.searchParams.set('token', token);
     ws = new WebSocket(url.toString());
 
