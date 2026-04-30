@@ -1,5 +1,6 @@
 ---
-// LiveDemo — two-pane live terminal: push goes to the relay, pull arrives via WebSocket
+// LiveDemo — supporting cinematic for the install-focused hero
+import TerminalWindow from './TerminalWindow.astro';
 const relayBase = import.meta.env.DEV
   ? '/api'
   : 'https://api.cinchcli.com';
@@ -7,99 +8,117 @@ const relayBase = import.meta.env.DEV
 
 <div class="live-demo" id="live-demo" data-relay={relayBase}>
 
-  <!-- ── PUSH terminal ─────────────────────────────── -->
-  <div class="demo-window push-term">
-    <div class="demo-bar">
-      <span class="dot dot-r"></span>
-      <span class="dot dot-y"></span>
-      <span class="dot dot-g"></span>
-      <span class="demo-label" id="push-label">bash — prod-server (ssh)</span>
-    </div>
-    <pre class="demo-body"><code><span class="c"># On your remote server</span>
-<span class="p">$</span> echo "<span id="push-echo" class="push-echo">…</span>" <span class="op">|</span> cinch push
-<span id="push-status" class="push-status"></span></code></pre>
-    <div class="push-controls">
-      <input
-        type="text"
-        id="push-input"
-        class="push-field"
-        placeholder="type something…"
-        maxlength="200"
-        autocomplete="off"
-        spellcheck="false"
-      />
-      <button id="push-btn" class="push-btn" type="button">
-        Push
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+  <div class="terminals-row">
 
-  <!-- ── PULL terminal ─────────────────────────────── -->
-  <div class="demo-window pull-term">
-    <div class="demo-bar">
-      <span class="dot dot-r"></span>
-      <span class="dot dot-y"></span>
-      <span class="dot dot-g"></span>
-      <span class="ws-dot" id="ws-dot" title="WebSocket status"></span>
-      <span class="demo-label">local-machine — bash</span>
+    <!-- ── PUSH col ──────────────────────────────────── -->
+    <div class="term-col">
+      <p class="term-label">PUSH</p>
+      <TerminalWindow title="bash — prod-server (ssh)">
+        <pre class="term-body"><code><span class="t-c"># SSH'd into prod</span>
+<span class="t-p">$</span> <span id="push-echo" class="push-echo">…</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>
+<span id="push-status" class="push-status"></span></code></pre>
+      </TerminalWindow>
     </div>
-    <!-- curl invite: paste this in your real terminal -->
-    <div class="stream-strip" id="stream-strip">
-      <span class="stream-p">$</span>
-      <code id="stream-cmd" class="stream-cmd">curl -sN "loading…"</code>
-      <button id="stream-copy" class="stream-copy" title="Copy command" aria-label="Copy curl command">⎘</button>
+
+    <!-- ── Arrow ─────────────────────────────────────── -->
+    <div class="flow-arrow" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M6 16 L22 16 M17 10 L25 16 L17 22"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </div>
-    <pre class="demo-body" id="pull-body"><code><span id="pull-output"><span class="c">waiting for push…</span></span>
+
+    <!-- ── PULL col ──────────────────────────────────── -->
+    <div class="term-col">
+      <p class="term-label">PULL</p>
+      <TerminalWindow title="local-machine — bash">
+        <span slot="bar-extra" class="ws-dot" id="ws-dot" title="WebSocket status"></span>
+        <pre class="term-body"><code><span class="t-p">$</span> <span class="t-cmd">cinch pull</span>
+<span id="pull-output"><span class="t-c">waiting for push…</span></span>
 </code></pre>
+      </TerminalWindow>
+    </div>
+
   </div>
 
   <p class="demo-counter" id="demo-counter" aria-live="polite"></p>
 </div>
 
 <style>
-  /* ── Layout ────────────────────────────────────────── */
+  /* ── Outer wrapper ─────────────────────────────────── */
   .live-demo {
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
   }
 
-  /* ── Terminal window shell ──────────────────────────── */
-  .demo-window {
-    background: light-dark(#F7F6F3, #0e0f11);
-    border: 1px solid var(--border-hover);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow:
-      0 24px 64px -16px light-dark(rgba(0,0,0,0.10), rgba(0,0,0,0.7)),
-      0 0 0 1px light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.02)),
-      inset 0 1px 0 light-dark(rgba(255,255,255,0.8), rgba(255,255,255,0.04));
+  /* ── Row ───────────────────────────────────────────── */
+  .terminals-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
   }
 
-  /* ── Title bar ─────────────────────────────────────── */
-  .demo-bar {
+  /* ── Per-terminal column ───────────────────────────── */
+  .term-col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  /* Stretch the inner terminal frame so both panes share height */
+  .term-col :global(.term-win) {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .term-col :global(.term-body) {
+    flex: 1;
+  }
+
+  .term-label {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding-left: 1rem;
+    margin: 0;
+  }
+
+  /* ── Arrow connector ───────────────────────────────── */
+  .flow-arrow {
+    flex-shrink: 0;
+    width: 64px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 0.65rem 1rem;
-    border-bottom: 1px solid var(--border);
-    background: light-dark(rgba(0,0,0,0.02), rgba(255,255,255,0.015));
+    justify-content: center;
+    color: var(--accent);
+    align-self: center;
+    animation: arrow-pulse 2.8s ease-in-out infinite;
   }
 
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  @keyframes arrow-pulse {
+    0%, 100% { opacity: 1;   transform: translateX(0); }
+    50%       { opacity: 0.4; transform: translateX(4px); }
   }
-  .dot-r { background: #ff5f57; }
-  .dot-y { background: #febc2e; }
-  .dot-g { background: #28c840; }
 
-  /* WebSocket status dot */
+  @media (prefers-reduced-motion: reduce) {
+    .flow-arrow { animation: none; }
+  }
+
+  /* ── WebSocket status dot ──────────────────────────── */
   .ws-dot {
     width: 7px;
     height: 7px;
@@ -113,46 +132,8 @@ const relayBase = import.meta.env.DEV
   .ws-dot.ws-disconnected { background: light-dark(rgba(0,0,0,0.18), rgba(255,255,255,0.18)); }
   .ws-dot.ws-error        { background: #FF6363; }
 
-  .demo-label {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 0.6875rem;
-    color: var(--text-3);
-    letter-spacing: 0.04em;
-  }
-
-  /* ── Code body ─────────────────────────────────────── */
-  .demo-body {
-    margin: 0;
-    padding: 1.125rem 1.375rem 1rem;
-    font-family: var(--mono);
-    font-size: 0.7813rem;
-    line-height: 1.85;
-    background: transparent;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .demo-body code {
-    display: block;
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    color: var(--text-2);
-    white-space: pre;
-    word-break: normal;
-  }
-
-  .demo-body .c   { color: var(--text-3); }
-  .demo-body .p   { color: var(--text-3); }
-  .demo-body .op  { color: var(--accent); }
-  .demo-body .ok  { color: #4ade80; }
-
   /* ── Push echo / status ────────────────────────────── */
-  .push-echo {
-    color: var(--accent);
-  }
+  .push-echo { color: var(--accent); }
 
   .push-status {
     display: block;
@@ -162,129 +143,37 @@ const relayBase = import.meta.env.DEV
   }
   .push-status.error { color: #FF6363; }
 
-  /* ── Push controls ─────────────────────────────────── */
-  .push-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0 1.375rem 1rem;
-    border-top: 1px solid var(--border);
-    padding-top: 0.75rem;
-  }
-
-  .push-field {
-    flex: 1;
-    background: light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.04));
-    border: 1px solid var(--border-hover);
-    border-radius: 6px;
-    padding: 0.45rem 0.75rem;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    min-width: 0;
-  }
-
-  .push-field::placeholder { color: var(--text-3); }
-
-  .push-field:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(79,179,169,0.15);
-  }
-
-  .push-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.45rem 0.875rem;
-    background: var(--accent);
-    color: var(--accent-on);
-    border: none;
-    border-radius: 6px;
-    font-family: var(--sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.15s, transform 0.1s, opacity 0.15s;
-  }
-
-  .push-btn:hover:not(:disabled) { background: var(--accent-muted); }
-  .push-btn:active:not(:disabled) { transform: scale(0.97); }
-  .push-btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
   /* ── Pull output ───────────────────────────────────── */
-  #pull-output {
-    display: block;
-  }
+  #pull-output { display: block; }
 
   .pull-line {
     display: block;
     color: var(--text-1);
   }
+  .pull-line.arriving { color: var(--accent); }
 
-  .pull-line.arriving {
+  .pull-receiving {
+    display: block;
     color: var(--accent);
+    animation: receive-pulse 0.8s ease-in-out infinite;
+  }
+  @keyframes receive-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pull-receiving { animation: none; }
   }
 
-  /* ── curl invite strip ─────────────────────────────── */
-  .stream-strip {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.375rem;
-    background: light-dark(rgba(0,0,0,0.03), rgba(255,255,255,0.03));
-    border-bottom: 1px solid var(--border);
-    font-family: var(--mono);
-    font-size: 0.7188rem;
-  }
-
-  .stream-p {
-    color: var(--text-3);
-    flex-shrink: 0;
-  }
-
-  .stream-cmd {
-    flex: 1;
-    color: var(--accent);
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-  }
-
-  .stream-copy {
-    flex-shrink: 0;
-    background: none;
-    border: 1px solid var(--border-hover);
-    border-radius: 4px;
-    color: var(--text-3);
-    cursor: pointer;
-    font-size: 0.875rem;
-    line-height: 1;
-    padding: 0.125rem 0.375rem;
-    transition: color 0.15s, border-color 0.15s;
-  }
-
-  .stream-copy:hover {
-    color: var(--text-1);
-    border-color: var(--text-3);
-  }
-
-  /* Latency + region badge on each received clip */
   .pull-badge {
     color: var(--text-3);
     font-size: 0.6875rem;
     letter-spacing: 0.02em;
+  }
+  .pull-clipboard { color: var(--accent); }
+
+  .pull-badge-line {
+    display: block;
   }
 
   /* ── Stats counter ─────────────────────────────────── */
@@ -297,12 +186,31 @@ const relayBase = import.meta.env.DEV
     margin: 0;
     min-height: 1em;
   }
+
+  /* ── Responsive ────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .terminals-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+      width: 100%;
+      height: 2.5rem;
+      margin-top: 0;
+    }
+    @keyframes arrow-pulse {
+      0%, 100% { opacity: 1;   transform: rotate(90deg) translateX(0); }
+      50%       { opacity: 0.4; transform: rotate(90deg) translateX(4px); }
+    }
+  }
 </style>
 
 <script>
   interface DemoSession {
     token: string;
-    stream_id: string;
+    stream_id?: string;
     relay_url: string;
     ws_url: string;
     max_clips: number;
@@ -324,17 +232,13 @@ const relayBase = import.meta.env.DEV
     pushes_today: number;
   }
 
-  // ── Cinematic scenarios ───────────────────────────────
   type Scenario = { echo: string; content: string };
 
   const SCENARIOS: Scenario[] = [
-    { echo: 'cat deploy.log | tail -1',  content: 'deployed a3f91b4 → prod.api' },
-    { echo: 'echo $DB_HOST',             content: 'prod.db.us-east-1.rds.amazonaws.com' },
-    { echo: '$(curl -s internal/ver)',   content: '{"build":"1.9.2","sha":"a3f91b4"}' },
+    { echo: 'kubectl get pods | grep api', content: 'api-deployment-7d9f8c8b4-xkj9m' },
   ];
 
   const RELAY_BASE = (document.getElementById('live-demo') as HTMLElement).dataset.relay ?? 'https://api.cinchcli.com';
-  const PUSH_BTN_HTML = `Push <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
 
   let session: DemoSession | null = null;
   let ws: WebSocket | null = null;
@@ -342,28 +246,16 @@ const relayBase = import.meta.env.DEV
   let reconnectAttempts = 0;
   const MAX_RECONNECT = 3;
 
-  const streamCmd  = document.getElementById('stream-cmd')  as HTMLElement;
-  const streamCopy = document.getElementById('stream-copy') as HTMLButtonElement;
-
-  // Cinematic state
   let cinematicRunId = 0;
-  let cinematicActive = false;
   let cinematicStarted = false;
   let demoRegion = 'us-east';
 
-  // Latency measurement: set just before push fetch, read in ws.onmessage
-  let pushSentAt = 0;
-
-  // ── DOM refs ──────────────────────────────────────────
-  const pushInput  = document.getElementById('push-input')  as HTMLInputElement;
   const pushEcho   = document.getElementById('push-echo')   as HTMLElement;
-  const pushBtn    = document.getElementById('push-btn')    as HTMLButtonElement;
   const pushStatus = document.getElementById('push-status') as HTMLElement;
   const pullOutput = document.getElementById('pull-output') as HTMLElement;
   const wsDot      = document.getElementById('ws-dot')      as HTMLElement;
   const counter    = document.getElementById('demo-counter') as HTMLElement;
 
-  // ── Helpers ───────────────────────────────────────────
   function wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -372,51 +264,79 @@ const relayBase = import.meta.env.DEV
     for (let i = 0; i <= text.length; i++) {
       if (cinematicRunId !== runId) return false;
       el.textContent = text.slice(0, i) + (i < text.length ? '▌' : '');
-      await wait(40);
+      await wait(38);
     }
     return true;
   }
 
-  // ── Append clip to pull terminal ──────────────────────
-  function appendClipWithBadge(content: string, ms: number, region: string) {
-    const waiting = pullOutput.querySelector('.c');
+  function resetPullOutput() {
+    pullOutput.replaceChildren();
+    const waiting = document.createElement('span');
+    waiting.className = 't-c';
+    waiting.textContent = 'waiting for push…';
+    pullOutput.appendChild(waiting);
+  }
+
+  async function showPullReceiving(runId: number): Promise<boolean> {
+    const waiting = pullOutput.querySelector('.t-c');
     if (waiting) waiting.remove();
 
+    const recv = document.createElement('span');
+    recv.className = 'pull-receiving';
+    recv.textContent = '↓ receiving…';
+    pullOutput.appendChild(recv);
+
+    await wait(450);
+    if (cinematicRunId !== runId) {
+      recv.remove();
+      return false;
+    }
+    recv.remove();
+    return true;
+  }
+
+  async function appendClipAnimated(content: string, ms: number, region: string, runId: number): Promise<void> {
     const line = document.createElement('span');
     line.className = 'pull-line arriving';
 
-    const contentNode = document.createTextNode('> ' + content);
-    line.appendChild(contentNode);
+    line.appendChild(document.createTextNode('> '));
 
-    // Only show badge if latency is plausible (clock skew guard)
-    if (ms >= 0 && ms < 1000) {
-      const badge = document.createElement('span');
-      badge.className = 'pull-badge';
-      badge.textContent = `  ·  ${ms}ms  relay: ${region}`;
-      line.appendChild(badge);
-    }
+    const text = document.createElement('span');
+    line.appendChild(text);
 
     pullOutput.appendChild(line);
     pullOutput.appendChild(document.createTextNode('\n'));
+
+    // Typewriter the arriving content
+    for (let i = 0; i <= content.length; i++) {
+      if (cinematicRunId !== runId) return;
+      text.textContent = content.slice(0, i);
+      await wait(18);
+    }
+
+    // Badges go on a continuation line so long content doesn't push them off-screen
+    const badgeLine = document.createElement('span');
+    badgeLine.className = 'pull-badge-line';
+    pullOutput.appendChild(badgeLine);
+    pullOutput.appendChild(document.createTextNode('\n'));
+
+    if (ms >= 0 && ms < 1000) {
+      const badge = document.createElement('span');
+      badge.className = 'pull-badge';
+      badge.textContent = `  ↳ ${ms}ms · relay: ${region}`;
+      badgeLine.appendChild(badge);
+    }
+
+    navigator.clipboard.writeText(content).catch(() => {});
+
+    const clipBadge = document.createElement('span');
+    clipBadge.className = 'pull-badge pull-clipboard';
+    clipBadge.textContent = ms >= 0 && ms < 1000 ? '  ·  📋 clipboard' : '  ↳ 📋 clipboard';
+    badgeLine.appendChild(clipBadge);
+
     setTimeout(() => line.classList.remove('arriving'), 900);
   }
 
-  function appendClip(content: string) {
-    appendClipWithBadge(content, -1, demoRegion);
-  }
-
-  // ── Cinematic ─────────────────────────────────────────
-  function cancelCinematic() {
-    if (!cinematicActive) return;
-    cinematicRunId++;
-    cinematicActive = false;
-    pushEcho.textContent = '…';
-    pushStatus.textContent = '';
-    pushStatus.className = 'push-status';
-  }
-
-  // Push content to the real relay for cinematic scenarios.
-  // Does NOT set pushSentAt — cinematic clips are only visible via curl, not in-browser.
   async function cinematicPush(content: string, runId: number): Promise<number> {
     if (!session || cinematicRunId !== runId) return 0;
     try {
@@ -434,12 +354,10 @@ const relayBase = import.meta.env.DEV
         return data.byte_size;
       }
     } catch (_) {}
-    pushSentAt = 0;
     return 0;
   }
 
   async function runCinematic() {
-    // Wait up to 3 s for demo session to be ready before starting
     if (!session) {
       await new Promise<void>(resolve => {
         const t = setTimeout(resolve, 3000);
@@ -447,46 +365,53 @@ const relayBase = import.meta.env.DEV
       });
     }
 
-    const runId = ++cinematicRunId;
-    cinematicActive = true;
+    while (true) {
+      const runId = ++cinematicRunId;
 
-    for (const scenario of SCENARIOS) {
-      if (cinematicRunId !== runId) return;
-      if (session && pushCount >= session.max_clips) break;
+      for (const scenario of SCENARIOS) {
+        if (cinematicRunId !== runId) return;
+        if (session && pushCount >= session.max_clips) return;
 
-      // Reset push pane for this scenario
-      pushEcho.textContent = '';
-      pushStatus.textContent = '';
-      pushStatus.className = 'push-status';
+        pushEcho.textContent = '';
+        pushStatus.textContent = '';
+        pushStatus.className = 'push-status';
 
-      // Typewrite the echo content
-      const completed = await typewriteAsync(pushEcho, scenario.echo, runId);
-      if (!completed) return;
+        const completed = await typewriteAsync(pushEcho, scenario.echo, runId);
+        if (!completed) return;
 
-      await wait(300);
-      if (cinematicRunId !== runId) return;
+        await wait(300);
+        if (cinematicRunId !== runId) return;
 
-      // Make a REAL push — the relay broadcasts via WS + SSE stream
-      const bytes = await cinematicPush(scenario.content, runId);
-      if (cinematicRunId !== runId) return;
+        const pushStart = Date.now();
+        const bytes = await cinematicPush(scenario.content, runId);
+        if (cinematicRunId !== runId) return;
 
-      if (bytes > 0) {
-        pushStatus.textContent = `✓ Pushed ${bytes} B`;
+        const displayBytes = bytes > 0 ? bytes : new Blob([scenario.content]).size;
+        pushStatus.textContent = `✓ Pushed ${displayBytes} B`;
+        await wait(280);
+        if (cinematicRunId !== runId) return;
+
+        const ok = await showPullReceiving(runId);
+        if (!ok) return;
+
+        const measuredMs = bytes > 0 ? Date.now() - pushStart : 38;
+        await appendClipAnimated(scenario.content, measuredMs, demoRegion, runId);
+        if (cinematicRunId !== runId) return;
+
+        await wait(2400);
+        if (cinematicRunId !== runId) return;
+
+        pushStatus.textContent = '';
+        pushEcho.textContent = '…';
       }
 
-      // WS onmessage will call appendClipWithBadge with real latency
-      await wait(2200);
+      // Reset before replaying so the loop reads cleanly
+      await wait(2000);
       if (cinematicRunId !== runId) return;
-
-      pushStatus.textContent = '';
-      await wait(200);
+      if (session && pushCount >= session.max_clips) return;
+      resetPullOutput();
+      await wait(800);
     }
-
-    // Cinematic finished — reset to default interactive state
-    cinematicActive = false;
-    pushEcho.textContent = '…';
-    pushStatus.textContent = '';
-    pushStatus.className = 'push-status';
   }
 
   function startCinematic() {
@@ -495,13 +420,11 @@ const relayBase = import.meta.env.DEV
     runCinematic();
   }
 
-  // ── WebSocket status ──────────────────────────────────
   function setWS(status: 'connected' | 'disconnected' | 'error') {
     wsDot.className = `ws-dot ws-${status}`;
     wsDot.title = status === 'connected' ? 'Live — receiving pushes' : status;
   }
 
-  // ── WebSocket connection ──────────────────────────────
   function connectWS(wsURL: string, token: string) {
     const url = `${wsURL}?token=${encodeURIComponent(token)}`;
     ws = new WebSocket(url);
@@ -521,22 +444,12 @@ const relayBase = import.meta.env.DEV
     };
 
     ws.onmessage = (evt: MessageEvent) => {
-      try {
-        const msg = JSON.parse(evt.data as string) as WSMessage;
-        if (msg.action === 'new_clip' && msg.clip) {
-          // Only show in-browser for manual pushes (pushSentAt > 0).
-          // Cinematic pushes are intentionally invisible here — they arrive via curl.
-          if (pushSentAt > 0) {
-            const ms = Date.now() - pushSentAt;
-            pushSentAt = 0;
-            appendClipWithBadge(msg.clip.content, ms, demoRegion);
-          }
-        }
-      } catch (_) {}
+      // Cinematic drives the pull terminal; WS is just live-status indicator.
+      // Parse to keep the wire format honest, but do not double-render.
+      try { JSON.parse(evt.data as string); } catch (_) {}
     };
   }
 
-  // ── Demo session init ─────────────────────────────────
   async function initDemo() {
     try {
       const res = await fetch(`${RELAY_BASE}/demo/session`, { method: 'POST' });
@@ -544,35 +457,12 @@ const relayBase = import.meta.env.DEV
       session = await res.json() as DemoSession;
       demoRegion = session.region ?? 'us-east';
       pushCount = 0;
-
-      // Use stream_id if available (requires deployed relay); fall back to token prefix
-      const sid = session.stream_id || session.token.slice(0, 8);
-      const streamURL = `${session.relay_url}/demo/stream/${sid}`;
-      streamCmd.textContent = `curl -sN "${streamURL}"`;
-
       connectWS(session.ws_url, session.token);
     } catch (_) {
       setWS('error');
     }
   }
 
-  // ── Copy curl command ─────────────────────────────────
-  streamCopy.addEventListener('click', async () => {
-    const text = streamCmd.textContent ?? '';
-    try {
-      await navigator.clipboard.writeText(text);
-      streamCopy.textContent = '✓';
-      setTimeout(() => { streamCopy.textContent = '⎘'; }, 1500);
-    } catch (_) {
-      // Fallback: select the text
-      const range = document.createRange();
-      range.selectNode(streamCmd);
-      window.getSelection()?.removeAllRanges();
-      window.getSelection()?.addRange(range);
-    }
-  });
-
-  // ── Stats counter ─────────────────────────────────────
   async function fetchStats() {
     try {
       const res = await fetch(`${RELAY_BASE}/demo/stats`);
@@ -584,87 +474,9 @@ const relayBase = import.meta.env.DEV
     } catch (_) {}
   }
 
-  // ── Push handler ──────────────────────────────────────
-  async function handlePush() {
-    const text = pushInput.value.trim();
-    if (!text || !session) return;
-    if (pushCount >= session.max_clips) return;
-
-    pushBtn.disabled = true;
-    pushBtn.textContent = 'Pushing…';
-    pushStatus.textContent = '';
-    pushStatus.className = 'push-status';
-
-    pushSentAt = Date.now();
-
-    try {
-      const res = await fetch(`${session.relay_url}/clips`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.token}`,
-        },
-        body: JSON.stringify({ content: text, content_type: 'text' }),
-      });
-
-      if (res.ok) {
-        const data = await res.json() as PushResponse;
-        pushCount++;
-        pushStatus.textContent = `✓ Pushed ${data.byte_size} B`;
-        pushInput.value = '';
-        pushEcho.textContent = '…';
-
-        const remaining = session.max_clips - pushCount;
-        setTimeout(() => {
-          if (remaining <= 0) {
-            pushBtn.textContent = 'Limit reached';
-            pushBtn.disabled = true;
-          } else {
-            pushBtn.innerHTML = PUSH_BTN_HTML;
-            pushBtn.disabled = false;
-          }
-        }, 1400);
-      } else {
-        pushSentAt = 0;
-        const err = await res.json() as { message?: string };
-        pushStatus.textContent = err.message ?? 'Push failed';
-        pushStatus.className = 'push-status error';
-        setTimeout(() => {
-          pushBtn.innerHTML = PUSH_BTN_HTML;
-          pushBtn.disabled = false;
-        }, 2000);
-      }
-    } catch (_) {
-      pushSentAt = 0;
-      pushStatus.textContent = 'Network error';
-      pushStatus.className = 'push-status error';
-      pushBtn.innerHTML = PUSH_BTN_HTML;
-      pushBtn.disabled = false;
-    }
-  }
-
-  // ── Input echo sync + cinematic cancel ───────────────
-  pushInput.addEventListener('focus', cancelCinematic);
-
-  pushInput.addEventListener('input', () => {
-    cancelCinematic();
-    pushEcho.textContent = pushInput.value || '…';
-  });
-
-  pushInput.addEventListener('keydown', (e) => {
-    if ((e as KeyboardEvent).key === 'Enter') handlePush();
-  });
-
-  pushBtn.addEventListener('click', () => {
-    cancelCinematic();
-    handlePush();
-  });
-
-  // ── Boot ──────────────────────────────────────────────
   initDemo();
   fetchStats();
 
-  // Start cinematic when hero scrolls into view
   if (typeof IntersectionObserver !== 'undefined') {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -676,7 +488,6 @@ const relayBase = import.meta.env.DEV
     }, { threshold: 0.3 });
     observer.observe(document.getElementById('live-demo')!);
   } else {
-    // Fallback: start after a short delay
     setTimeout(startCinematic, 800);
   }
 </script>

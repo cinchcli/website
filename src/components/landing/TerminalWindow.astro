@@ -1,0 +1,111 @@
+---
+// TerminalWindow — shared terminal shell used by LiveDemo, UseCases, DualTerminalDemo.
+// Renders the outer card (background, border, shadow), title bar, and dots.
+// Consumers put class="term-body" on their <pre> and use .t-* token classes.
+//
+// Slots:
+//   default    — body content (pre.term-body, push-controls, etc.)
+//   bar-extra  — extra elements inside the title bar, after the dots (e.g. WS status dot)
+//
+// Token classes (apply inside .term-body):
+//   .t-c   comment / dim prompt text
+//   .t-p   prompt symbol ($)
+//   .t-cmd command / keyword
+//   .t-str string literal
+//   .t-op  operator / pipe
+//   .t-ok  success output (✓)
+//   .t-val value / output text
+//   .t-meta metadata / small annotation
+interface Props {
+  title?: string;
+  class?: string;
+}
+const { title, class: className } = Astro.props;
+---
+
+<div class:list={['term-win', className]}>
+  <div class="term-bar">
+    <span class="dot dot-r" aria-hidden="true"></span>
+    <span class="dot dot-y" aria-hidden="true"></span>
+    <span class="dot dot-g" aria-hidden="true"></span>
+    <slot name="bar-extra" />
+    {title && <span class="term-title">{title}</span>}
+  </div>
+  <slot />
+</div>
+
+<style>
+  /* ── Shell ─────────────────────────────────────────── */
+  .term-win {
+    background: light-dark(#F7F6F3, #0e0f11);
+    border: 1px solid light-dark(rgba(0,0,0,0.10), rgba(255,255,255,0.08));
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 2px light-dark(rgba(0,0,0,0.06), rgba(0,0,0,0.12)),
+      0 4px 12px light-dark(rgba(0,0,0,0.08), rgba(0,0,0,0.18)),
+      0 24px 56px -12px light-dark(rgba(0,0,0,0.12), rgba(0,0,0,0.38)),
+      inset 0 1px 0 light-dark(rgba(255,255,255,0.80), rgba(255,255,255,0.04));
+  }
+
+  /* ── Title bar ─────────────────────────────────────── */
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.625rem 1rem;
+    background: light-dark(rgba(0,0,0,0.02), rgba(255,255,255,0.025));
+    border-bottom: 1px solid light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.06));
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .term-title {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.28));
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Body — applied to slotted <pre class="term-body"> ── */
+  .term-win :global(.term-body) {
+    margin: 0;
+    padding: 1.125rem 1.375rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    line-height: 1.85;
+    background: transparent;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .term-win :global(.term-body code) {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: light-dark(rgba(0,0,0,0.75), rgba(255,255,255,0.75));
+    white-space: pre;
+    word-break: normal;
+  }
+
+  /* ── Syntax tokens ─────────────────────────────────── */
+  .term-win :global(.t-c)    { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.28)); }
+  .term-win :global(.t-p)    { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.30)); }
+  .term-win :global(.t-cmd)  { color: light-dark(rgba(0,0,0,0.82), rgba(255,255,255,0.82)); }
+  .term-win :global(.t-str)  { color: light-dark(#2F7F78, #a5d6d3); }
+  .term-win :global(.t-op)   { color: var(--accent); }
+  .term-win :global(.t-ok)   { color: light-dark(#16a34a, #4ade80); }
+  .term-win :global(.t-val)  { color: light-dark(rgba(0,0,0,0.58), rgba(255,255,255,0.58)); }
+  .term-win :global(.t-meta) { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.30)); font-size: 0.75rem; }
+</style>

@@ -1,7 +1,7 @@
 ---
 // UseCases — Step Line scroll section
 // Layout: 2-col grid (text left, terminal right)
-// Style: vertical teal spine with node dots per variant C
+import TerminalWindow from './TerminalWindow.astro';
 ---
 
 <section class="usecases" aria-labelledby="usecases-heading">
@@ -29,20 +29,14 @@
           </div>
         </div>
         <div class="uc-right">
-          <div class="term-window">
-            <div class="term-bar">
-              <span class="dot dot-r" aria-hidden="true"></span>
-              <span class="dot dot-y" aria-hidden="true"></span>
-              <span class="dot dot-g" aria-hidden="true"></span>
-              <span class="term-title">prod-server — ssh</span>
-            </div>
+          <TerminalWindow title="prod-server — ssh">
             <pre class="term-body" role="img" aria-label="SSH session push example"><code
-><span class="tc">user@prod:~$</span> <span class="tk">cat</span> deploy.log <span class="tp">|</span> <span class="tk">cinch push</span>
-<span class="ts">✓ pushed</span>  <span class="tv">148 bytes → relay</span>
+><span class="t-c">user@prod:~$</span> <span class="t-cmd">cat</span> deploy.log <span class="t-op">|</span> <span class="t-cmd">cinch push</span>
+<span class="t-ok">✓ pushed</span>  <span class="t-val">148 bytes → relay</span>
 
-<span class="tc">user@prod:~$</span> <span class="tk">cinch push</span> &lt; /etc/nginx/nginx.conf
-<span class="ts">✓ pushed</span>  <span class="tv">4.8 KB — nginx.conf</span></code></pre>
-          </div>
+<span class="t-c">user@prod:~$</span> <span class="t-cmd">cinch push</span> &lt; /etc/nginx/nginx.conf
+<span class="t-ok">✓ pushed</span>  <span class="t-val">4.8 KB — nginx.conf</span></code></pre>
+          </TerminalWindow>
         </div>
       </article>
 
@@ -59,22 +53,16 @@
           </div>
         </div>
         <div class="uc-right">
-          <div class="term-window">
-            <div class="term-bar">
-              <span class="dot dot-r" aria-hidden="true"></span>
-              <span class="dot dot-y" aria-hidden="true"></span>
-              <span class="dot dot-g" aria-hidden="true"></span>
-              <span class="term-title">nvim — init.lua</span>
-            </div>
+          <TerminalWindow title="nvim — init.lua">
             <pre class="term-body" role="img" aria-label="Neovim cinch.vim plugin example"><code
-><span class="tc"># lazy.nvim</span>
-<span class="tv">&#123; </span><span class="ts">"cinchcli/cinch.vim"</span><span class="tv"> &#125;</span>
+><span class="t-c"># lazy.nvim</span>
+<span class="t-val">&#123; </span><span class="t-str">"cinchcli/cinch.vim"</span><span class="t-val"> &#125;</span>
 
-<span class="tc"># yank any motion → auto-pushed</span>
-<span class="tk">yy</span>   <span class="tc">" current line</span>
-<span class="tk">yi"</span>  <span class="tc">" inside quotes</span>
-<span class="ts">✓ pushed</span>  <span class="tv">42 bytes · clip #7</span></code></pre>
-          </div>
+<span class="t-c"># yank any motion → auto-pushed</span>
+<span class="t-cmd">yy</span>   <span class="t-c">" current line</span>
+<span class="t-cmd">yi"</span>  <span class="t-c">" inside quotes</span>
+<span class="t-ok">✓ pushed</span>  <span class="t-val">42 bytes · clip #7</span></code></pre>
+          </TerminalWindow>
         </div>
       </article>
 
@@ -91,20 +79,14 @@
           </div>
         </div>
         <div class="uc-right">
-          <div class="term-window">
-            <div class="term-bar">
-              <span class="dot dot-r" aria-hidden="true"></span>
-              <span class="dot dot-y" aria-hidden="true"></span>
-              <span class="dot dot-g" aria-hidden="true"></span>
-              <span class="term-title">local — tmux 0:1</span>
-            </div>
+          <TerminalWindow title="local — tmux 0:1">
             <pre class="term-body" role="img" aria-label="tmux push and pull example"><code
-><span class="tc">~/project $</span> <span class="tk">cinch push</span> &lt; config.json
-<span class="ts">✓ pushed</span>  <span class="tv">512 bytes · clip #14</span>
-<span class="tc">─── pane 0 ──────────── pane 1 ───</span>
-<span class="tc">~/project $</span> <span class="tk">cinch pull</span>
-<span class="ts">✓ pulled</span>  <span class="tv">512 bytes → clipboard</span></code></pre>
-          </div>
+><span class="t-c">~/project $</span> <span class="t-cmd">cinch push</span> &lt; config.json
+<span class="t-ok">✓ pushed</span>  <span class="t-val">512 bytes · clip #14</span>
+<span class="t-c">─── pane 0 ──────────── pane 1 ───</span>
+<span class="t-c">~/project $</span> <span class="t-cmd">cinch pull</span>
+<span class="t-ok">✓ pulled</span>  <span class="t-val">512 bytes → clipboard</span></code></pre>
+          </TerminalWindow>
         </div>
       </article>
 
@@ -260,75 +242,10 @@
     border-radius: 3px;
   }
 
-  /* ── Right column — terminal ──────────────────────────── */
+  /* ── Right column ─────────────────────────────────────── */
   .uc-right {
     min-width: 0;
   }
-
-  .term-window {
-    background: #1a1b1e;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow:
-      0 1px 2px rgba(0,0,0,0.12),
-      0 4px 12px rgba(0,0,0,0.18),
-      0 24px 56px -12px rgba(0,0,0,0.38),
-      inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-
-  .term-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.625rem 1rem;
-    background: rgba(255,255,255,0.025);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-r { background: #ff5f57; }
-  .dot-y { background: #febc2e; }
-  .dot-g { background: #28c840; }
-
-  .term-title {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 0.6875rem;
-    color: rgba(255,255,255,0.28);
-    letter-spacing: 0.04em;
-  }
-
-  .term-body {
-    margin: 0;
-    padding: 1.375rem 1.625rem 1.5rem;
-    font-family: var(--mono);
-    font-size: 0.875rem;
-    line-height: 1.85;
-    background: transparent;
-    overflow-x: auto;
-  }
-
-  .term-body code {
-    display: block;
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    white-space: pre;
-  }
-
-  /* Syntax tokens */
-  .tc { color: rgba(255,255,255,0.28); }
-  .tk { color: rgba(255,255,255,0.82); }
-  .tp { color: #4FB3A9; }
-  .ts { color: #4ade80; }
-  .tv { color: rgba(255,255,255,0.58); }
 
   /* ── Responsive ───────────────────────────────────────── */
   @media (max-width: 860px) {
@@ -355,8 +272,8 @@
   }
 
   @media (max-width: 480px) {
-    .term-body {
-      font-size: 0.8125rem;
+    .uc-right :global(.term-body) {
+      font-size: 0.75rem;
       padding: 1rem 1.25rem 1.125rem;
     }
   }

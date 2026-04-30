@@ -1,6 +1,6 @@
 ---
 // DualTerminalDemo — static side-by-side push / pull terminals
-// Used by Hero (variant B2): centered below the headline block
+import TerminalWindow from './TerminalWindow.astro';
 ---
 
 <div class="dual-demo" aria-label="Push and pull terminal demo">
@@ -8,29 +8,20 @@
   <!-- ── PUSH terminal ─────────────────────────────── -->
   <div class="term-wrap">
     <p class="term-label" aria-hidden="true">Push</p>
-    <div class="demo-window push-term" role="img" aria-label="Push terminal: echo deploy target | cinch push">
-      <!-- Title bar -->
-      <div class="demo-bar">
-        <span class="dot dot-r" aria-hidden="true"></span>
-        <span class="dot dot-y" aria-hidden="true"></span>
-        <span class="dot dot-g" aria-hidden="true"></span>
-        <span class="demo-title">zsh — machine-a</span>
-      </div>
-      <!-- Body -->
-      <pre class="demo-body"><code
-><span class="c"># Remote server</span>
-<span class="p">$</span> <span class="cmd">echo</span> <span class="str">"deploy target: api.prod"</span> <span class="op">|</span> <span class="cmd">cinch push</span>
-<span class="ok">✓ Pushed</span>  <span class="val">deploy target: api.prod</span>
-<span class="meta">  relay: online · encrypted · 8ms</span>
+    <TerminalWindow title="bash — prod-server (ssh)">
+      <pre class="term-body"><code
+><span class="t-c"># SSH'd into prod</span>
+<span class="t-p">$</span> <span class="t-cmd">echo</span> <span class="t-var">$DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>
+<span class="t-ok">✓ Pushed</span>  <span class="t-meta">· relay: us-east · 12ms</span>
 </code></pre>
-    </div>
+    </TerminalWindow>
   </div>
 
   <!-- ── ARROW connector ───────────────────────────── -->
   <div class="flow-arrow" aria-hidden="true">
-    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        d="M6 16 L22 16 M18 10 L26 16 L18 22"
+        d="M6 16 L22 16 M17 10 L25 16 L17 22"
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
@@ -42,38 +33,26 @@
   <!-- ── PULL terminal ─────────────────────────────── -->
   <div class="term-wrap">
     <p class="term-label" aria-hidden="true">Pull</p>
-    <div class="demo-window pull-term" role="img" aria-label="Pull terminal: cinch pull receiving deploy target">
-      <!-- Title bar -->
-      <div class="demo-bar">
-        <span class="dot dot-r" aria-hidden="true"></span>
-        <span class="dot dot-y" aria-hidden="true"></span>
-        <span class="dot dot-g" aria-hidden="true"></span>
-        <span class="demo-title">zsh — machine-b</span>
-      </div>
-      <!-- Body -->
-      <pre class="demo-body"><code
-><span class="c"># Local machine</span>
-<span class="p">$</span> <span class="cmd">cinch pull</span>
-<span class="val">deploy target: api.prod</span>
-<span class="meta">  from machine-a · 423ms ago</span>
+    <TerminalWindow title="local-machine — bash">
+      <pre class="term-body"><code
+><span class="t-c"># Any other machine</span>
+<span class="t-p">$</span> <span class="t-cmd">cinch pull</span>
+<span class="t-val">postgres://prod:s3cr3t@db.prod.internal/app</span>
+<span class="t-meta">  · 📋 clipboard</span>
 </code></pre>
-    </div>
+    </TerminalWindow>
   </div>
 
 </div>
 
 <style>
-  /* ── Outer container ──────────────────────────────── */
   .dual-demo {
     display: flex;
     align-items: flex-end;
     gap: 0;
     width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
   }
 
-  /* ── Per-terminal wrapper (label + card) ─────────── */
   .term-wrap {
     flex: 1;
     display: flex;
@@ -92,124 +71,43 @@
     padding-left: 1rem;
   }
 
-  /* ── Arrow ────────────────────────────────────────── */
+  .t-var { color: var(--accent); }
+
   .flow-arrow {
     flex-shrink: 0;
-    width: 72px;
+    width: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 0;
-    /* Vertically center relative to terminal card height, not label */
-    margin-top: 1.5rem; /* ~label height */
+    margin-top: 1.5rem;
     color: var(--accent);
     animation: arrow-pulse 2.8s ease-in-out infinite;
   }
 
   @keyframes arrow-pulse {
     0%, 100% { opacity: 1; transform: translateX(0); }
-    50%       { opacity: 0.5; transform: translateX(3px); }
+    50%       { opacity: 0.4; transform: translateX(4px); }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .flow-arrow { animation: none; }
   }
 
-  /* ── Terminal card ────────────────────────────────── */
-  .demo-window {
-    background: #1a1b1e;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow:
-      0 1px 2px rgba(0,0,0,0.12),
-      0 4px 12px rgba(0,0,0,0.18),
-      0 28px 64px -16px rgba(0,0,0,0.38),
-      inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-
-  /* ── Title bar ─────────────────────────────────────── */
-  .demo-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.625rem 1rem;
-    background: rgba(255,255,255,0.025);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-r { background: #ff5f57; }
-  .dot-y { background: #febc2e; }
-  .dot-g { background: #28c840; }
-
-  .demo-title {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.28);
-    letter-spacing: 0.04em;
-  }
-
-  /* ── Code body ─────────────────────────────────────── */
-  .demo-body {
-    margin: 0;
-    padding: 1.5rem 1.75rem 1.625rem;
-    font-family: var(--mono);
-    font-size: 0.9375rem;
-    line-height: 1.8;
-    background: transparent;
-    overflow-x: auto;
-  }
-
-  .demo-body code {
-    display: block;
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    white-space: pre;
-    word-break: normal;
-  }
-
-  /* Syntax colors — intentionally warm teal family */
-  .demo-body .c    { color: rgba(255,255,255,0.22); }
-  .demo-body .p    { color: rgba(255,255,255,0.30); }
-  .demo-body .cmd  { color: rgba(255,255,255,0.80); }
-  .demo-body .str  { color: #a5d6d3; }           /* pale teal string */
-  .demo-body .op   { color: #4FB3A9; }           /* teal pipe */
-  .demo-body .ok   { color: #4ade80; }           /* green ✓ */
-  .demo-body .val  { color: rgba(255,255,255,0.72); }
-  .demo-body .meta { color: rgba(255,255,255,0.30); font-size: 0.8125rem; }
-
-  /* ── Responsive ────────────────────────────────────── */
   @media (max-width: 680px) {
     .dual-demo {
       flex-direction: column;
       align-items: stretch;
       gap: 0.75rem;
     }
-
-    .demo-body {
-      padding: 1rem 1.25rem 1.125rem;
-      font-size: 0.8125rem;
-    }
-
     .flow-arrow {
       transform: rotate(90deg);
       margin-top: 0;
       width: 100%;
       height: 2.5rem;
     }
-
     @keyframes arrow-pulse {
       0%, 100% { opacity: 1; transform: rotate(90deg) translateX(0); }
-      50%       { opacity: 0.5; transform: rotate(90deg) translateX(3px); }
+      50%       { opacity: 0.4; transform: rotate(90deg) translateX(4px); }
     }
   }
 </style>
