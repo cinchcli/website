@@ -156,6 +156,7 @@ starlight-toc {
   font-size: 0.875rem;
   letter-spacing: 0.2px;
   line-height: 1.65;
+  overflow-x: auto;
 }
 
 /* expressive-code override */

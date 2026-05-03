@@ -27,7 +27,7 @@ docker run -d \
   -e MAX_BODY_MB=50 \
   -e AUTH_TOKEN=your-secret-token \
   -e LOG_LEVEL=info \
-  ghcr.io/jinmugo/cinch-relay:latest
+  ghcr.io/cinchcli/relay:latest
 ```
 
 ## Docker Compose example
@@ -35,7 +35,7 @@ docker run -d \
 ```yaml
 services:
   relay:
-    image: ghcr.io/jinmugo/cinch-relay:latest
+    image: ghcr.io/cinchcli/relay:latest
     ports:
       - "8080:8080"
     volumes:
@@ -52,21 +52,23 @@ volumes:
 
 ## Pointing the CLI at your relay
 
-After deploying, tell the CLI where to find your relay:
+After deploying, authenticate against your relay:
 
 ```bash
-cinch config set relay-url https://relay.example.com
+cinch auth login --relay https://relay.example.com
 ```
 
-Or set the environment variable:
+Or set the environment variable before running any `cinch` command:
 
 ```bash
 export CINCH_RELAY_URL=https://relay.example.com
 ```
 
 :::note
-The `AUTH_TOKEN` variable requires clients to pass the token with every request.
-Set it via `cinch config set token <value>` on each paired machine.
+If `AUTH_TOKEN` is set on the relay, pass it as `CINCH_TOKEN` on each client machine:
+```bash
+export CINCH_TOKEN=your-secret-token
+```
 :::
 
 ## SQLite database

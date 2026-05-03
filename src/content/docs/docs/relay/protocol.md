@@ -113,8 +113,8 @@ The WebSocket connection is authenticated at upgrade time. Tokens are not re-val
 | JPEG image | `image/jpeg` |
 | Arbitrary binary | `application/octet-stream` |
 
-The CLI auto-detects the content type from stdin using the first 512 bytes. You can override with `--mime`:
+The CLI auto-detects the content type from stdin using the first 512 bytes. You can override with `--type`:
 
 ```bash
-cat file.pdf | cinch push --mime application/pdf
+cat file.pdf | cinch push --type application/pdf
 ```
