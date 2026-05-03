@@ -327,8 +327,6 @@ const relayBase = import.meta.env.DEV
       badgeLine.appendChild(badge);
     }
 
-    navigator.clipboard.writeText(content).catch(() => {});
-
     const clipBadge = document.createElement('span');
     clipBadge.className = 'pull-badge pull-clipboard';
     clipBadge.textContent = ms >= 0 && ms < 1000 ? '  ·  📋 clipboard' : '  ↳ 📋 clipboard';
