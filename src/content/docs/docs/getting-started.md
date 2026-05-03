@@ -14,7 +14,7 @@ This installs the `cinch` binary to `/usr/local/bin`.
 Verify the install:
 
 ```bash
-cinch version
+cinch --version
 ```
 
 ## Authenticate

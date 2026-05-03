@@ -11,7 +11,7 @@ The relay server is a single Go binary that handles HTTP push and WebSocket deli
 docker run -d \
   -p 8080:8080 \
   -v cinch-data:/data \
-  ghcr.io/jinmugo/cinch-relay:latest
+  ghcr.io/cinchcli/relay:latest
 ```
 
 ## Docker Compose
@@ -19,7 +19,7 @@ docker run -d \
 ```yaml
 services:
   relay:
-    image: ghcr.io/jinmugo/cinch-relay:latest
+    image: ghcr.io/cinchcli/relay:latest
     ports:
       - "8080:8080"
     volumes:
@@ -32,8 +32,8 @@ volumes:
 ## Build from source
 
 ```bash
-git clone https://github.com/JinmuGo/cinch.git
-cd cinch
-make build-relay
+git clone https://github.com/cinchcli/relay.git
+cd relay
+make build
 ./dist/relay
 ```
