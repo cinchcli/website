@@ -1,0 +1,13 @@
+Package: cinch
+Version: 0.1.0
+Architecture: amd64
+Maintainer: jinmu
+Filename: pool/main/c/cinch/cinch_0.1.0_amd64.deb
+Size: 2130376
+MD5sum: 4efe10667869e47d255747ee502d7141
+SHA1: ba71df11cd8880f8161930a00766c20df29d66ca
+SHA256: f5fb2c6e8a7418812319ae61c839a172285d81baa88a9758aed9f26247074c1e
+Section: utils
+Priority: optional
+Description: Remote clipboard tool. Push from SSH, pull to local.
+
