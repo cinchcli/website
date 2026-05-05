@@ -1,0 +1,179 @@
+name: Publish Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Cinch release tag to publish (e.g., v1.0.0)"
+        required: true
+        type: string
+
+env:
+  PACKAGE_NAME: cinch
+  PACKAGE_REPO: cinchcli/cinch
+  PACKAGE_DESC: Remote clipboard tool. Push from SSH, pull to local.
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts
+          cd artifacts
+          gh release download "${{ inputs.tag }}" \
+            --repo "${{ env.PACKAGE_REPO }}" \
+            --pattern "*.deb" \
+            --pattern "*.rpm"
+          ls -la
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf
+          gpg-connect-agent reloadagent /bye
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y createrepo-c dpkg-dev jq rpm
+
+      - name: Sign RPM packages
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          cat > ~/.rpmmacros << 'EOF'
+          %_signature gpg
+          %_gpg_name GPG_KEY_ID_PLACEHOLDER
+          %__gpg /usr/bin/gpg
+          %__gpg_sign_cmd %{__gpg} gpg --batch --no-armor --pinentry-mode loopback --passphrase GPG_PASSPHRASE_PLACEHOLDER --no-secmem-warning -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}
+          EOF
+          sed -i "s|GPG_KEY_ID_PLACEHOLDER|$GPG_KEY_ID|g" ~/.rpmmacros
+          sed -i "s|GPG_PASSPHRASE_PLACEHOLDER|$GPG_PASSPHRASE|g" ~/.rpmmacros
+
+          shopt -s nullglob
+          rpms=(artifacts/*.rpm)
+          for rpm in "${rpms[@]}"; do
+            rpmsign --addsign "$rpm"
+          done
+
+      - name: Setup APT repository
+        env:
+          PKG_NAME: ${{ env.PACKAGE_NAME }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          FIRST_LETTER=$(echo "$PKG_NAME" | cut -c1)
+
+          rm -rf public/deb
+          mkdir -p "public/deb/pool/main/${FIRST_LETTER}/${PKG_NAME}"
+          mkdir -p public/deb/dists/stable/main/binary-amd64
+          mkdir -p public/deb/dists/stable/main/binary-arm64
+
+          debs=(artifacts/*.deb)
+          if [ "${#debs[@]}" -eq 0 ]; then
+            echo "No .deb artifacts found in release ${{ inputs.tag }}" >&2
+            exit 1
+          fi
+          cp "${debs[@]}" "public/deb/pool/main/${FIRST_LETTER}/${PKG_NAME}/"
+
+          cd public/deb
+
+          dpkg-scanpackages --arch amd64 pool/ > dists/stable/main/binary-amd64/Packages
+          gzip -k -f dists/stable/main/binary-amd64/Packages
+
+          dpkg-scanpackages --arch arm64 pool/ > dists/stable/main/binary-arm64/Packages
+          gzip -k -f dists/stable/main/binary-arm64/Packages
+
+          cd dists/stable
+          cat > Release << 'EOF'
+          Origin: cinchcli
+          Label: cinchcli
+          Suite: stable
+          Codename: stable
+          Architectures: amd64 arm64
+          Components: main
+          Description: cinchcli package repository
+          EOF
+          echo "Date: $(date -Ru)" >> Release
+
+          {
+            echo "MD5Sum:"
+            find main -type f \( -name "Packages*" \) -exec sh -c 'echo " $(md5sum "$1" | cut -d" " -f1) $(stat -c%s "$1") $1"' _ {} \;
+            echo "SHA256:"
+            find main -type f \( -name "Packages*" \) -exec sh -c 'echo " $(sha256sum "$1" | cut -d" " -f1) $(stat -c%s "$1") $1"' _ {} \;
+          } >> Release
+
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --default-key "${{ secrets.GPG_KEY_ID }}" \
+            -abs -o Release.gpg Release
+
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --default-key "${{ secrets.GPG_KEY_ID }}" \
+            --clearsign -o InRelease Release
+
+      - name: Setup YUM/DNF repository
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          rpms=(artifacts/*.rpm)
+          if [ "${#rpms[@]}" -eq 0 ]; then
+            echo "No .rpm artifacts found in release ${{ inputs.tag }}" >&2
+            exit 1
+          fi
+
+          rm -rf public/rpm
+          mkdir -p public/rpm/packages
+          cp "${rpms[@]}" public/rpm/packages/
+
+          cd public/rpm
+          createrepo_c .
+
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --default-key "${{ secrets.GPG_KEY_ID }}" \
+            -abs -o repodata/repomd.xml.asc repodata/repomd.xml
+
+      - name: Export GPG public key
+        run: |
+          gpg --armor --export "${{ secrets.GPG_KEY_ID }}" > public/gpg.key
+
+      - name: Update package index
+        env:
+          PKG_NAME: ${{ env.PACKAGE_NAME }}
+          PKG_TAG: ${{ inputs.tag }}
+          PKG_REPO: ${{ env.PACKAGE_REPO }}
+          PKG_DESC: ${{ env.PACKAGE_DESC }}
+        run: |
+          cd public
+
+          if [ ! -f packages.json ]; then
+            echo '{"packages":{}}' > packages.json
+          fi
+
+          jq \
+            --arg name "$PKG_NAME" \
+            --arg version "$PKG_TAG" \
+            --arg repo "$PKG_REPO" \
+            --arg desc "$PKG_DESC" \
+            '.packages[$name] = {"version": $version, "repo": $repo, "description": $desc, "updated": now | strftime("%Y-%m-%dT%H:%M:%SZ")}' \
+            packages.json > packages.json.tmp && mv packages.json.tmp packages.json
+
+      - name: Commit and push package repository
+        env:
+          PKG_NAME: ${{ env.PACKAGE_NAME }}
+          PKG_TAG: ${{ inputs.tag }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add public/deb public/rpm public/gpg.key public/packages.json
+          git diff --staged --quiet || git commit -m "Update ${PKG_NAME} packages to ${PKG_TAG}"
+          git push
