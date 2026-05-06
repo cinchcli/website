@@ -38,9 +38,11 @@ No. The CLI is fully headless. It works in SSH sessions, Docker containers, CI r
 
 ### Who can see my clips?
 
-Only machines paired with the same relay and token. The relay stores clips encrypted at rest (SQLite + filesystem encryption). If you use the hosted relay, Cinch staff have access to the relay infrastructure but not to the content of individual clips.
+Only devices that share your encryption key. Clips are encrypted with **AES-256-GCM on your device** before they leave — the relay receives and stores ciphertext only. Your encryption key is generated at `cinch auth login` and stored locally (macOS Keychain on macOS, Secret Service on Linux, plaintext config fallback if no keyring is available).
 
-For maximum privacy, self-host the relay — see [Self-hosting](/docs/relay/self-hosting/).
+This means Cinch staff operate the hosted relay infrastructure but have **no ability to decrypt your clips** — the key never touches the server.
+
+For an additional layer of control, you can also self-host the relay so the ciphertext itself stays on your hardware — see [Self-hosting](/docs/relay/self-hosting/).
 
 ### How long are clips kept?
 
@@ -48,7 +50,10 @@ The hosted relay deletes clips after **7 days**. Self-hosted relays default to 7
 
 ### Is the connection encrypted?
 
-Yes. All HTTP and WebSocket traffic is over TLS (HTTPS / WSS). The hosted relay enforces TLS. If you self-host, terminating TLS at a reverse proxy (Caddy, nginx, Cloudflare Tunnel) is recommended.
+Two layers:
+
+1. **Transport (TLS)**: All HTTP and WebSocket traffic runs over HTTPS / WSS. The hosted relay enforces TLS. If you self-host, terminate TLS at a reverse proxy (Caddy, nginx, Cloudflare Tunnel).
+2. **End-to-end (AES-256-GCM)**: Independently of TLS, every clip is encrypted on the sending device with a key the server never sees, and decrypted on the receiving device. Even an operator with full access to the relay database sees only ciphertext.
 
 ---
 
