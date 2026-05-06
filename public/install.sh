@@ -98,6 +98,12 @@ enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-${REPO_NAME}
 EOF
+
+  if command -v dnf >/dev/null 2>&1; then
+    run_root dnf clean metadata --disablerepo="*" --enablerepo="${REPO_NAME}" >/dev/null 2>&1 || true
+  else
+    run_root yum clean metadata --disablerepo="*" --enablerepo="${REPO_NAME}" >/dev/null 2>&1 || true
+  fi
 }
 
 install_pkg() {
