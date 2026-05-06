@@ -114,9 +114,15 @@ install_pkg() {
   elif [ "$2" = "rpm" ]; then
     info "Installing $1..."
     if command -v dnf >/dev/null 2>&1; then
-      run_root dnf install -y "$1"
+      if ! run_root dnf install -y --disablerepo='*' --enablerepo="${REPO_NAME}" "$1"; then
+        info "Retrying with system repositories for dependencies..."
+        run_root dnf install -y "$1"
+      fi
     else
-      run_root yum install -y "$1"
+      if ! run_root yum install -y --disablerepo='*' --enablerepo="${REPO_NAME}" "$1"; then
+        info "Retrying with system repositories for dependencies..."
+        run_root yum install -y "$1"
+      fi
     fi
   fi
 }
