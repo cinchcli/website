@@ -12,11 +12,20 @@ This guide walks you through installing Cinch, authenticating, and moving your f
 1. **Install the CLI**
 
    <Tabs>
-   <TabItem label="macOS / Linux">
+   <TabItem label="macOS">
+   [Download the Desktop app](https://cinchcli.com/#install) (Apple Silicon, recommended), or install the CLI via Homebrew:
+   ```bash
+   brew install cinchcli/tap/cinch
+   ```
+   </TabItem>
+   <TabItem label="Linux">
    ```bash
    curl -fsSL https://cinchcli.com/install.sh | sh
    ```
-   This installs the `cinch` binary to `/usr/local/bin`.
+   This installs the `cinch` binary to `/usr/local/bin`. Supports Debian/Ubuntu and RHEL/Fedora.
+   </TabItem>
+   <TabItem label="Windows">
+   Download `cinch_Windows_x86_64.zip` from [GitHub Releases](https://github.com/cinchcli/cinch/releases/latest), extract, and add `cinch.exe` to PATH.
    </TabItem>
    <TabItem label="Docker (relay only)">
    ```bash

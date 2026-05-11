@@ -5,11 +5,19 @@ description: Install Cinch and send your first clipboard in 30 seconds.
 
 ## Installation
 
+**macOS** — [Download the Desktop app](https://cinchcli.com/#install) (Apple Silicon, recommended), or install the CLI via Homebrew:
+
+```bash
+brew install cinchcli/tap/cinch
+```
+
+**Linux** — Debian/Ubuntu and RHEL/Fedora:
+
 ```bash
 curl -fsSL https://cinchcli.com/install.sh | sh
 ```
 
-This installs the `cinch` binary to `/usr/local/bin`.
+**Windows** — download `cinch_Windows_x86_64.zip` from [GitHub Releases](https://github.com/cinchcli/cinch/releases/latest), extract, and add `cinch.exe` to PATH.
 
 Verify the install:
 

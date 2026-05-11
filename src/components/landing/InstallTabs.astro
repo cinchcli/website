@@ -1,0 +1,436 @@
+---
+// InstallTabs — OS-aware tabbed install widget
+---
+
+<section class="install-tabs" id="install" aria-label="Install Cinch">
+  <div class="tab-row" role="tablist" aria-label="Choose your platform">
+    <button class="tab-btn" role="tab" id="tab-macos"   aria-controls="panel-macos"   aria-selected="false" tabindex="-1">macOS</button>
+    <button class="tab-btn" role="tab" id="tab-linux"   aria-controls="panel-linux"   aria-selected="true"  tabindex="0">Linux</button>
+    <button class="tab-btn" role="tab" id="tab-windows" aria-controls="panel-windows" aria-selected="false" tabindex="-1">Windows</button>
+  </div>
+
+  <!-- macOS panel -->
+  <div class="tab-panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" hidden>
+    <a class="download-btn" id="dmg-btn" href="https://github.com/cinchcli/desktop/releases/latest">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      <span>Download Cinch Desktop</span>
+      <span class="version-badge" id="dmg-version" aria-live="polite"></span>
+    </a>
+    <p class="panel-hint">Apple Silicon (M1+) &middot; Signed &amp; notarized</p>
+
+    <div class="divider">
+      <span class="divider-line" aria-hidden="true"></span>
+      <span class="divider-text">or use Homebrew</span>
+      <span class="divider-line" aria-hidden="true"></span>
+    </div>
+
+    <div class="cmd-strip" data-copy="brew install cinchcli/tap/cinch">
+      <span class="dollar" aria-hidden="true">$</span>
+      <code class="cmd-text">brew install cinchcli/tap/cinch</code>
+      <button class="copy-btn" aria-label="Copy Homebrew install command" type="button">
+        <svg class="icon-copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <svg class="icon-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="intel-note">Intel Mac? Not supported — Apple Silicon only.</p>
+  </div>
+
+  <!-- Linux panel -->
+  <div class="tab-panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux">
+    <div class="cmd-strip" data-copy="curl -fsSL https://cinchcli.com/install.sh | sh">
+      <span class="dollar" aria-hidden="true">$</span>
+      <code class="cmd-text">curl -fsSL https://cinchcli.com/install.sh | sh</code>
+      <button class="copy-btn" aria-label="Copy install command" type="button">
+        <svg class="icon-copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <svg class="icon-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </button>
+    </div>
+    <p class="panel-hint">Debian/Ubuntu and RHEL/Fedora. <a href="/docs/getting-started/">Other options &rarr;</a></p>
+  </div>
+
+  <!-- Windows panel -->
+  <div class="tab-panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" hidden>
+    <a class="download-btn download-btn--outline" href="https://github.com/cinchcli/cinch/releases/latest">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      <span>Download for Windows</span>
+    </a>
+    <p class="panel-hint">Extract the <code>.zip</code> and add <code>cinch.exe</code> to PATH.</p>
+  </div>
+</section>
+
+<style>
+  .install-tabs {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ─── Tab row ─────────────────────────────────────────── */
+  .tab-row {
+    display: flex;
+    gap: 0.125rem;
+    margin-bottom: 0.625rem;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--text-3);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+    line-height: 1.4;
+  }
+
+  @media (hover: hover) {
+    .tab-btn:hover {
+      color: var(--text-2);
+      background: var(--hover);
+    }
+  }
+
+  .tab-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .tab-btn[aria-selected="true"] {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  /* ─── Panel container ─────────────────────────────────── */
+  .tab-panel {
+    background: var(--bg-card);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border-hover));
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    box-shadow:
+      0 1px 2px light-dark(rgba(0,0,0,0.04), rgba(0,0,0,0.18)),
+      0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  /* ─── Download button ─────────────────────────────────── */
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--sans);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 0.7rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    width: 100%;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .download-btn:hover {
+      background: var(--accent-muted);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+  }
+
+  .download-btn:active { transform: scale(0.98); }
+
+  .download-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .download-btn--outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  @media (hover: hover) {
+    .download-btn--outline:hover {
+      background: var(--accent-subtle);
+      box-shadow: none;
+    }
+  }
+
+  .version-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.75;
+    font-family: var(--mono);
+  }
+
+  /* ─── Panel hint / note ───────────────────────────────── */
+  .panel-hint {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  .panel-hint a {
+    color: var(--text-3);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+
+  @media (hover: hover) {
+    .panel-hint a:hover { color: var(--text-2); }
+  }
+
+  .panel-hint code {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    background: var(--bg-card-2);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--text-2);
+  }
+
+  .intel-note {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  /* ─── Divider ─────────────────────────────────────────── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.125rem 0;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider-text {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ─── Command strip ───────────────────────────────────── */
+  .cmd-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.625rem 0.75rem 0.625rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    cursor: default;
+  }
+
+  .dollar { color: var(--text-3); flex-shrink: 0; }
+
+  .cmd-text {
+    color: var(--text-1);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  @media (hover: hover) {
+    .copy-btn:hover {
+      color: var(--text-2);
+      background: light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.06));
+    }
+  }
+
+  .copy-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ─── Responsive ──────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .tab-panel {
+      padding: 0.875rem 1rem;
+    }
+
+    .cmd-text {
+      font-size: 0.75rem;
+    }
+
+    .download-btn {
+      font-size: 0.875rem;
+      padding: 0.625rem 1rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    function detectOS() {
+      var data = navigator.userAgentData;
+      if (data && data.platform) {
+        var p = data.platform.toLowerCase();
+        if (p.indexOf('mac') !== -1) return 'macos';
+        if (p.indexOf('win') !== -1) return 'windows';
+        if (p.indexOf('linux') !== -1 || p.indexOf('chrome os') !== -1) return 'linux';
+      }
+      var ua = navigator.userAgent;
+      var plat = navigator.platform || '';
+      if (/Mac|iPhone|iPad/i.test(plat) || /Macintosh/i.test(ua)) return 'macos';
+      if (/Win/i.test(plat) || /Windows/i.test(ua)) return 'windows';
+      return 'linux';
+    }
+
+    var OS_IDS = ['macos', 'linux', 'windows'];
+
+    function activate(os) {
+      OS_IDS.forEach(function (id) {
+        var tab = document.getElementById('tab-' + id);
+        var panel = document.getElementById('panel-' + id);
+        var active = id === os;
+        if (tab) {
+          tab.setAttribute('aria-selected', String(active));
+          tab.setAttribute('tabindex', active ? '0' : '-1');
+        }
+        if (panel) panel.hidden = !active;
+      });
+    }
+
+    activate(detectOS());
+
+    OS_IDS.forEach(function (id, i) {
+      var btn = document.getElementById('tab-' + id);
+      if (!btn) return;
+      btn.addEventListener('click', function () { activate(id); });
+      btn.addEventListener('keydown', function (e) {
+        var idx = OS_IDS.indexOf(id);
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          var next = OS_IDS[(idx + 1) % 3];
+          activate(next);
+          var el = document.getElementById('tab-' + next);
+          if (el) el.focus();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          var prev = OS_IDS[(idx + 2) % 3];
+          activate(prev);
+          var el2 = document.getElementById('tab-' + prev);
+          if (el2) el2.focus();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          activate(OS_IDS[0]);
+          var el3 = document.getElementById('tab-' + OS_IDS[0]);
+          if (el3) el3.focus();
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          activate(OS_IDS[2]);
+          var el4 = document.getElementById('tab-' + OS_IDS[2]);
+          if (el4) el4.focus();
+        }
+      });
+    });
+
+    // Resolve latest dmg version
+    var dmgBtn = document.getElementById('dmg-btn');
+    var versionEl = document.getElementById('dmg-version');
+    if (dmgBtn && versionEl) {
+      var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 5000);
+      fetch('https://github.com/cinchcli/desktop/releases/latest/download/latest.json', {
+        signal: ctrl ? ctrl.signal : undefined,
+        cache: 'force-cache'
+      }).then(function (r) {
+        return r.ok ? r.json() : null;
+      }).then(function (j) {
+        clearTimeout(timer);
+        if (!j) return;
+        var ver = j.version;
+        if (ver) {
+          var url = 'https://github.com/cinchcli/desktop/releases/download/desktop-v' + ver + '/Cinch_' + ver + '_aarch64.dmg';
+          dmgBtn.href = url;
+          versionEl.textContent = 'v' + ver;
+        }
+      }).catch(function () { /* keep fallback href */ });
+    }
+
+    // Copy buttons
+    document.querySelectorAll('.cmd-strip').forEach(function (strip) {
+      var btn = strip.querySelector('.copy-btn');
+      var cmd = strip.dataset.copy;
+      if (!btn || !cmd) return;
+      var iconCopy = btn.querySelector('.icon-copy');
+      var iconCheck = btn.querySelector('.icon-check');
+      btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(cmd).then(function () {
+          if (iconCopy) iconCopy.style.display = 'none';
+          if (iconCheck) iconCheck.style.display = '';
+          setTimeout(function () {
+            if (iconCopy) iconCopy.style.display = '';
+            if (iconCheck) iconCheck.style.display = 'none';
+          }, 2000);
+        }).catch(function () {});
+      });
+    });
+  })();
+</script>
