@@ -111,6 +111,8 @@ export default defineConfig({
           tag: 'noscript',
           content: '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@700;800&display=swap">',
         },
+        // Analytics
+        { tag: 'script', attrs: { defer: true, src: 'https://umami.jinmu.me/script.js', 'data-website-id': '9c8818d2-8496-48cd-a55d-81e6e3979078' } },
       ],
       disable404Route: false,
     }),

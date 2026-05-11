@@ -8,19 +8,19 @@ import LiveDemo from './LiveDemo.astro';
   <!-- Badge -->
   <p class="hero-badge">
     <span class="badge-dot" aria-hidden="true"></span>
-    AGPL 3.0 · Open source
+    Open source · Self-hostable
   </p>
 
   <!-- Headline -->
   <h1 class="hero-title">
-    Copy from any terminal.
-    <span class="title-muted">Paste anywhere.</span>
+    Your clipboard.
+    <span class="title-muted">Across every machine.</span>
   </h1>
 
   <!-- Description -->
   <p class="hero-description">
-    Push text, code, or data from any terminal — pull it instantly on any other machine.
-    No GUI required.
+    Run <code>cinch push</code> on one machine, <code>cinch pull</code> on any other.
+    Text, code, and data — from your terminal or the desktop app.
   </p>
 
   <!-- CTAs -->
@@ -129,6 +129,15 @@ import LiveDemo from './LiveDemo.astro';
     max-width: 52ch;
     text-wrap: pretty;
     margin-bottom: 1.75rem;
+  }
+
+  .hero-description code {
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+    color: var(--text-1);
+    background: light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.08));
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
   }
 
   /* ─── Actions row ───────────────────────────────────── */
