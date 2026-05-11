@@ -13,7 +13,7 @@ By default, the hosted relay accepts clips up to **20 MB**. Self-hosted relays c
 
 The CLI (`cinch push` / `cinch pull` / `cinch auth`) runs on:
 
-- macOS (Apple Silicon + Intel)
+- macOS (Apple Silicon)
 - Linux (x86_64, ARM64)
 - Windows (x86_64)
 

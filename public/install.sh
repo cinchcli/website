@@ -127,6 +127,19 @@ install_pkg() {
   fi
 }
 
+case "$(uname -s)" in
+  Darwin)
+    cat <<'EOF'
+Cinch on macOS:
+
+  Desktop app (recommended):  https://cinchcli.com/#install
+  CLI via Homebrew:            brew install cinchcli/tap/cinch
+
+EOF
+    exit 0
+    ;;
+esac
+
 DISTRO="$(detect_distro)"
 cleanup_legacy_repos "$DISTRO"
 

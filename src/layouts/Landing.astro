@@ -53,6 +53,7 @@ const {
   <meta name="theme-color" content="#4FB3A9">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://github.com">
   <!-- Inter (body · UI) + JetBrains Mono (code · kbd) + Geist (display headline) per DESIGN.md -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -74,14 +75,26 @@ const {
         "@graph": [
           {
             "@type": "SoftwareApplication",
-            "name": "Cinch",
+            "name": "Cinch CLI",
             "description": "Open-source remote clipboard tool for developers. Push from any terminal, pull on any machine via WebSocket relay.",
             "applicationCategory": "DeveloperApplication",
-            "operatingSystem": "macOS, Linux",
+            "operatingSystem": "macOS, Linux, Windows",
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
             "license": "https://opensource.org/licenses/AGPL-3.0",
             "url": "https://cinchcli.com",
-            "downloadUrl": "https://cinchcli.com/install.sh",
+            "downloadUrl": "https://cinchcli.com/#install",
+            "author": { "@id": "#organization" }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Cinch Desktop",
+            "description": "macOS menubar app that receives clipboard syncs automatically via the Cinch relay.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "macOS",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "license": "https://opensource.org/licenses/AGPL-3.0",
+            "url": "https://cinchcli.com",
+            "downloadUrl": "https://github.com/cinchcli/desktop/releases/latest",
             "author": { "@id": "#organization" }
           },
           {
