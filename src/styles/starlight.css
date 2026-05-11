@@ -300,6 +300,11 @@ article.card p {
   color: var(--sl-color-gray-3) !important;
 }
 
+/* ─── TABS ───────────────────────────────────────────────── */
+:root[data-theme='light'] .tab [role='tab'][aria-selected='true'] {
+  color: var(--sl-color-text-accent);
+}
+
 /* ─── SEARCH BAR ─────────────────────────────────────────── */
 /* Force search button to follow site theme, not OS color-scheme */
 :root[data-theme='light'] site-search,
