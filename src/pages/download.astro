@@ -275,6 +275,7 @@ import Footer from '../components/landing/Footer.astro';
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    min-width: 0; /* prevent grid item from overflowing */
   }
 
   /* ─── macOS featured card ─────────────────────────────── */
@@ -476,7 +477,6 @@ import Footer from '../components/landing/Footer.astro';
     font-size: 0.685rem;
     color: var(--text-3);
     letter-spacing: 0.02em;
-    white-space: nowrap;
   }
 
   /* ─── Command block ───────────────────────────────────── */
