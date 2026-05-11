@@ -1,0 +1,693 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Nav from '../components/landing/Nav.astro';
+import Footer from '../components/landing/Footer.astro';
+---
+<Landing
+  title="Download Cinch — macOS, Linux, Windows"
+  description="Download the Cinch desktop app for macOS, or install the CLI on Linux and Windows. Free, open source, AGPL 3.0."
+>
+  <Nav />
+
+  <main class="dl-page" id="main-content">
+    <div class="dl-inner">
+
+      <!-- ── Page header ───────────────────────────────── -->
+      <header class="dl-header">
+        <p class="dl-eyebrow">Free &middot; Open source &middot; AGPL 3.0</p>
+        <h1 class="dl-title">Download</h1>
+        <p class="dl-version-line">
+          <span class="ver-label">Latest</span>
+          <span class="ver-num" id="dl-ver">—</span>
+        </p>
+      </header>
+
+      <!-- ── Platform cards ────────────────────────────── -->
+      <section class="dl-grid" aria-label="Platform downloads">
+
+        <!-- macOS — featured card ───────────── -->
+        <article class="dl-card dl-card--macos">
+          <div class="card-top">
+            <div class="card-platform">
+              <svg class="platform-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true" width="22" height="22">
+                <path d="M9.5 1a3.5 3.5 0 0 1-3.3 2.4A3.5 3.5 0 0 1 9.5 1ZM12 9.7c-.4.9-.6 1.3-1.1 2-.7 1-1.8 2.3-3 2.3-1.1 0-1.4-.7-3-.7s-1.9.7-3 .7c-1.2 0-2.2-1.2-3-2.3C-1.6 9.1-.8 5 1.8 3.6A4 4 0 0 1 4 3c1.3 0 2 .7 3 .7 1 0 1.6-.7 3-.7 1 0 2 .5 2.7 1.5A3.5 3.5 0 0 0 11 7.7c.4.6.7 1.3 1 2Z"/>
+              </svg>
+              <h2 class="platform-name">macOS</h2>
+            </div>
+            <span class="rec-badge">Recommended</span>
+          </div>
+
+          <p class="card-desc">
+            The desktop app lives in your menu bar. Every clip pushed from your terminal lands automatically in your Mac's clipboard.
+          </p>
+
+          <div class="card-actions">
+            <a class="btn-primary" id="dmg-btn" href="https://github.com/cinchcli/desktop/releases/latest">
+              <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span class="btn-text">Download Desktop App</span>
+              <span class="btn-ver" id="dmg-ver" aria-live="polite"></span>
+            </a>
+
+            <div class="or-sep" aria-hidden="true">
+              <span class="sep-line"></span>
+              <span class="sep-label">or install the CLI via Homebrew</span>
+              <span class="sep-line"></span>
+            </div>
+
+            <button class="cmd-block" type="button"
+              data-copy="brew install cinchcli/tap/cinch"
+              aria-label="Copy brew install command">
+              <span class="cmd-ps" aria-hidden="true">$</span>
+              <code class="cmd-code">brew install cinchcli/tap/cinch</code>
+              <span class="cmd-copy-wrap" aria-hidden="true">
+                <svg class="ico ico-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <svg class="ico ico-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <footer class="card-foot">
+            Apple Silicon (M1+) &middot; Signed &amp; notarized &middot; <span class="foot-dim">Intel not supported</span>
+          </footer>
+        </article>
+
+        <!-- Linux ───────────────────────────── -->
+        <article class="dl-card dl-card--linux">
+          <div class="card-top">
+            <div class="card-platform">
+              <svg class="platform-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true" width="18" height="18">
+                <path d="M7 .5C4 .5 1.6 2.9 1.6 6c0 1.8.6 3.2 1.6 4.3.3.4.5.8.5 1.3v.5h5.3v-.5c0-.4.2-.9.5-1.3C10.5 9.2 11 7.8 11 6c0-3-2.3-5.5-4-5.5ZM3.5 7a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm5 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0ZM4.5 12.5h4v.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-.5Z"/>
+              </svg>
+              <h2 class="platform-name">Linux</h2>
+            </div>
+          </div>
+
+          <p class="card-desc">One-line installer for Debian, Ubuntu, RHEL, and Fedora.</p>
+
+          <div class="card-actions">
+            <button class="cmd-block" type="button"
+              data-copy="curl -fsSL https://cinchcli.com/install.sh | sh"
+              aria-label="Copy Linux install command">
+              <span class="cmd-ps" aria-hidden="true">$</span>
+              <code class="cmd-code">curl -fsSL https://cinchcli.com/install.sh | sh</code>
+              <span class="cmd-copy-wrap" aria-hidden="true">
+                <svg class="ico ico-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <svg class="ico ico-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <footer class="card-foot">
+            Debian &middot; Ubuntu &middot; RHEL &middot; Fedora &nbsp;&ndash;&nbsp;
+            <a href="/docs/getting-started/" class="foot-link">other options</a>
+          </footer>
+        </article>
+
+        <!-- Windows ─────────────────────────── -->
+        <article class="dl-card dl-card--windows">
+          <div class="card-top">
+            <div class="card-platform">
+              <svg class="platform-icon" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true" width="18" height="18">
+                <path d="M1 2.2 6.4 1.5v5.1H1V2.2Zm6.3-.8L13 .5v6.1H7.3V1.4ZM1 7.4h5.4v5.1L1 11.8V7.4Zm6.3 0H13v6.1l-5.7-.9V7.4Z"/>
+              </svg>
+              <h2 class="platform-name">Windows</h2>
+            </div>
+          </div>
+
+          <p class="card-desc">CLI only. Extract the zip and add to PATH.</p>
+
+          <div class="card-actions">
+            <a class="btn-ghost" href="https://github.com/cinchcli/cinch/releases/latest">
+              <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span class="btn-text">Download for Windows</span>
+            </a>
+          </div>
+
+          <footer class="card-foot">
+            Extract <code>.zip</code> &rarr; add <code>cinch.exe</code> to PATH
+          </footer>
+        </article>
+
+      </section>
+
+      <!-- ── Extra links ───────────────────────────────── -->
+      <nav class="dl-links" aria-label="More resources">
+        <a href="https://github.com/cinchcli/cinch/releases" target="_blank" rel="noopener noreferrer" class="dl-link">
+          All releases on GitHub
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+        <span class="dl-link-sep" aria-hidden="true">&middot;</span>
+        <a href="/docs/quick-start/" class="dl-link">Quick start guide &rarr;</a>
+        <span class="dl-link-sep" aria-hidden="true">&middot;</span>
+        <a href="/" class="dl-link">&larr; Back to cinchcli.com</a>
+      </nav>
+
+    </div>
+  </main>
+
+  <Footer />
+</Landing>
+
+<style>
+  /* ─── Page shell ──────────────────────────────────────── */
+  .dl-page {
+    min-height: 100vh;
+    padding-top: 3.5rem;
+    position: relative;
+  }
+
+  /* Subtle dot-grid blueprint background */
+  .dl-page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      light-dark(rgba(0,0,0,0.065), rgba(79,179,169,0.065)) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dl-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 6rem;
+  }
+
+  /* ─── Header ──────────────────────────────────────────── */
+  .dl-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    animation: fade-down 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes fade-down {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dl-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 1.125rem;
+  }
+
+  .dl-title {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(3.5rem, 6vw, 5.25rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--text-1);
+    margin: 0 0 0.875rem;
+    font-feature-settings: 'liga' 0, 'calt' 1;
+  }
+
+  .dl-version-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-3);
+  }
+
+  .ver-label {
+    opacity: 0.6;
+  }
+
+  .ver-num {
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  /* ─── Card grid — asymmetric ──────────────────────────── */
+  .dl-grid {
+    display: grid;
+    grid-template-columns: 1fr 296px;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .dl-card--macos   { grid-column: 1; grid-row: 1 / 3; }
+  .dl-card--linux   { grid-column: 2; grid-row: 1; }
+  .dl-card--windows { grid-column: 2; grid-row: 2; }
+
+  /* ─── Card base ───────────────────────────────────────── */
+  .dl-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ─── macOS featured card ─────────────────────────────── */
+  .dl-card--macos {
+    border-color: color-mix(in srgb, var(--accent) 22%, var(--border));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 5%, transparent) inset,
+      0 2px 8px light-dark(rgba(0,0,0,0.05), rgba(0,0,0,0.24)),
+      0 0 72px -24px color-mix(in srgb, var(--accent) 20%, transparent);
+    padding: 1.75rem 1.875rem;
+    gap: 1.25rem;
+  }
+
+  /* Entrance animations */
+  @keyframes card-rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dl-card--macos   { animation: card-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+  .dl-card--linux   { animation: card-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
+  .dl-card--windows { animation: card-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dl-header, .dl-card--macos, .dl-card--linux, .dl-card--windows { animation: none; }
+  }
+
+  /* ─── Card top row ────────────────────────────────────── */
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .card-platform {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .platform-icon {
+    color: var(--text-3);
+    flex-shrink: 0;
+  }
+
+  .dl-card--macos .platform-icon {
+    color: var(--accent);
+  }
+
+  .platform-name {
+    font-family: 'Geist', var(--sans);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-1);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .dl-card--macos .platform-name {
+    font-size: 1.3rem;
+  }
+
+  /* ─── Recommended badge ───────────────────────────────── */
+  .rec-badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: 100px;
+    padding: 0.2rem 0.625rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ─── Card description ────────────────────────────────── */
+  .card-desc {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0;
+  }
+
+  .dl-card--macos .card-desc {
+    font-size: 0.9375rem;
+    color: var(--text-2);
+  }
+
+  /* ─── Card actions ────────────────────────────────────── */
+  .card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    flex: 1;
+  }
+
+  /* ─── Primary download button ─────────────────────────── */
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    background: var(--accent);
+    color: var(--accent-on);
+    border-radius: 9px;
+    padding: 0.875rem 1.125rem;
+    text-decoration: none;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    letter-spacing: -0.005em;
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover {
+      background: var(--accent-muted);
+      box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+  }
+
+  .btn-primary:active { transform: scale(0.983); }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ─── Ghost button (Windows) ──────────────────────────── */
+  .btn-ghost {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border-hover);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+
+  @media (hover: hover) {
+    .btn-ghost:hover {
+      border-color: color-mix(in srgb, var(--accent) 38%, var(--border-hover));
+      color: var(--text-1);
+      background: var(--hover);
+    }
+  }
+
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .btn-icon {
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  .btn-text {
+    flex: 1;
+  }
+
+  .btn-ver {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.65;
+    letter-spacing: 0.02em;
+    margin-left: auto;
+  }
+
+  /* ─── "or" separator ──────────────────────────────────── */
+  .or-sep {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.0625rem;
+  }
+
+  .sep-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .sep-label {
+    font-family: var(--sans);
+    font-size: 0.685rem;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ─── Command block ───────────────────────────────────── */
+  .cmd-block {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    background: light-dark(rgba(0,0,0,0.04), rgba(0,0,0,0.3));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.725rem 0.875rem 0.725rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  @media (hover: hover) {
+    .cmd-block:hover {
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border-hover));
+      background: light-dark(rgba(0,0,0,0.065), rgba(0,0,0,0.42));
+    }
+
+    .cmd-block:hover .cmd-copy-wrap {
+      opacity: 1;
+    }
+  }
+
+  .cmd-block:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .cmd-ps {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .cmd-code {
+    color: var(--text-2);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 400;
+  }
+
+  .cmd-copy-wrap {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--text-3);
+    opacity: 0.45;
+    transition: opacity 0.15s;
+  }
+
+  .ico-check {
+    stroke: var(--accent);
+  }
+
+  /* ─── Card footer ─────────────────────────────────────── */
+  .card-foot {
+    font-family: var(--mono);
+    font-size: 0.685rem;
+    color: var(--text-3);
+    line-height: 1.65;
+    margin-top: auto;
+    padding-top: 0.25rem;
+  }
+
+  .foot-dim {
+    opacity: 0.6;
+  }
+
+  .foot-link {
+    color: var(--text-3);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--border-hover);
+    transition: color 0.15s;
+  }
+
+  @media (hover: hover) {
+    .foot-link:hover { color: var(--text-2); }
+  }
+
+  .card-foot code {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    background: var(--bg-card-2);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+
+  /* ─── Footer links ────────────────────────────────────── */
+  .dl-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 2.75rem;
+  }
+
+  .dl-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8125rem;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  @media (hover: hover) {
+    .dl-link:hover { color: var(--text-2); }
+  }
+
+  .dl-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  .dl-link-sep {
+    color: var(--text-3);
+    opacity: 0.4;
+    font-size: 0.875rem;
+  }
+
+  /* ─── Responsive ──────────────────────────────────────── */
+  @media (max-width: 760px) {
+    .dl-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    .dl-card--macos   { grid-column: 1; grid-row: 1; }
+    .dl-card--linux   { grid-column: 1; grid-row: 2; }
+    .dl-card--windows { grid-column: 1; grid-row: 3; }
+  }
+
+  @media (max-width: 640px) {
+    .dl-inner {
+      padding: 3rem 1.25rem 5rem;
+    }
+
+    .dl-title {
+      font-size: 3.25rem;
+    }
+
+    .dl-link-sep {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline>
+(function () {
+  // Version fetch — updates download button href + version labels
+  var dmgBtn = document.getElementById('dmg-btn');
+  var dmgVer = document.getElementById('dmg-ver');
+  var dlVer  = document.getElementById('dl-ver');
+
+  if (dmgBtn) {
+    var ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var t  = setTimeout(function () { if (ac) ac.abort(); }, 5000);
+
+    fetch('https://github.com/cinchcli/desktop/releases/latest/download/latest.json', {
+      signal: ac ? ac.signal : undefined,
+      cache: 'force-cache'
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        clearTimeout(t);
+        if (!j || !j.version) return;
+        var v = j.version;
+        dmgBtn.href = 'https://github.com/cinchcli/desktop/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
+        if (dmgVer) dmgVer.textContent = 'v' + v;
+        if (dlVer)  dlVer.textContent  = 'v' + v;
+      })
+      .catch(function () {});
+  }
+
+  // Copy-to-clipboard for all cmd blocks
+  document.querySelectorAll('.cmd-block[data-copy]').forEach(function (btn) {
+    var cmd = btn.dataset.copy;
+    if (!cmd) return;
+    var ic = btn.querySelector('.ico-copy');
+    var ck = btn.querySelector('.ico-check');
+
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(cmd).then(function () {
+        if (ic) ic.style.display = 'none';
+        if (ck) ck.style.display = '';
+        setTimeout(function () {
+          if (ic) ic.style.display = '';
+          if (ck) ck.style.display = 'none';
+        }, 2000);
+      }).catch(function () {});
+    });
+  });
+})();
+</script>

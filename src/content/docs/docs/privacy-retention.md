@@ -36,6 +36,6 @@ Local clips live in a SQLite database under `~/Library/Application Support/com.c
 
 ## macOS-only in this release
 
-The Cinch desktop app ships for macOS only in this release. If you use Linux or Windows, install the `cinch` CLI instead — see the [install page](https://cinchcli.com/#install) for all platform options.
+The Cinch desktop app ships for macOS only in this release. If you use Linux or Windows, install the `cinch` CLI instead — see the [download page](https://cinchcli.com/download) for all platform options.
 
 The CLI supports push and pull on all three platforms. A Linux and Windows desktop build returns in a follow-up release.

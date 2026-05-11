@@ -5,7 +5,7 @@ description: Install Cinch and send your first clipboard in 30 seconds.
 
 ## Installation
 
-**macOS** — [Download the Desktop app](https://cinchcli.com/#install) (Apple Silicon, recommended), or install the CLI via Homebrew:
+**macOS** — [Download the Desktop app](https://cinchcli.com/download) (Apple Silicon, recommended), or install the CLI via Homebrew:
 
 ```bash
 brew install cinchcli/tap/cinch
