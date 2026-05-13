@@ -443,7 +443,8 @@
         if (p.indexOf('linux') !== -1 || p.indexOf('chrome os') !== -1) return 'linux';
       }
       var ua = navigator.userAgent;
-      var pl = navigator.platform || '';
+      var nav = /** @type {any} */ (navigator);
+      var pl = nav.platform || '';
       if (/Mac|iPhone|iPad/i.test(pl) || /Macintosh/i.test(ua)) return 'macos';
       if (/Win/i.test(pl) || /Windows/i.test(ua)) return 'windows';
       return 'linux';

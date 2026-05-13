@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { docsLoader } from '@astrojs/starlight/loaders';
 import { docsSchema } from '@astrojs/starlight/schema';
@@ -30,13 +31,13 @@ const guidesSchema = z.object({
   os: z.array(z.enum(['macos', 'linux', 'windows'])).optional(),
   competitor: z.object({
     name: z.string(),
-    url: z.string().url().optional(),
+    url: z.url().optional(),
     rows: z.array(compareRow).default([]),
   }).optional(),
   steps: z.array(howToStep).optional(),
   faqs: z.array(faq).optional(),
   noindex: z.boolean().default(false),
-  canonical: z.string().url().optional(),
+  canonical: z.url().optional(),
   ogImage: z.string().optional(),
 });
 
