@@ -55,25 +55,29 @@ const {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://github.com">
   <!-- Inter (body · UI) + JetBrains Mono (code · kbd) + Geist (display headline) per DESIGN.md -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link id="font-body" rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   </noscript>
   <!-- Geist — display weight for hero headline (engineered personality, not on blocklist) -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" as="style">
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link id="font-display" rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap">
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" rel="stylesheet">
   </noscript>
+  <script is:inline>
+    ['font-body', 'font-display'].forEach(function (id) {
+      var link = document.getElementById(id);
+      if (link) link.setAttribute('rel', 'stylesheet');
+    });
+  </script>
 
   <!-- Analytics -->
-  <script defer src="https://umami.jinmu.me/script.js" data-website-id="9c8818d2-8496-48cd-a55d-81e6e3979078"></script>
+  <script is:inline defer src="https://umami.jinmu.me/script.js" data-website-id="9c8818d2-8496-48cd-a55d-81e6e3979078"></script>
 
   <!-- Structured Data -->
   {jsonLd
-    ? <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
-    : <script type="application/ld+json">{JSON.stringify({
+    ? <script is:inline type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
+    : <script is:inline type="application/ld+json">{JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
           {
