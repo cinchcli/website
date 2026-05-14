@@ -172,6 +172,51 @@ const {
     --sans:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
     --body:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
     --mono:         'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+    /* Semantic — success / online (terminal ✓, status dots) */
+    --semantic-ok:  light-dark(#16a34a, #4ade80);
+  }
+
+  /* Mono uppercase captions (terminal labels, section eyebrows) */
+  .mono-caps {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .mono-caps--meta {
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    color: var(--text-3);
+  }
+
+  .mono-caps--accent {
+    color: var(--accent);
+  }
+
+  /* Inline code in marketing prose (not terminal blocks) */
+  .inline-code {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    color: var(--text-1);
+    background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+
+  .inline-code--accent {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+
+  .inline-code--sm {
+    font-size: 0.7rem;
+    color: inherit;
+    background: var(--bg-card-2);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
   }
 
   /* ─── LIGHT MODE ─── DESIGN.md §2.3 · follows system preference */

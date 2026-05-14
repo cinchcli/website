@@ -8,7 +8,7 @@ import TerminalWindow from './TerminalWindow.astro';
   <div class="uc-inner">
 
     <header class="uc-header">
-      <p class="uc-eyebrow" id="usecases-heading">
+      <p class="mono-caps mono-caps--accent uc-eyebrow" id="usecases-heading">
         <span class="uc-eyebrow-rule" aria-hidden="true"></span>
         WORKS EVERYWHERE YOU CODE
       </p>
@@ -49,7 +49,7 @@ import TerminalWindow from './TerminalWindow.astro';
           <div class="uc-text">
             <span class="uc-num">02</span>
             <h3 class="uc-title">Vim &amp; Neovim</h3>
-            <p class="uc-desc">Yank in Vim and the text is already on your clipboard, everywhere. The cinch.vim plugin hooks into <code>TextYankPost</code> — no extra keystrokes required.</p>
+            <p class="uc-desc">Yank in Vim and the text is already on your clipboard, everywhere. The cinch.vim plugin hooks into <code class="inline-code inline-code--accent">TextYankPost</code> — no extra keystrokes required.</p>
           </div>
         </div>
         <div class="uc-right">
@@ -75,17 +75,21 @@ import TerminalWindow from './TerminalWindow.astro';
           <div class="uc-text">
             <span class="uc-num">03</span>
             <h3 class="uc-title">tmux &amp; screen</h3>
-            <p class="uc-desc">Works inside any multiplexer. OSC 52 breaks in tmux — cinch doesn't. Plain HTTP from any pane, any nesting level.</p>
+            <p class="uc-desc">The usual stack is ssh → tmux or screen → Vim. OSC 52 never survives that chain. cinch.vim still pushes every yank over HTTPS — same flow as a bare shell, from any pane.</p>
           </div>
         </div>
         <div class="uc-right">
-          <TerminalWindow title="local — tmux 0:1">
-            <pre class="term-body" role="img" aria-label="tmux push and pull example"><code
-><span class="t-c">~/project $</span> <span class="t-cmd">cinch push</span> &lt; config.json
-<span class="t-ok">✓ pushed</span>  <span class="t-val">512 bytes · clip #14</span>
-<span class="t-c">─── pane 0 ──────────── pane 1 ───</span>
-<span class="t-c">~/project $</span> <span class="t-cmd">cinch pull</span>
-<span class="t-ok">✓ pulled</span>  <span class="t-val">512 bytes → clipboard</span></code></pre>
+          <TerminalWindow title="session — tmux · nvim">
+            <pre class="term-body" role="img" aria-label="Vim buffer inside tmux with cinch.vim"><code
+><span class="t-meta">   1 </span><span class="t-cmd">use</span> <span class="t-val">axum</span><span class="t-op">::</span><span class="t-val">Router</span><span class="t-op">;</span>
+<span class="t-meta">   2 </span>
+<span class="t-meta">   3 </span><span class="t-cmd">pub fn</span> <span class="t-val">app</span><span class="t-op">()</span> <span class="t-op">-&gt;</span> <span class="t-val">Router</span> <span class="t-op">&#123;</span>
+<span class="t-meta">   4 </span>    <span class="t-val">Router</span><span class="t-op">::</span><span class="t-cmd">new</span><span class="t-op">()</span>
+<span class="t-meta">   5 </span>        <span class="t-op">.</span><span class="t-cmd">route</span><span class="t-op">(</span><span class="t-str">"/health"</span><span class="t-op">,</span> <span class="t-cmd">get</span><span class="t-op">(</span><span class="t-val">health</span><span class="t-op">))</span>
+<span class="t-meta">   6 </span><span class="t-op">&#125;</span>
+<span class="t-meta">   ~ </span>
+<span class="t-meta">   ~ </span>
+<span class="t-meta">NORMAL</span>  <span class="t-val">api/src/lib.rs</span>  <span class="t-meta">[+]</span>  <span class="t-ok">✓ cinch.vim</span>  <span class="t-meta">yank → relay</span></code></pre>
           </TerminalWindow>
         </div>
       </article>
@@ -114,11 +118,6 @@ import TerminalWindow from './TerminalWindow.astro';
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: var(--mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
   }
 
   .uc-eyebrow-rule {
@@ -232,15 +231,6 @@ import TerminalWindow from './TerminalWindow.astro';
     max-width: 38ch;
   }
 
-  .uc-desc code {
-    font-family: var(--mono);
-    font-size: 0.875em;
-    color: var(--accent);
-    background: rgba(79,179,169,0.08);
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
-  }
-
   /* ── Right column ─────────────────────────────────────── */
   .uc-right {
     min-width: 0;
@@ -272,7 +262,7 @@ import TerminalWindow from './TerminalWindow.astro';
 
   @media (max-width: 480px) {
     .uc-right :global(.term-body) {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       padding: 1rem 1.25rem 1.125rem;
     }
   }

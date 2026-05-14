@@ -1,7 +1,7 @@
 ---
 // TerminalWindow — shared terminal shell used by LiveDemo, UseCases, DualTerminalDemo.
 // Renders the outer card (background, border, shadow), title bar, and dots.
-// Consumers put class="term-body" on their <pre> and use .t-* token classes.
+// Consumers put class="term-body" on their <pre> or <div> and use .t-* token classes.
 //
 // Slots:
 //   default    — body content (pre.term-body, push-controls, etc.)
@@ -76,13 +76,14 @@ const { title, class: className } = Astro.props;
     letter-spacing: 0.04em;
   }
 
-  /* ── Body — applied to slotted <pre class="term-body"> ── */
+  /* ── Body — slotted <pre class="term-body"> or <div class="term-body"> ── */
   .term-win :global(.term-body) {
     margin: 0;
-    padding: 1.125rem 1.375rem 1rem;
+    padding: 2.25rem 2.75rem 2rem;
     font-family: var(--mono);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.85;
+    color: light-dark(rgba(0, 0, 0, 0.75), rgba(255, 255, 255, 0.75));
     background: transparent;
     overflow-x: auto;
     overflow-y: hidden;
@@ -105,7 +106,8 @@ const { title, class: className } = Astro.props;
   .term-win :global(.t-cmd)  { color: light-dark(rgba(0,0,0,0.82), rgba(255,255,255,0.82)); }
   .term-win :global(.t-str)  { color: light-dark(#2F7F78, #a5d6d3); }
   .term-win :global(.t-op)   { color: var(--accent); }
-  .term-win :global(.t-ok)   { color: light-dark(#16a34a, #4ade80); }
+  .term-win :global(.t-ok)   { color: var(--semantic-ok); }
   .term-win :global(.t-val)  { color: light-dark(rgba(0,0,0,0.58), rgba(255,255,255,0.58)); }
-  .term-win :global(.t-meta) { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.30)); font-size: 0.75rem; }
+  .term-win :global(.t-meta) { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.30)); font-size: 0.875rem; }
+  .term-win :global(.t-var) { color: var(--accent); }
 </style>

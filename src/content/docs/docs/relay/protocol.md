@@ -97,7 +97,7 @@ The `payload` field is always base64-encoded regardless of the original MIME typ
 
 **Keepalive**
 
-The relay sends a WebSocket ping every 30 seconds. Clients that do not respond within 10 seconds are disconnected. `cinchd` and the CLI reconnect automatically with exponential back-off (initial 1s, max 60s).
+The relay sends a WebSocket ping every 30 seconds. Clients that do not respond within 10 seconds are disconnected. The desktop app and the CLI reconnect automatically with exponential back-off (initial 1s, max 60s).
 
 :::note
 The WebSocket connection is authenticated at upgrade time. Tokens are not re-validated on each message.

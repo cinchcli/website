@@ -85,6 +85,7 @@ export default defineConfig({
       customCss: ['./src/styles/starlight.css'],
       components: {
         Footer: './src/components/overrides/StarlightFooter.astro',
+        SiteTitle: './src/components/overrides/StarlightSiteTitle.astro',
       },
       head: [
         { tag: 'link', attrs: { rel: 'icon',             href: '/favicon.ico',          sizes: '32x32' } },

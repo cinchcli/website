@@ -4,7 +4,7 @@ description: How Cinch captures clips, what it skips, and how long clips are kep
 ---
 
 :::note
-This page covers the **macOS desktop app** (`cinchd`) and its local clip history. If you are using the CLI only (`cinch push` / `cinch pull`), see [Relay Configuration](/docs/relay/configuration/) for relay-side retention settings (`RETENTION_DAYS`).
+This page covers the **macOS desktop app** and its local clip history. If you are using the CLI only (`cinch push` / `cinch pull`), see [Relay Configuration](/docs/relay/configuration/) for relay-side retention settings (`RETENTION_DAYS`).
 :::
 
 Cinch captures every text or image clip you copy on this Mac and keeps it in a local history you can search and re-use. This page explains what gets captured, what gets skipped, and how long clips live.

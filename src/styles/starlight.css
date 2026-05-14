@@ -3,11 +3,7 @@
    Porcelain palette · Inter + JetBrains Mono
    ══════════════════════════════════════════════════════════ */
 
-/* ─── LOGO ───────────────────────────────────────────────── */
-.site-title img {
-  height: 1.75rem;
-  width: auto;
-}
+/* Logo: shared with landing via StarlightSiteTitle.astro (+ lockup sizing) */
 
 /* ─── FONTS ──────────────────────────────────────────────── */
 :root {
