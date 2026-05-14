@@ -66,15 +66,60 @@ import Default from '@astrojs/starlight/components/Footer.astro';
   }
 </style>
 
-<script>
+<script
+  define:vars={{
+    telemetryUrl: import.meta.env.PUBLIC_TELEMETRY_URL ?? '',
+    telemetryKey: import.meta.env.PUBLIC_TELEMETRY_API_KEY ?? '',
+  }}
+>
   const yes    = document.getElementById('feedback-yes');
   const no     = document.getElementById('feedback-no');
   const status = document.getElementById('feedback-status');
 
-  function pick(helpful: boolean) {
+  function sendPageFeedback(helpful) {
+    const base = String(telemetryUrl).trim().replace(/\/+$/, '');
+    const key = String(telemetryKey).trim();
+    if (!base || !key) return;
+
+    const path = typeof location !== 'undefined' ? location.pathname : '';
+    const storageKey = `cinch_docs_feedback_sent:${path}`;
+    try {
+      if (sessionStorage.getItem(storageKey)) return;
+    } catch {
+      /* private mode / blocked */
+    }
+
+    const context = { path };
+    if (typeof document !== 'undefined' && document.referrer) {
+      context.referrer = document.referrer;
+    }
+
+    void fetch(`${base}/v1/events`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': key,
+      },
+      body: JSON.stringify({
+        app: 'cinch-website',
+        event: 'docs.page_feedback',
+        context,
+        properties: { helpful },
+      }),
+    }).catch(() => {});
+
+    try {
+      sessionStorage.setItem(storageKey, '1');
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function pick(helpful) {
     document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
     (helpful ? yes : no)?.classList.add('selected');
     if (status) status.textContent = 'Thanks for your feedback!';
+    sendPageFeedback(helpful);
   }
 
   yes?.addEventListener('click', () => pick(true));
