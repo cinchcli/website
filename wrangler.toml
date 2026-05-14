@@ -5,6 +5,11 @@ compatibility_flags = ["nodejs_compat"]
 
 # Secrets (RESEND_API_KEY, RESEND_AUDIENCE_ID) are set in the Cloudflare dashboard
 # under Settings → Environment Variables → encrypted — never put them here.
+#
+# Docs feedback telemetry (PUBLIC_TELEMETRY_URL, PUBLIC_TELEMETRY_API_KEY): the site is
+# built in GitHub Actions (.github/workflows/deploy.yml), so add those names under the
+# repo's Settings → Secrets and variables → Actions → Secrets. Dashboard-only vars will
+# stay empty in the static bundle.
 
 # Local dev: copy .dev.vars.example → .dev.vars and fill in values.
 # Run: npx wrangler pages dev dist --compatibility-flag nodejs_compat
