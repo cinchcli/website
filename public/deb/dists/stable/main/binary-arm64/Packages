@@ -1,16 +1,16 @@
 Package: cinch
-Version: 0.1.4
+Version: 0.1.5
 Architecture: arm64
 Maintainer: jinmu
 Depends: libc6 (>= 2.30), libdbus-1-3 (>= 1.9.14), libgcc-s1 (>= 4.2)
-Breaks: cinch-cli (<< 0.1.4)
-Replaces: cinch-cli (<< 0.1.4)
+Breaks: cinch-cli (<< 0.1.5)
+Replaces: cinch-cli (<< 0.1.5)
 Provides: cinch-cli
-Filename: pool/main/c/cinch/cinch_0.1.4_arm64.deb
-Size: 1818576
-MD5sum: 164cfcfbda6f19607fb56a8a4cb2159f
-SHA1: 25c650e99db20f00f00cf2ee56d6e91155809e2a
-SHA256: 0f2eece23db7b41882ca43ea545a2fbaba7987cabce9f1c39e049ff92446e071
+Filename: pool/main/c/cinch/cinch_0.1.5_arm64.deb
+Size: 2639140
+MD5sum: 3ab7ec4d7acc6cbad49c6c639cd4a9dc
+SHA1: e5bdac54c6b80142bab442c13a05f3a761a9ae5c
+SHA256: c03e3a1e22fd2dd6d1ad972723769cd67680d4a5d6cbdd6c52888dab4e74d916
 Section: utils
 Priority: optional
 Description: Remote clipboard tool. Push from SSH, pull to local.
