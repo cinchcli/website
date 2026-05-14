@@ -1,7 +1,7 @@
 ---
-// Matches landing Nav logo: 24×27 lockups, lowercase “cinch”, primary text color (not accent).
-import { logos } from 'virtual:starlight/user-images';
-import config from 'virtual:starlight/user-config';
+// Matches landing Nav logo: 24×27 lockups, lowercase "cinch", primary text color (not accent).
+import lockupDark  from '../../assets/lockup-dark-icon.svg';
+import lockupLight from '../../assets/lockup-light-icon.svg';
 
 const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
 ---
@@ -11,34 +11,22 @@ const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
   class="cinch-site-title sl-flex"
   aria-label={`${siteTitle} home`}
 >
-  {
-    config.logo && logos.dark && (
-      <>
-        <img
-          class:list={{
-            'light:sl-hidden print:hidden': !('src' in config.logo),
-          }}
-          alt=""
-          aria-hidden="true"
-          src={logos.dark.src}
-          width={24}
-          height={27}
-        />
-        {
-          !('src' in config.logo) && logos.light && (
-            <img
-              class="dark:sl-hidden print:block"
-              alt=""
-              aria-hidden="true"
-              src={logos.light.src}
-              width={24}
-              height={27}
-            />
-          )
-        }
-      </>
-    )
-  }
+  <img
+    class="cinch-logo-dark light:sl-hidden print:hidden"
+    src={lockupDark.src}
+    width={24}
+    height={27}
+    alt=""
+    aria-hidden="true"
+  />
+  <img
+    class="cinch-logo-light dark:sl-hidden print:block"
+    src={lockupLight.src}
+    width={24}
+    height={27}
+    alt=""
+    aria-hidden="true"
+  />
   <span class="cinch-site-title-wordmark" translate="no">cinch</span>
 </a>
 
