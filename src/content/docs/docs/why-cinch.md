@@ -31,7 +31,7 @@ Cinch doesn't use terminal escape sequences at all. It's just HTTP:
 
 1. `cinch push` sends the clip to a relay server over HTTPS.
 2. The relay holds the clip in SQLite until it is pulled.
-3. `cinch pull` (or `cinchd`) retrieves it over WebSocket for real-time delivery.
+3. `cinch pull` (or the Cinch desktop app) retrieves it over WebSocket for real-time delivery.
 
 Because it's HTTP, it works everywhere:
 

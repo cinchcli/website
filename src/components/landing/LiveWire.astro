@@ -1,0 +1,314 @@
+---
+// LiveWire — animated dual terminal showing push → pull in a continuous 8s loop.
+// Pure CSS keyframes; `prefers-reduced-motion` falls back to the final state.
+import TerminalWindow from './TerminalWindow.astro';
+
+// Character counts for the typed commands — used by the reveal keyframes below.
+// echo $DATABASE_URL | cinch push  = 31 chars
+// cinch pull                       = 10 chars
+---
+
+<div class="live-wire" aria-label="Push and pull terminal demo">
+
+  <!-- ── PUSH ─────────────────────────────────────────── -->
+  <div class="term-wrap">
+    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Push</p>
+    <TerminalWindow title="local — bash">
+      <span slot="bar-extra" class="status-dot" aria-hidden="true"></span>
+      <div class="term-body">
+        <div class="line line-comment">
+          <span class="t-c line-glyph">#</span>
+          <span class="t-c">Save it once</span>
+        </div>
+        <div class="line line-cmd line-push-cmd">
+          <span class="t-p line-glyph">$</span>
+          <span class="line-rest">
+            <span class="reveal reveal-push"><span class="t-cmd">echo</span> <span class="t-var">$DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span></span><span class="caret caret-push" aria-hidden="true"></span>
+          </span>
+        </div>
+        <div class="line line-out line-push-out">
+          <span class="t-ok">✓ Pushed</span> <span class="t-meta">56 B · 12 ms</span>
+        </div>
+      </div>
+    </TerminalWindow>
+  </div>
+
+  <!-- ── ARROW ────────────────────────────────────────── -->
+  <div class="flow-arrow" aria-hidden="true">
+    <svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M6 16 L22 16 M17 10 L25 16 L17 22"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+
+  <!-- ── PULL ─────────────────────────────────────────── -->
+  <div class="term-wrap">
+    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Pull</p>
+    <TerminalWindow title="remote — bash">
+      <span slot="bar-extra" class="status-dot" aria-hidden="true"></span>
+      <div class="term-body">
+        <div class="line line-comment">
+          <span class="t-c line-glyph">#</span>
+          <span class="t-c">Use it anywhere</span>
+        </div>
+        <div class="line line-cmd line-pull-cmd">
+          <span class="t-p line-glyph">$</span>
+          <span class="line-rest">
+            <span class="reveal reveal-pull"><span class="t-cmd">cinch pull</span></span><span class="caret caret-pull" aria-hidden="true"></span>
+          </span>
+        </div>
+        <div class="line line-out line-pull-out">
+          <span class="t-val">postgres://prod:s3cr3t@db.prod.internal/app</span>
+        </div>
+      </div>
+    </TerminalWindow>
+  </div>
+
+</div>
+
+<style>
+  /* ─── Layout ────────────────────────────────────────── */
+  .live-wire {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .term-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+
+  .term-label {
+    padding-left: 1rem;
+    margin: 0;
+  }
+
+  /* LiveWire-only: clip typing reveal; loop fade (typography → TerminalWindow) */
+  .live-wire .term-body {
+    overflow: hidden;
+    animation: body-cycle 8s linear infinite;
+  }
+
+  /* Comment + command rows share a fixed glyph column so `#` and `$` align. */
+  .line {
+    min-height: 1.85em;
+  }
+
+  .line-comment,
+  .line-cmd {
+    display: grid;
+    grid-template-columns: 2ch minmax(0, 1fr);
+    column-gap: 0.35em;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+
+  .line-glyph {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .line-out {
+    display: block;
+    white-space: pre;
+  }
+
+  /* .t-* tokens → TerminalWindow.astro */
+
+  /* ─── Typing reveal (CSS-only) ──────────────────────── */
+  .reveal {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    width: 0;
+    white-space: nowrap;
+  }
+
+  /* Push reveal: 31 chars, typed between 5% → 31.25% of the 8s cycle */
+  .reveal-push {
+    animation: reveal-push 8s linear infinite;
+  }
+  @keyframes reveal-push {
+    0%                                                    { width: 0; }
+    5%   { width: 0; animation-timing-function: steps(31, end); }
+    31.25%                                                { width: 31ch; }
+    100%                                                  { width: 31ch; }
+  }
+
+  /* Pull reveal: 10 chars, typed between 47.5% → 57.5% */
+  .reveal-pull {
+    animation: reveal-pull 8s linear infinite;
+  }
+  @keyframes reveal-pull {
+    0%, 47.5% { width: 0; animation-timing-function: steps(10, end); }
+    57.5%     { width: 10ch; }
+    100%      { width: 10ch; }
+  }
+
+  /* ─── Caret ─────────────────────────────────────────── */
+  .caret {
+    display: inline-block;
+    width: 0.5ch;
+    height: 1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    margin-left: 1px;
+    opacity: 0;
+  }
+
+  /* Caret blinks; visibility window is gated by a sibling keyframe */
+  .caret-push {
+    animation:
+      caret-blink 1s steps(2, end) infinite,
+      caret-push-show 8s steps(1, end) infinite;
+  }
+  .caret-pull {
+    animation:
+      caret-blink 1s steps(2, end) infinite,
+      caret-pull-show 8s steps(1, end) infinite;
+  }
+
+  @keyframes caret-blink {
+    0%   { opacity: 1; }
+    50%  { opacity: 0; }
+  }
+
+  /* Push caret visible from start through typing completion */
+  @keyframes caret-push-show {
+    0%      { visibility: visible; }
+    32%     { visibility: hidden; }
+    100%    { visibility: hidden; }
+  }
+
+  /* Pull caret visible only during pull typing window */
+  @keyframes caret-pull-show {
+    0%      { visibility: hidden; }
+    45%     { visibility: visible; }
+    58%     { visibility: hidden; }
+    100%    { visibility: hidden; }
+  }
+
+  /* ─── Output lines (fade in once after typing completes) ── */
+  .line-push-out {
+    opacity: 0;
+    animation: appear-push 8s linear infinite;
+  }
+  @keyframes appear-push {
+    0%, 33%  { opacity: 0; transform: translateY(2px); }
+    35.5%    { opacity: 1; transform: translateY(0); }
+    100%     { opacity: 1; transform: translateY(0); }
+  }
+
+  /* The synced value materializing is the visual climax of the loop —
+     a subtle overshoot makes it land instead of just appearing. */
+  .line-pull-out {
+    opacity: 0;
+    animation: appear-pull 8s linear infinite;
+    transform-origin: left center;
+  }
+  @keyframes appear-pull {
+    0%, 60%  { opacity: 0; transform: translateY(4px) scale(0.985); }
+    63.5%    { opacity: 1; transform: translateY(-1px) scale(1.008); }
+    66%      { opacity: 1; transform: translateY(0)   scale(1); }
+    100%     { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+
+  @keyframes body-cycle {
+    0%       { opacity: 0; }
+    2%       { opacity: 1; }
+    95%      { opacity: 1; }
+    100%     { opacity: 0; }
+  }
+
+  /* ─── Arrow ─────────────────────────────────────────── */
+  .flow-arrow {
+    flex-shrink: 0;
+    width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+
+  .flow-arrow svg {
+    animation: arrow-wave 8s linear infinite;
+    opacity: 0.45;
+  }
+  @keyframes arrow-wave {
+    0%, 32%  { opacity: 0.45; transform: translateX(0) scale(1); }
+    35%      { opacity: 1;    transform: translateX(3px) scale(1.08); }
+    40%      { opacity: 0.7;  transform: translateX(0) scale(1); }
+    44%      { opacity: 0.45; transform: translateX(0) scale(1); }
+    100%     { opacity: 0.45; transform: translateX(0) scale(1); }
+  }
+
+  /* ─── Status dot on terminal title bar ──────────────── */
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--semantic-ok);
+    margin-left: 6px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--semantic-ok) 45%, transparent);
+    animation: status-pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes status-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--semantic-ok) 45%, transparent); }
+    50%      { box-shadow: 0 0 0 4px color-mix(in srgb, var(--semantic-ok) 0%, transparent); }
+  }
+
+  /* ─── Responsive ────────────────────────────────────── */
+  @media (max-width: 680px) {
+    .live-wire {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+      margin-top: 0;
+      width: 100%;
+      height: 2.5rem;
+    }
+  }
+
+  /* ─── Hover to pause (mouse only) ────────────────────── */
+  /* Lets a reader freeze on any frame instead of chasing the loop. */
+  @media (hover: hover) {
+    .live-wire:hover .term-body,
+    .live-wire:hover .reveal-push,
+    .live-wire:hover .reveal-pull,
+    .live-wire:hover .caret-push,
+    .live-wire:hover .caret-pull,
+    .live-wire:hover .line-push-out,
+    .live-wire:hover .line-pull-out,
+    .live-wire:hover .flow-arrow svg,
+    .live-wire:hover .status-dot {
+      animation-play-state: paused;
+    }
+  }
+
+  /* ─── Reduced motion: hold the final state ──────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-push { width: 31ch; animation: none; }
+    .reveal-pull { width: 10ch; animation: none; }
+    .line-push-out,
+    .line-pull-out { opacity: 1; animation: none; }
+    .term-body { opacity: 1; animation: none; }
+    .flow-arrow svg { animation: none; opacity: 0.7; }
+    .caret-push, .caret-pull { animation: none; opacity: 0; }
+    .status-dot { animation: none; }
+  }
+</style>
