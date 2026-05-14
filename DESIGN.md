@@ -12,7 +12,7 @@ Cinch's interface feels like the dark interior of a precision instrument — a n
 
 The signature move is the layered shadow system borrowed from macOS window chrome: multi-layer box-shadows with inset highlights that simulate physical depth, as if cards and buttons are actual pressed or raised glass elements on a dark desk. Combined with the **Porcelain** brand palette — **Porcelain Deep** (`#4FB3A9`) for punch and **Porcelain Pastel** (`#BED9D7`) for breath — the palette reads as "powerful pipe with personality." The deep teal doesn't dominate; it glows. The pastel doesn't decorate; it tints.
 
-The Porcelain palette was sampled directly from the glaze of a favorite cappuccino mug — an unmistakable, earned color. Inter is used everywhere — headings, body, buttons, captions — with extensive OpenType features (`calt`, `kern`, `liga`, `ss03`) creating a consistent, readable typographic voice. The positive letter-spacing (0.2px–0.4px on body text) is unusual for a dark UI and gives the text an airy, breathable quality that counterbalances the dense, dark surfaces. JetBrains Mono appears for code elements, clip previews, and tabular metadata, reinforcing the developer-tool identity.
+The Porcelain palette was sampled directly from the glaze of a favorite cappuccino mug — an unmistakable, earned color. Inter is used everywhere — headings, body, buttons, captions — with extensive OpenType features (`calt`, `kern`, `liga`, `ss03`) creating a consistent, readable typographic voice. The positive letter-spacing (0.2px–0.4px on body text) is unusual for a dark UI and gives the text an airy, breathable quality that counterbalances the dense, dark surfaces. Geist Mono appears for code elements, clip previews, and tabular metadata — paired with Geist display for a single type family rhythm while reinforcing the developer-tool identity.
 
 **Key Characteristics:**
 - Near-black blue-tinted background (`#07080a`) on dark; warm bone (`#FBFBFA`) on light
@@ -138,7 +138,7 @@ Never reuse Porcelain Deep for semantic meaning — the brand accent is brand, n
 ### Font Family
 - **Primary**: `Inter` — humanist sans-serif, used everywhere. Fallbacks: `Inter Fallback`, `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `"Segoe UI"`, sans-serif
 - **System** (select macOS-native surfaces): `SF Pro Text` → `SF Pro Icons` → `Inter`
-- **Monospace**: `JetBrains Mono` — code blocks, `<kbd>`, clip previews, tabular metadata. Fallbacks: `ui-monospace`, `SFMono-Regular`, `Menlo`, `Monaco`
+- **Monospace**: `Geist Mono` — code blocks, `<kbd>`, clip previews, tabular metadata. Fallbacks: `ui-monospace`, `SFMono-Regular`, `Menlo`, `Monaco`
 - **OpenType features**: `calt`, `kern`, `liga`, `ss03` enabled globally on Inter; `ss02`, `ss08` on display text; `"liga" 0` on hero headings to keep character shapes crisp at scale
 - **Tabular numerals**: `font-variant-numeric: tabular-nums` on clip timestamps, sizes, row counts
 
@@ -160,8 +160,8 @@ Never reuse Porcelain Deep for semantic meaning — the brand accent is brand, n
 | Caption Bold | 14px | 600 | 1.40 | 0px | Emphasized captions |
 | Small | 12px | 600 | 1.33 | 0px | Badges, tags, micro-labels |
 | Small Link | 12px | 400 | 1.50 | 0.4px | Footer, fine print |
-| Code | 14px (JetBrains Mono) | 500 | 1.60 | 0.3px | Code blocks |
-| Code Small | 12px (JetBrains Mono) | 400 | 1.60 | 0.2px | Inline code, CLI snippets, kbd |
+| Code | 14px (Geist Mono) | 500 | 1.60 | 0.3px | Code blocks |
+| Code Small | 12px (Geist Mono) | 400 | 1.60 | 0.2px | Inline code, CLI snippets, kbd |
 
 ### Principles
 - **Positive tracking on dark**: +0.2px to +0.4px on body text compensates for dark-background optical tightening — the signature move that gives Cinch its breathable feel
@@ -209,8 +209,8 @@ All specs are mode-aware via tokens. Values below use dark-mode defaults with li
 - **App UI embeds**: Show actual Cinch desktop app and CLI transcripts
 
 ### Keyboard Shortcut Keys (`<kbd>`)
-- **Dark key cap**: `#121212 → #0d0d0d` gradient, heavy multi-layer shadow, JetBrains Mono 12/600
-- **Light key cap**: `#F7F6F3 → #EFEDE8` gradient, subtle 1px bottom inset shadow, JetBrains Mono 12/600 in `--text-primary`
+- **Dark key cap**: `#121212 → #0d0d0d` gradient, heavy multi-layer shadow, Geist Mono 12/600
+- **Light key cap**: `#F7F6F3 → #EFEDE8` gradient, subtle 1px bottom inset shadow, Geist Mono 12/600 in `--text-primary`
 - **Radius**: 4px–6px individual keys; 4px gap between keys
 
 ### Badges & Tags
@@ -219,7 +219,7 @@ All specs are mode-aware via tokens. Values below use dark-mode defaults with li
 - **Status dot**: 8px circle — accent pulsing for "relay online", success for "push OK", red for "relay disconnected"
 
 ### Data Tables (clip list, device dashboard)
-- Row height 44px, 1px bottom `--border-strong`, JetBrains Mono for size/time columns with `tabular-nums`
+- Row height 44px, 1px bottom `--border-strong`, Geist Mono for size/time columns with `tabular-nums`
 - Hover row: `--bg-hover`
 - Selected row: `--bg-selected` fill + 2px `--accent` left bar
 
@@ -332,7 +332,7 @@ Dark mode shadows combine outer rings + inset highlights + inset darks for macOS
 - Use regular (400) for body text when 500 is available — it reads thin on dark
 - Mix warm and cool borders — stick to the mode's border palette
 - Apply opacity-fade hover on light mode — it washes surfaces out rather than emphasizing
-- Render clip metadata in JetBrains Mono — mono is for clip **payload**, not UI labels
+- Render clip metadata in Geist Mono — mono is for clip **payload**, not UI labels
 - Reuse Porcelain Deep for semantic states (success/error/warning) — brand is brand, semantics are semantics
 
 ## 10. Responsive Behavior
@@ -399,7 +399,7 @@ Dark mode shadows combine outer rings + inset highlights + inset darks for macOS
 
 ### Example Component Prompts
 - "Create a hero on dark canvas `#07080a` with 64px Inter heading weight 600 in warm cream `#F0EBE0`, and a Porcelain Emphasis Pill CTA: `#4FB3A9` fill, `#07080a` text, 86px radius, `rgba(79,179,169,0.25) 0 0 20px 2px` glow."
-- "Design a clip-row card at `#101111` background, `1px solid rgba(255,255,255,0.06)` border, 8px radius, Inter 16/500 for preview, JetBrains Mono 12 with `tabular-nums` for timestamp, selected state `rgba(79,179,169,0.15)` fill + 2px `#4FB3A9` left bar."
+- "Design a clip-row card at `#101111` background, `1px solid rgba(255,255,255,0.06)` border, 8px radius, Inter 16/500 for preview, Geist Mono 12 with `tabular-nums` for timestamp, selected state `rgba(79,179,169,0.15)` fill + 2px `#4FB3A9` left bar."
 - "Build a light-mode marketing page at canvas `#FBFBFA`, `#FFFFFF` cards with `1px solid rgba(0,0,0,0.06)` border, charcoal `#2F3437` body text, Porcelain Deep `#4FB3A9` CTA filled with `#FFFFFF` text, hover deepens to `#3E928A`."
 - "Render the live-relay pill: `--surface-200` background, 999 radius, 8px Porcelain Deep pulsing dot, 14px Inter weight 500 'Relay online', accent flow glow `rgba(79,179,169,0.18) 0 0 20px 5px` behind the pill."
 - "Render the push/pull pipe: 2px `#4FB3A9` line with trailing flow glow moving left-to-right between machine glyphs, 600ms, `cubic-bezier(0.16, 1, 0.3, 1)`, static line under `prefers-reduced-motion: reduce`."
@@ -413,7 +413,7 @@ When refining:
 5. Dark-mode hover uses opacity 0.6; light-mode hover uses background darken.
 6. Porcelain Deep is foreground (CTAs/focus/live); Porcelain Pastel is background-tint (hovers/selected on light/ambient). Flag any inversions.
 7. Semantic colors are not the brand — never color a CTA red to convey "danger as primary action."
-8. Mono (JetBrains Mono) only on clip payload, code, kbd, and numeric columns — not UI labels.
+8. Mono (Geist Mono) only on clip payload, code, kbd, and numeric columns — not UI labels.
 
 ## 13. Decisions Log
 
@@ -427,3 +427,4 @@ When refining:
 | 2026-04-21 | **Brand accent: cyan → Porcelain dual token** | Cyan `#06B6D4` felt generic "tech-stock" and had only one operating mode (saturated punch). Sampled a new brand palette from a cappuccino mug's porcelain glaze — unmistakably earned, personal. **Porcelain Deep (`#4FB3A9`)** for CTAs, focus, live states, pipe glow; **Porcelain Pastel (`#BED9D7`)** for tints, hover fills, ambient. Dual-token solves the "one color can't do both foreground punch and background wash" problem — Deep punches on dark, Pastel breathes. |
 | 2026-04-21 | **Light mode elevated to first-class parallel system** | Previous version treated light as a docs-only alternate. Marketing pages and Starlight docs run in light by default; desktop app in dark. Explicit per-mode tokens documented (surfaces, text, borders, hover behavior, shadow philosophy). Hover pattern flips: opacity-fade on dark → background-darken on light, because opacity-fade on light washes rather than emphasizes. |
 | 2026-04-21 | **Porcelain Deep splits per mode: `#4FB3A9` (dark) · `#2F7F78` (light)** | Live browser QA in light mode revealed `#4FB3A9` read as mint/washed-pastel against warm bone canvas — foreground punch collapsed. Shifted light-mode `--accent` to `#2F7F78` (same hue family, deeper by ~20%) to restore "pulls the eye" quality on light. Ripple effects: (1) CTA pill text flips from near-black `#07080a` (OK on `#4FB3A9`) to white `#FFFFFF` (required on `#2F7F78` for AA contrast), so added `--accent-on` token that flips with mode. (2) Code-span text using `C.accent` now meets AA body-text contrast on light canvas (`#2F7F78` = 5.4:1 vs `#4FB3A9` = 2.5:1). Both modes still share Porcelain brand family; only saturation shifts to compensate for canvas luminance. |
+| 2026-05-14 | **Marketing monospace: Geist Mono** | Website and Starlight load **Geist Mono** for `--mono`, code, kbd, and tabular metadata — pairs with **Geist** display; replaces JetBrains Mono on web. Desktop app typography is unchanged in this commit. |

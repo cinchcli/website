@@ -25,15 +25,15 @@ const typeLabel: Record<string, string> = {
 <div class="guide-page">
   <header class="guide-hero">
     <div class="guide-hero-inner">
-      <nav class="breadcrumb" aria-label="Breadcrumb">
+      <nav class="breadcrumb mono-caps mono-caps--meta" aria-label="Breadcrumb">
         <ol>
           <li><a href="/">Home</a></li>
           <li><a href="/guides/">Guides</a></li>
           <li aria-current="page">{title}</li>
         </ol>
       </nav>
-      <span class="type-badge">{typeLabel[type]}</span>
-      <h1>{title}</h1>
+      <p class="mono-caps mono-caps--accent guide-type">{typeLabel[type]}</p>
+      <h1 class="guide-title">{title}</h1>
       <p class="byline">
         <time datetime={publishedAt.toISOString()}>{formattedPublished}</time>
         {formattedUpdated && (
@@ -56,23 +56,41 @@ const typeLabel: Record<string, string> = {
     padding-top: 3.75rem; /* nav height */
   }
 
-  /* ── Hero header ─────────────────────────────────────────── */
+  /* ── Hero header (matches landing section rhythm) ───────── */
   .guide-hero {
     border-bottom: 1px solid var(--border);
-    background: var(--bg-card);
+  }
+
+  /* Align with landing sections + footer (.footer-inner uses max-width: 1100px; Hero uses same + 2rem horizontal pad) */
+  .guide-hero-inner,
+  .guide-shell {
+    width: 100%;
+    max-width: 1100px;
+    margin-inline: auto;
+    box-sizing: border-box;
+    padding-left: max(2rem, env(safe-area-inset-left, 0px));
+    padding-right: max(2rem, env(safe-area-inset-right, 0px));
+  }
+
+  @media (max-width: 480px) {
+    .guide-hero-inner,
+    .guide-shell {
+      padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+      padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+    }
   }
 
   .guide-hero-inner {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem 2.5rem;
+    padding-top: clamp(4.25rem, 10vw + 2rem, 5.5rem);
+    padding-bottom: clamp(1.75rem, 4vw, 2.5rem);
   }
 
   .breadcrumb ol {
     display: flex;
     gap: 0.5rem;
     list-style: none;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.07em;
     color: var(--text-3);
     flex-wrap: wrap;
     margin-bottom: 1rem;
@@ -82,6 +100,7 @@ const typeLabel: Record<string, string> = {
     content: '/';
     margin-left: 0.5rem;
     color: var(--text-3);
+    font-weight: 500;
   }
 
   .breadcrumb a {
@@ -92,28 +111,20 @@ const typeLabel: Record<string, string> = {
 
   .breadcrumb a:hover { color: var(--accent); }
 
-  .type-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: var(--accent-subtle);
-    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-    border-radius: 4px;
-    padding: 0.2em 0.6em;
+  .guide-type {
     margin-bottom: 1rem;
   }
 
-  h1 {
-    font-family: var(--sans);
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+  .guide-title {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(1.625rem, 4.2vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     color: var(--text-1);
     margin-bottom: 0.875rem;
+    font-feature-settings: 'liga' 0, 'calt' 1;
+    text-wrap: balance;
   }
 
   .byline {
@@ -123,9 +134,8 @@ const typeLabel: Record<string, string> = {
 
   /* ── Body ────────────────────────────────────────────────── */
   .guide-shell {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 5rem;
+    padding-top: clamp(1.75rem, 5vw, 2.5rem);
+    padding-bottom: clamp(4rem, 12vw, 7rem);
   }
 
   .guide-body {
@@ -192,7 +202,8 @@ const typeLabel: Record<string, string> = {
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 0.15em 0.4em;
-    color: var(--accent-pastel);
+    /* --accent-pastel is for dark UI tint; on inline chips use theme accent for contrast */
+    color: var(--accent);
   }
 
   .guide-body :global(pre) {
@@ -222,8 +233,7 @@ const typeLabel: Record<string, string> = {
   .guide-body :global(th) {
     background: var(--bg-card);
     font-weight: 600;
-    font-size: 0.8125rem;
-    text-transform: uppercase;
+    font-size: 0.875rem;
     letter-spacing: 0.04em;
     color: var(--text-2);
     padding: 0.625rem 0.875rem;
