@@ -1,14 +1,14 @@
 /* ══════════════════════════════════════════════════════════
    Cinch — Starlight theme · DESIGN.md token alignment
-   Porcelain palette · Inter + JetBrains Mono
+   Porcelain palette · Geist + Geist Mono
    ══════════════════════════════════════════════════════════ */
 
 /* Logo: shared with landing via StarlightSiteTitle.astro (+ lockup sizing) */
 
 /* ─── FONTS ──────────────────────────────────────────────── */
 :root {
-  --sl-font:      'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
-  --sl-font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+  --sl-font:      'Geist', system-ui, -apple-system, sans-serif;
+  --sl-font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
 }
 
 /* ─── LIGHT MODE ─────────────────────────────────────────── */
@@ -27,7 +27,6 @@
   --sl-color-text-accent:    #2F7F78;
 
   /* Gray scale — maps to DESIGN.md text tokens */
-  --sl-color-white:          #FBFBFA;
   --sl-color-black:          #2F3437;
   --sl-color-gray-1:         #2F3437;   /* text-primary */
   --sl-color-gray-2:         #4A4A50;
@@ -36,6 +35,9 @@
   --sl-color-gray-5:         #D0D0CC;
   --sl-color-gray-6:         #F7F6F3;   /* surface-200 */
   --sl-color-gray-7:         #FBFBFA;   /* canvas */
+
+  /* Starlight uses --sl-color-white for h1–h6, th, summary, aside body — must contrast light canvas */
+  --sl-color-white:          #2F3437;
 
   /* Borders */
   --sl-color-hairline:       rgba(0, 0, 0, 0.07);
@@ -74,7 +76,7 @@
 }
 
 /* ─── GLOBAL TYPOGRAPHY ──────────────────────────────────── */
-/* Inter OpenType features per DESIGN.md §3 */
+/* OpenType features (legacy Inter-inspired stack; Geist ignores unsupported tags) */
 body,
 .sl-markdown-content,
 .sidebar-content,
@@ -173,8 +175,7 @@ header.header {
 /* Section group labels */
 .group-label span {
   letter-spacing: 0.05em;
-  font-size: 0.6875rem !important;
-  text-transform: uppercase;
+  font-size: 0.875rem !important;
   font-weight: 600;
   color: var(--sl-color-gray-3) !important;
 }
@@ -201,7 +202,7 @@ header.header {
 
 /* ─── TABLE OF CONTENTS ──────────────────────────────────── */
 starlight-toc a {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--sl-color-gray-3);
   transition: color 0.15s;
   letter-spacing: 0.1px;
@@ -257,7 +258,7 @@ starlight-toc a[aria-current='true'] {
 
 /* ─── LAST UPDATED ───────────────────────────────────────── */
 .last-updated {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--sl-color-gray-3);
 }
 

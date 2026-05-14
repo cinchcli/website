@@ -24,7 +24,7 @@ const {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
 
@@ -54,21 +54,14 @@ const {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://github.com">
-  <!-- Inter (body · UI) + JetBrains Mono (code · kbd) + Geist (display headline) per DESIGN.md -->
-  <link id="font-body" rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <!-- Geist (body · UI · display) + Geist Mono (code · kbd) -->
+  <link id="fonts-cinch" rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap">
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  </noscript>
-  <!-- Geist — display weight for hero headline (engineered personality, not on blocklist) -->
-  <link id="font-display" rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </noscript>
   <script is:inline>
-    ['font-body', 'font-display'].forEach(function (id) {
-      var link = document.getElementById(id);
-      if (link) link.setAttribute('rel', 'stylesheet');
-    });
+    var fonts = document.getElementById('fonts-cinch');
+    if (fonts) fonts.setAttribute('rel', 'stylesheet');
   </script>
 
   <!-- Analytics -->
@@ -168,10 +161,10 @@ const {
     --accent-subtle: rgba(79,179,169,0.1);
     --accent-pastel: #BED9D7; /* Porcelain Pastel — tints, ambient */
     --accent-on:    #07080a; /* text color when using --accent as background */
-    /* Typography — Inter everywhere + JetBrains Mono for code */
-    --sans:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
-    --body:         'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
-    --mono:         'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
+    /* Typography — Geist UI + Geist Mono for code */
+    --sans:         'Geist', system-ui, -apple-system, sans-serif;
+    --body:         'Geist', system-ui, -apple-system, sans-serif;
+    --mono:         'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco, monospace;
     /* Semantic — success / online (terminal ✓, status dots) */
     --semantic-ok:  light-dark(#16a34a, #4ade80);
   }
@@ -179,8 +172,7 @@ const {
   /* Mono uppercase captions (terminal labels, section eyebrows) */
   .mono-caps {
     font-family: var(--mono);
-    font-size: 0.6875rem;
-    text-transform: uppercase;
+    font-size: 0.875rem;
     letter-spacing: 0.1em;
   }
 
@@ -212,7 +204,7 @@ const {
   }
 
   .inline-code--sm {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     color: inherit;
     background: var(--bg-card-2);
     padding: 0.1em 0.3em;
@@ -248,7 +240,7 @@ const {
     font-family: var(--body);
     background: var(--bg);
     color: var(--text-1);
-    /* Inter OpenType features — calt, kern, liga, ss03 per DESIGN.md */
+    /* OpenType features (harmless where unsupported by Geist) */
     font-feature-settings: 'calt' 1, 'kern' 1, 'liga' 1, 'ss03' 1;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
