@@ -30,7 +30,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # PUBLIC_* are inlined at astro build time. This workflow builds on GitHub, so
+      # Cloudflare Pages dashboard env vars do NOT apply — set GitHub Actions secrets instead.
       - name: Build
+        env:
+          PUBLIC_TELEMETRY_URL: ${{ secrets.PUBLIC_TELEMETRY_URL }}
+          PUBLIC_TELEMETRY_API_KEY: ${{ secrets.PUBLIC_TELEMETRY_API_KEY }}
         run: pnpm build
 
       - name: Deploy to Cloudflare Pages
