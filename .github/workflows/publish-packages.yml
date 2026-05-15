@@ -15,6 +15,7 @@ env:
 
 permissions:
   contents: write
+  actions: write   # needed to dispatch the Deploy workflow after publishing
 
 jobs:
   publish:
@@ -168,6 +169,7 @@ jobs:
             packages.json > packages.json.tmp && mv packages.json.tmp packages.json
 
       - name: Commit and push package repository
+        id: push
         env:
           PKG_NAME: ${{ env.PACKAGE_NAME }}
           PKG_TAG: ${{ inputs.tag }}
@@ -175,5 +177,22 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add public/deb public/rpm public/gpg.key public/packages.json
-          git diff --staged --quiet || git commit -m "Update ${PKG_NAME} packages to ${PKG_TAG}"
-          git push
+          if git diff --staged --quiet; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Update ${PKG_NAME} packages to ${PKG_TAG}"
+            git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # GITHUB_TOKEN pushes from a workflow do NOT trigger other workflows
+      # (push event), so deploy.yml never runs after this commit and the new
+      # packages stay stuck in the repo. Dispatch deploy.yml explicitly here —
+      # workflow_dispatch IS allowed via GITHUB_TOKEN when `actions: write` is
+      # granted at the job level.
+      - name: Trigger Deploy workflow
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy.yml --ref main
