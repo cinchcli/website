@@ -1,10 +1,10 @@
 {
   "packages": {
     "cinch": {
-      "version": "v0.1.5",
+      "version": "v0.1.6",
       "repo": "cinchcli/cinch",
       "description": "Remote clipboard tool. Push from SSH, pull to local.",
-      "updated": "2026-05-14T09:59:35Z"
+      "updated": "2026-05-15T13:15:19Z"
     }
   }
 }
