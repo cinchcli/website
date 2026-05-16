@@ -1,62 +1,257 @@
 ---
-// Footer component — ultra-minimal, evolu-style
+import lockupDark  from '../../assets/lockup-dark-icon.svg';
+import lockupLight from '../../assets/lockup-light-icon.svg';
+import { urls } from '../../site/social';
+
+// Footer component - Redesigned for High-End Visual Standards
 ---
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <p class="footer-copy">
-      &copy; {new Date().getFullYear()} Cinch &middot; AGPL 3.0
-    </p>
+<footer class="site-footer section-pad">
+  <div class="container-wide">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="Cinch Home">
+          <img src={lockupDark.src}  width="32" height="36" alt="" aria-hidden="true" class="logo-dark">
+          <img src={lockupLight.src} width="32" height="36" alt="" aria-hidden="true" class="logo-light">
+          <span class="footer-logo-text">cinch</span>
+        </a>
+        <p class="footer-description">
+          Infrastructure for the modern pipe. <br/>
+          Remote clipboard sync for developers.
+        </p>
+      </div>
 
-    <nav class="footer-social" aria-label="Social links">
-      <a href="https://github.com/JinmuGo/cinch" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
-        </svg>
-      </a>
-    </nav>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 class="footer-heading">Product</h4>
+          <ul class="footer-links">
+            <li><a href="/docs/getting-started/" class="footer-link">Docs</a></li>
+            <li><a href="/download" class="footer-link">Download</a></li>
+            <li><a href="/docs/cli/push" class="footer-link">CLI Reference</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href={urls.githubHome} class="footer-link">GitHub</a></li>
+            <li><a href="/guides" class="footer-link">Guides</a></li>
+            <li><a href="/docs/privacy-retention" class="footer-link">Privacy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="/docs/privacy-retention" class="footer-link">Terms of Use</a></li>
+            <li><a href="/docs/privacy-retention" class="footer-link">Privacy Policy</a></li>
+            <li><span class="footer-meta">AGPL 3.0 License</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <p>&copy; {new Date().getFullYear()} Cinch. All rights reserved.</p>
+      </div>
+      <div class="footer-social">
+        <a href={urls.githubHome} target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    padding: 2rem;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 10;
   }
 
-  .footer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
+  .footer-main {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    gap: 4rem;
+    margin-bottom: 6rem;
   }
 
-  .footer-copy {
+  .footer-brand {
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .footer-logo {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--text-1);
+    text-decoration: none;
+    letter-spacing: -0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s var(--ease-fluid);
+  }
+
+  .footer-logo:hover {
+    color: var(--accent);
+  }
+
+  .footer-logo-text {
+    margin-top: -2px;
+  }
+
+  /* Show correct logo variant per color scheme */
+  .logo-light { display: none; }
+  @media (prefers-color-scheme: light) {
+    .logo-dark  { display: none; }
+    .logo-light { display: inline; }
+  }
+
+  .footer-description {
+    font-size: 1.125rem;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    text-wrap: pretty;
+  }
+
+  .public-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-2);
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-subtle);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    gap: 4rem;
+  }
+
+  .footer-heading {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-3);
+    margin-bottom: 2rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .footer-links li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-link {
+    font-size: 0.9375rem;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: all 0.3s var(--ease-fluid);
+    display: inline-block;
+  }
+
+  .footer-link:hover {
+    color: var(--text-1);
+    transform: translateX(4px);
+  }
+
+  .footer-meta {
+    font-size: 0.875rem;
+    color: var(--text-2);
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-legal p {
     font-size: 0.875rem;
     color: var(--text-3);
-    letter-spacing: 0.1px;
-    margin: 0;
   }
 
   .footer-social {
     display: flex;
-    align-items: center;
-    gap: 0.25rem;
+    gap: 1.5rem;
   }
 
-  .social-link {
+  .social-icon-link {
+    color: var(--text-3);
+    transition: all 0.3s var(--ease-fluid);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    color: var(--text-3);
-    border-radius: 6px;
-    transition: color 0.15s, background 0.15s;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
   }
 
-  .social-link:hover {
-    color: var(--text-1);
-    background: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.05));
+  .social-icon-link:hover {
+    color: var(--accent);
+    border-color: var(--accent-subtle);
+    background: var(--hover);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 1024px) {
+    .footer-main {
+      flex-direction: column;
+      gap: 5rem;
+    }
+    .footer-brand {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .footer-bottom {
+      flex-direction: column-reverse;
+      gap: 2rem;
+      align-items: flex-start;
+    }
   }
 </style>
