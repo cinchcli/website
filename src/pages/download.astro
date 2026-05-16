@@ -2,6 +2,7 @@
 import Landing from '../layouts/Landing.astro';
 import Nav from '../components/landing/Nav.astro';
 import Footer from '../components/landing/Footer.astro';
+import { repo, urls } from '../site/social';
 ---
 <Landing
   title="Download Cinch — macOS, Linux, Windows"
@@ -42,7 +43,7 @@ import Footer from '../components/landing/Footer.astro';
           </p>
 
           <div class="card-actions">
-            <a class="btn-primary" id="dmg-btn" href="https://github.com/cinchcli/desktop/releases/latest">
+            <a class="btn-primary" id="dmg-btn" href={urls.desktopLatestRelease}>
               <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
@@ -131,7 +132,7 @@ import Footer from '../components/landing/Footer.astro';
           <p class="card-desc">CLI only. Extract the zip and add to PATH.</p>
 
           <div class="card-actions">
-            <a class="btn-ghost" href="https://github.com/cinchcli/cinch/releases/latest">
+            <a class="btn-ghost" href={urls.cliLatestReleaseZip}>
               <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
@@ -150,7 +151,7 @@ import Footer from '../components/landing/Footer.astro';
 
       <!-- ── Extra links ───────────────────────────────── -->
       <nav class="dl-links" aria-label="More resources">
-        <a href="https://github.com/cinchcli/cinch/releases" target="_blank" rel="noopener noreferrer" class="dl-link">
+        <a href={urls.changelog} target="_blank" rel="noopener noreferrer" class="dl-link">
           All releases on GitHub
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -643,7 +644,7 @@ import Footer from '../components/landing/Footer.astro';
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ manifestUrl: urls.desktopLatestManifest, desktopRoot: repo.desktop }}>
 (function () {
   // Version fetch — updates download button href + version labels
   var dmgBtn = document.getElementById('dmg-btn');
@@ -654,7 +655,7 @@ import Footer from '../components/landing/Footer.astro';
     var ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var t  = setTimeout(function () { if (ac) ac.abort(); }, 5000);
 
-    fetch('https://github.com/cinchcli/desktop/releases/latest/download/latest.json', {
+    fetch(manifestUrl, {
       signal: ac ? ac.signal : undefined,
       cache: 'force-cache'
     })
@@ -663,7 +664,7 @@ import Footer from '../components/landing/Footer.astro';
         clearTimeout(t);
         if (!j || !j.version) return;
         var v = j.version;
-        dmgBtn.href = 'https://github.com/cinchcli/desktop/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
+        dmgBtn.href = desktopRoot + '/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
         if (dmgVer) dmgVer.textContent = 'v' + v;
         if (dlVer)  dlVer.textContent  = 'v' + v;
         var verLine = document.getElementById('dl-version-line');

@@ -1,261 +1,232 @@
 ---
-// UseCases — Step Line scroll section
-// Layout: 2-col grid (text left, terminal right)
+// UseCases — High-End Sequential Workflow Section
 import TerminalWindow from './TerminalWindow.astro';
 ---
 
-<section class="usecases" aria-labelledby="usecases-heading">
-  <div class="uc-inner">
-    <div class="uc-rows">
+<section class="usecases section-pad" id="use-cases" aria-labelledby="usecases-heading">
+  <div class="container-wide">
+    <div class="uc-header animate-in">
+      <h2 class="text-display">Built for your workflow</h2>
+      <p class="uc-header-desc">
+        From remote servers to local buffers, Cinch bridges the gap in your daily development cycle.
+      </p>
+    </div>
 
+    <div class="uc-rows">
       <!-- Row 01: SSH sessions -->
       <article class="uc-row" data-uc>
-        <div class="uc-left">
-          <div class="uc-marker" aria-hidden="true">
+        <div class="uc-info">
+          <div class="uc-marker">
             <span class="uc-dot"></span>
+            <div class="uc-line"></div>
           </div>
-          <div class="uc-text">
+          <div class="uc-content">
             <span class="uc-num">01</span>
             <h3 class="uc-title">SSH sessions</h3>
             <p class="uc-desc">Run cinch on any remote server. Push a file, a command output, or raw text — it surfaces instantly on your local machine. No port forwarding, no scp gymnastics.</p>
           </div>
         </div>
-        <div class="uc-right">
+        <div class="uc-visual">
           <TerminalWindow title="prod-server — ssh">
-            <pre class="term-body" role="img" aria-label="SSH session push example"><code
-><span class="t-c">user@prod:~$</span> <span class="t-cmd">cat</span> deploy.log <span class="t-op">|</span> <span class="t-cmd">cinch push</span>
-<span class="t-ok">✓ pushed</span>  <span class="t-val">148 bytes → relay</span>
-
-<span class="t-c">user@prod:~$</span> <span class="t-cmd">cinch push</span> &lt; /etc/nginx/nginx.conf
-<span class="t-ok">✓ pushed</span>  <span class="t-val">4.8 KB — nginx.conf</span></code></pre>
+            <div class="term-body">
+              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cat</span> deploy.log <span class="t-op">|</span> <span class="t-cmd">cinch push</span></div>
+              <div class="term-line t-ok">✓ pushed 148 bytes → relay</div>
+              <div class="term-line"></div>
+              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cinch push</span> &lt; config.yaml</div>
+              <div class="term-line t-ok">✓ pushed 4.8 KB — config.yaml</div>
+            </div>
           </TerminalWindow>
         </div>
       </article>
 
       <!-- Row 02: Vim & Neovim -->
       <article class="uc-row" data-uc>
-        <div class="uc-left">
-          <div class="uc-marker" aria-hidden="true">
+        <div class="uc-info">
+          <div class="uc-marker">
             <span class="uc-dot"></span>
+            <div class="uc-line"></div>
           </div>
-          <div class="uc-text">
+          <div class="uc-content">
             <span class="uc-num">02</span>
             <h3 class="uc-title">Vim &amp; Neovim</h3>
-            <p class="uc-desc">Yank in Vim and the text is already on your clipboard, everywhere. The cinch.vim plugin hooks into <code class="inline-code inline-code--accent">TextYankPost</code> — no extra keystrokes required.</p>
+            <p class="uc-desc">Yank in Vim and the text is already on your clipboard, everywhere. The cinch.vim plugin hooks into <code class="inline-code">TextYankPost</code> — no extra keystrokes required.</p>
           </div>
         </div>
-        <div class="uc-right">
+        <div class="uc-visual">
           <TerminalWindow title="nvim — init.lua">
-            <pre class="term-body" role="img" aria-label="Neovim cinch.vim plugin example"><code
-><span class="t-c"># lazy.nvim</span>
-<span class="t-val">&#123; </span><span class="t-str">"cinchcli/cinch.vim"</span><span class="t-val"> &#125;</span>
-
-<span class="t-c"># yank any motion → auto-pushed</span>
-<span class="t-cmd">yy</span>   <span class="t-c">" current line</span>
-<span class="t-cmd">yi"</span>  <span class="t-c">" inside quotes</span>
-<span class="t-ok">✓ pushed</span>  <span class="t-val">42 bytes · clip #7</span></code></pre>
+            <div class="term-body">
+              <div class="term-line"><span class="t-c">-- lazy.nvim plugin setup</span></div>
+              <div class="term-line"><span class="t-val">&#123; </span><span class="t-str">"cinchcli/cinch.vim"</span><span class="t-val"> &#125;</span></div>
+              <div class="term-line"></div>
+              <div class="term-line"><span class="t-c">-- yank any motion → auto-pushed</span></div>
+              <div class="term-line"><span class="t-cmd">yy</span> <span class="t-meta">" current line</span></div>
+              <div class="term-line t-ok">✓ pushed 42 bytes · clip #7</div>
+            </div>
           </TerminalWindow>
         </div>
       </article>
 
       <!-- Row 03: tmux & screen -->
       <article class="uc-row" data-uc>
-        <div class="uc-left">
-          <div class="uc-marker" aria-hidden="true">
+        <div class="uc-info">
+          <div class="uc-marker">
             <span class="uc-dot"></span>
           </div>
-          <div class="uc-text">
+          <div class="uc-content">
             <span class="uc-num">03</span>
             <h3 class="uc-title">tmux &amp; screen</h3>
             <p class="uc-desc">The usual stack is ssh → tmux or screen → Vim. OSC 52 never survives that chain. cinch.vim still pushes every yank over HTTPS — same flow as a bare shell, from any pane.</p>
           </div>
         </div>
-        <div class="uc-right">
+        <div class="uc-visual">
           <TerminalWindow title="session — tmux · nvim">
-            <pre class="term-body" role="img" aria-label="Vim buffer inside tmux with cinch.vim"><code
-><span class="t-meta">   1 </span><span class="t-cmd">use</span> <span class="t-val">axum</span><span class="t-op">::</span><span class="t-val">Router</span><span class="t-op">;</span>
-<span class="t-meta">   2 </span>
-<span class="t-meta">   3 </span><span class="t-cmd">pub fn</span> <span class="t-val">app</span><span class="t-op">()</span> <span class="t-op">-&gt;</span> <span class="t-val">Router</span> <span class="t-op">&#123;</span>
-<span class="t-meta">   4 </span>    <span class="t-val">Router</span><span class="t-op">::</span><span class="t-cmd">new</span><span class="t-op">()</span>
-<span class="t-meta">   5 </span>        <span class="t-op">.</span><span class="t-cmd">route</span><span class="t-op">(</span><span class="t-str">"/health"</span><span class="t-op">,</span> <span class="t-cmd">get</span><span class="t-op">(</span><span class="t-val">health</span><span class="t-op">))</span>
-<span class="t-meta">   6 </span><span class="t-op">&#125;</span>
-<span class="t-meta">   ~ </span>
-<span class="t-meta">   ~ </span>
-<span class="t-meta">NORMAL</span>  <span class="t-val">api/src/lib.rs</span>  <span class="t-meta">[+]</span>  <span class="t-ok">✓ cinch.vim</span>  <span class="t-meta">yank → relay</span></code></pre>
+            <div class="term-body">
+              <div class="term-line"><span class="t-meta">1</span> <span class="t-cmd">use</span> <span class="t-val">axum</span><span class="t-op">::</span><span class="t-val">Router</span><span class="t-op">;</span></div>
+              <div class="term-line"><span class="t-meta">2</span> </div>
+              <div class="term-line"><span class="t-meta">3</span> <span class="t-cmd">pub fn</span> <span class="t-val">app</span><span class="t-op">()</span> <span class="t-op">-&gt;</span> <span class="t-val">Router</span> <span class="t-op">&#123;</span></div>
+              <div class="term-line"><span class="t-meta">NORMAL</span>  <span class="t-val">api/src/lib.rs</span> <span class="t-ok">✓ cinch.vim</span></div>
+            </div>
           </TerminalWindow>
         </div>
       </article>
-
-    </div><!-- /uc-rows -->
+    </div>
   </div>
 </section>
 
 <style>
-  /* ── Section wrapper ──────────────────────────────────── */
   .usecases {
-    padding: 5rem 2rem 7rem;
-  }
-
-  .uc-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  /* ── Eyebrow ──────────────────────────────────────────── */
-  .uc-header {
-    margin-bottom: 3.5rem;
-  }
-
-  .uc-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .uc-eyebrow-rule {
-    display: block;
-    width: 2rem;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.6;
-    flex-shrink: 0;
-  }
-
-  /* ── Rows container — holds the spine line ───────────── */
-  .uc-rows {
-    --dot-col-w: 2.5rem;
-    --spine-x: calc(var(--dot-col-w) / 2);
     position: relative;
+    overflow: hidden;
   }
 
-  /* Spine: single teal line running through all rows */
-  .uc-rows::before {
-    content: '';
-    position: absolute;
-    left: var(--spine-x);
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    transform: translateX(-0.5px);
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(79,179,169,0.45) 6%,
-      rgba(79,179,169,0.45) 94%,
-      transparent 100%
-    );
-    pointer-events: none;
+  .uc-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 8rem;
   }
 
-  /* ── Row ──────────────────────────────────────────────── */
+  .uc-header-desc {
+    font-size: 1.25rem;
+    color: var(--text-2);
+    margin-top: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .uc-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
   .uc-row {
     display: grid;
-    grid-template-columns: 2fr 3fr;
-    gap: 4rem;
-    padding: 4.5rem 0;
-    border-top: 1px solid var(--border);
+    grid-template-columns: 1fr 1.5fr;
+    gap: 8rem;
+    align-items: center;
+    padding: 6rem 0;
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
+    transform: translateY(4rem);
+    transition: all 1s var(--ease-fluid);
   }
 
   .uc-row.is-visible {
     opacity: 1;
-    transform: none;
+    transform: translateY(0);
   }
 
-  /* ── Left column ──────────────────────────────────────── */
-  .uc-left {
+  .uc-info {
     display: flex;
-    gap: 1.25rem;
+    gap: 3rem;
+    height: 100%;
   }
 
-  /* Marker column — holds the node dot, aligned with spine */
   .uc-marker {
-    width: var(--dot-col-w);
-    flex-shrink: 0;
     display: flex;
-    justify-content: center;
-    padding-top: 0.25rem;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    padding-top: 0.5rem;
   }
 
   .uc-dot {
-    display: block;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
+    width: 12px;
+    height: 12px;
     background: var(--accent);
-    box-shadow: 0 0 10px rgba(79,179,169,0.5);
-    position: relative;
-    z-index: 1;
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--accent-subtle);
     flex-shrink: 0;
+    z-index: 2;
   }
 
-  /* Text content */
-  .uc-text {
+  .uc-line {
+    width: 1px;
     flex: 1;
-    min-width: 0;
+    background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+    opacity: 0.2;
+    margin-top: 1rem;
+    margin-bottom: -6rem; /* Overlap with next row */
+  }
+
+  .uc-content {
+    padding-bottom: 2rem;
   }
 
   .uc-num {
-    display: block;
     font-family: var(--mono);
     font-size: 0.875rem;
     color: var(--accent);
-    letter-spacing: 0.06em;
-    margin-bottom: 0.625rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.1em;
   }
 
   .uc-title {
-    font-size: 1.375rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text-1);
-    margin-bottom: 0.75rem;
-    line-height: 1.2;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
   }
 
   .uc-desc {
-    font-size: 0.9375rem;
+    font-size: 1.125rem;
     color: var(--text-2);
-    line-height: 1.75;
-    letter-spacing: 0.1px;
-    max-width: 38ch;
+    line-height: 1.6;
+    max-width: 42ch;
   }
 
-  /* ── Right column ─────────────────────────────────────── */
-  .uc-right {
-    min-width: 0;
+  .visual-wrapper {
+    padding: 0.625rem;
+    background: light-dark(rgba(255,255,255,0.4), rgba(0,0,0,0.4));
+    backdrop-filter: blur(10px);
   }
 
-  /* ── Responsive ───────────────────────────────────────── */
-  @media (max-width: 860px) {
-    .usecases {
-      padding: 4rem 1.5rem 5rem;
-    }
+  .uc-terminal {
+    background: #0e0f10 !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+  }
 
+  .term-line {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    line-height: 2;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1024px) {
     .uc-row {
       grid-template-columns: 1fr;
+      gap: 4rem;
+      padding: 4rem 0;
+    }
+    .uc-info {
       gap: 2rem;
     }
-
-    .uc-rows::before {
+    .uc-line {
       display: none;
     }
-
-    .uc-marker {
-      display: none;
-    }
-
-    .uc-left {
-      gap: 0;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .uc-right :global(.term-body) {
-      font-size: 0.875rem;
-      padding: 1rem 1.25rem 1.125rem;
+    .uc-title {
+      font-size: 2rem;
     }
   }
 </style>
@@ -268,14 +239,11 @@ import TerminalWindow from './TerminalWindow.astro';
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
     rows.forEach(row => observer.observe(row));
-  } else {
-    document.querySelectorAll<HTMLElement>('[data-uc]').forEach(r => r.classList.add('is-visible'));
   }
 </script>

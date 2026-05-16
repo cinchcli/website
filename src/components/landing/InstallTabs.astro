@@ -1,4 +1,6 @@
 ---
+import { repo, urls } from '../../site/social';
+
 // InstallTabs — OS-aware install widget with sliding segment control
 ---
 
@@ -31,7 +33,7 @@
 
     <!-- macOS -->
     <div class="panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" hidden>
-      <a class="dmg-btn" id="dmg-btn" href="https://github.com/cinchcli/desktop/releases/latest">
+      <a class="dmg-btn" id="dmg-btn" href={urls.desktopLatestRelease}>
         <span class="dmg-icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </span>
@@ -72,7 +74,7 @@
 
     <!-- Windows -->
     <div class="panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" hidden>
-      <a class="dmg-btn dmg-btn--ghost" href="https://github.com/cinchcli/cinch/releases/latest">
+      <a class="dmg-btn dmg-btn--ghost" href={urls.cliLatestReleaseZip}>
         <span class="dmg-icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </span>
@@ -423,7 +425,7 @@
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ manifestUrl: urls.desktopLatestManifest, desktopRoot: repo.desktop }}>
   (function () {
 
     function detectOS() {
@@ -510,7 +512,7 @@
     if (dmgBtn && dmgVer) {
       var ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var t = setTimeout(function () { if (ac) ac.abort(); }, 5000);
-      fetch('https://github.com/cinchcli/desktop/releases/latest/download/latest.json', {
+      fetch(manifestUrl, {
         signal: ac ? ac.signal : undefined,
         cache: 'force-cache'
       })
@@ -519,7 +521,7 @@
           clearTimeout(t);
           if (!j || !j.version) return;
           var v = j.version;
-          dmgBtn.href = 'https://github.com/cinchcli/desktop/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
+          dmgBtn.href = desktopRoot + '/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
           dmgVer.textContent = 'v' + v;
         })
         .catch(function () {});

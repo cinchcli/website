@@ -1,11 +1,45 @@
 ---
-// LiveWire — animated dual terminal showing push → pull in a continuous 8s loop.
-// Pure CSS keyframes; `prefers-reduced-motion` falls back to the final state.
+// LiveWire — animated dual terminal showing push → pull, rotating through scenarios.
+//
+// To add or edit a scenario, just edit the SCENES array below — nothing else.
+// No char counts to track, no per-scenario CSS to add. The typewriter width is
+// computed at runtime from `els.pushCmd.textContent.length` and injected as a
+// `--push-chars` CSS variable that the animation interpolates against.
+//
+// The reveal is a smooth left-to-right slide (linear `width` growth, no `steps()`)
+// because `steps()` cannot accept a CSS variable — and demanding one keyframe per
+// char count is the friction we're getting rid of.
+//
+// Rotation is synced to the `body-cycle` `animationiteration` event so the swap
+// always happens at the exact moment the body is at opacity 0 — invisible to the
+// reader. Hover-pause is fully CSS-driven (no JS timer to maintain).
 import TerminalWindow from './TerminalWindow.astro';
 
-// Character counts for the typed commands — used by the reveal keyframes below.
-// echo $DATABASE_URL | cinch push  = 31 chars
-// cinch pull                       = 10 chars
+const SCENES = [
+  {
+    pushComment: 'Save it once',
+    pushCmdHtml: '<span class="t-cmd">echo</span> <span class="t-var">$DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
+    pushMeta: '56 B · 12 ms',
+    pullComment: 'Use it anywhere',
+    pullOutput: 'postgres://prod:s3cr3t@db.prod.internal/app',
+  },
+  {
+    pushComment: 'Hand off a secret',
+    pushCmdHtml: '<span class="t-cmd">cat</span> <span class="t-str">~/.stripe-key</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
+    pushMeta: '32 B · 9 ms',
+    pullComment: 'Use it in CI',
+    pullOutput: 'sk_live_••••••••••••••••demo••••',
+  },
+  {
+    pushComment: 'Forward your key',
+    pushCmdHtml: '<span class="t-cmd">ssh-add -L</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
+    pushMeta: '380 B · 18 ms',
+    pullComment: 'Trust on the box',
+    pullOutput: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA',
+  },
+];
+
+const first = SCENES[0];
 ---
 
 <div class="live-wire" aria-label="Push and pull terminal demo">
@@ -15,19 +49,19 @@ import TerminalWindow from './TerminalWindow.astro';
     <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Push</p>
     <TerminalWindow title="local — bash">
       <span slot="bar-extra" class="status-dot" aria-hidden="true"></span>
-      <div class="term-body">
+      <div class="term-body" data-lw-body>
         <div class="line line-comment">
           <span class="t-c line-glyph">#</span>
-          <span class="t-c">Save it once</span>
+          <span class="t-c" data-lw="pushComment">{first.pushComment}</span>
         </div>
         <div class="line line-cmd line-push-cmd">
           <span class="t-p line-glyph">$</span>
           <span class="line-rest">
-            <span class="reveal reveal-push"><span class="t-cmd">echo</span> <span class="t-var">$DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span></span><span class="caret caret-push" aria-hidden="true"></span>
+            <span class="reveal reveal-push is-typing" data-lw="pushCmd" set:html={first.pushCmdHtml}></span><span class="caret caret-push" aria-hidden="true"></span>
           </span>
         </div>
         <div class="line line-out line-push-out">
-          <span class="t-ok">✓ Pushed</span> <span class="t-meta">56 B · 12 ms</span>
+          <span class="t-ok">✓ Pushed</span> <span class="t-meta" data-lw="pushMeta">{first.pushMeta}</span>
         </div>
       </div>
     </TerminalWindow>
@@ -54,7 +88,7 @@ import TerminalWindow from './TerminalWindow.astro';
       <div class="term-body">
         <div class="line line-comment">
           <span class="t-c line-glyph">#</span>
-          <span class="t-c">Use it anywhere</span>
+          <span class="t-c" data-lw="pullComment">{first.pullComment}</span>
         </div>
         <div class="line line-cmd line-pull-cmd">
           <span class="t-p line-glyph">$</span>
@@ -63,7 +97,7 @@ import TerminalWindow from './TerminalWindow.astro';
           </span>
         </div>
         <div class="line line-out line-pull-out">
-          <span class="t-val">postgres://prod:s3cr3t@db.prod.internal/app</span>
+          <span class="t-val" data-lw="pullOutput">{first.pullOutput}</span>
         </div>
       </div>
     </TerminalWindow>
@@ -71,30 +105,98 @@ import TerminalWindow from './TerminalWindow.astro';
 
 </div>
 
+<script is:inline define:vars={{ SCENES }}>
+  (function () {
+    const lw = document.querySelector('.live-wire');
+    if (!lw) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const els = {
+      pushComment: lw.querySelector('[data-lw="pushComment"]'),
+      pushCmd:     lw.querySelector('[data-lw="pushCmd"]'),
+      pushMeta:    lw.querySelector('[data-lw="pushMeta"]'),
+      pullComment: lw.querySelector('[data-lw="pullComment"]'),
+      pullOutput:  lw.querySelector('[data-lw="pullOutput"]'),
+    };
+    const pushBody = lw.querySelector('[data-lw-body]');
+    if (!pushBody) return;
+
+    function apply(idx) {
+      const s = SCENES[idx];
+      els.pushComment.textContent = s.pushComment;
+      els.pushCmd.innerHTML       = s.pushCmdHtml;
+      els.pushMeta.textContent    = s.pushMeta;
+      els.pullComment.textContent = s.pullComment;
+      els.pullOutput.textContent  = s.pullOutput;
+      // Auto-derive the typewriter target width from the rendered text length —
+      // this is what makes "just edit the SCENES array" the entire workflow.
+      // We set it as an explicit `<length>` so `@property --push-width` interpolates
+      // it correctly. The keyframes use `var(--push-width)` directly.
+      lw.style.setProperty('--push-width', els.pushCmd.textContent.length + 'ch');
+      // Restart the typewriter so the new --push-width takes effect this iteration —
+      // browsers don't reliably re-resolve `var()` references inside @keyframes once an
+      // animation is in flight, so we toggle the gating class to force a clean restart.
+      els.pushCmd.classList.remove('is-typing');
+      // Force reflow so the class removal is observed before re-adding.
+      void els.pushCmd.offsetWidth;
+      els.pushCmd.classList.add('is-typing');
+    }
+
+    // Sync with scene 0 on mount (sets --push-width without changing anything visible).
+    apply(0);
+
+    // Rotate scenes exactly at body-cycle iteration boundaries — body is at opacity 0
+    // there, so the textContent swap is invisible. No setInterval drift, and CSS-driven
+    // hover-pause (`animation-play-state: paused`) automatically pauses rotation too
+    // because paused animations don't fire `animationiteration`.
+    let i = 0;
+    pushBody.addEventListener('animationiteration', (e) => {
+      // Only react to the body's master cycle, ignore inner animations if any bubble.
+      if (e.target !== pushBody) return;
+      i = (i + 1) % SCENES.length;
+      apply(i);
+    });
+  })();
+</script>
+
 <style>
   /* ─── Layout ────────────────────────────────────────── */
+  /* Grid (not flex) so column widths are decoupled from intrinsic content size —
+     the typing `.reveal` animation can't push the terminal wider.
+     Each terminal is capped at 32rem (≈ a real macOS Terminal window) and the
+     whole row pins to the start — feels like a real demo, not a stretched banner.
+     `text-align: left` neutralises the centered `Hero.astro > .hero-container`,
+     so the typing reveal, output lines, and Push/Pull labels all align flush left. */
   .live-wire {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 32rem) auto minmax(0, 32rem);
+    justify-content: start;
     align-items: center;
     gap: 0;
     width: 100%;
-    margin-top: 0.5rem;
+    text-align: left;
   }
 
   .term-wrap {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
+    gap: 0.75rem;
     min-width: 0;
   }
 
+  /* Pin the terminal shell to its grid column — no shrink-wrap to inner content. */
+  .live-wire :global(.term-win) {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Label sits flush with where the terminal's title-bar dots begin (1rem). */
   .term-label {
     padding-left: 1rem;
     margin: 0;
   }
 
-  /* LiveWire-only: clip typing reveal; loop fade (typography → TerminalWindow) */
+  /* LiveWire-only: clip typing reveal; loop fade hides the scene swap. */
   .live-wire .term-body {
     overflow: hidden;
     animation: body-cycle 8s linear infinite;
@@ -126,7 +228,21 @@ import TerminalWindow from './TerminalWindow.astro';
 
   /* .t-* tokens → TerminalWindow.astro */
 
-  /* ─── Typing reveal (CSS-only) ──────────────────────── */
+  /* ─── Typing reveal ─────────────────────────────────── */
+  /* Width-based clip: the element occupies `width` from 0 → target, and `overflow:
+     hidden` clips the right side as the text fills in. The caret sits right after
+     the reveal so it slides forward with the visible edge naturally.
+     Target width is the typed `--push-width` length (set by JS from textContent.length).
+     `@property` registration makes the variable interpolate as a real `<length>`,
+     and the JS `.is-typing` toggle forces the animation to re-resolve keyframe
+     values each scene — together they sidestep the "var() inside @keyframes
+     doesn't update mid-flight" quirk that left scenes 2 & 3 invisible. */
+  @property --push-width {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 31ch;
+  }
+
   .reveal {
     display: inline-block;
     overflow: hidden;
@@ -135,23 +251,21 @@ import TerminalWindow from './TerminalWindow.astro';
     white-space: nowrap;
   }
 
-  /* Push reveal: 31 chars, typed between 5% → 31.25% of the 8s cycle */
-  .reveal-push {
-    animation: reveal-push 8s linear infinite;
+  /* Animation is gated by `.is-typing` so JS can restart it (remove + reflow + add). */
+  .reveal-push.is-typing {
+    animation: type-push 8s linear infinite;
   }
-  @keyframes reveal-push {
-    0%                                                    { width: 0; }
-    5%   { width: 0; animation-timing-function: steps(31, end); }
-    31.25%                                                { width: 31ch; }
-    100%                                                  { width: 31ch; }
+  @keyframes type-push {
+    0%, 5%   { width: 0; }
+    31.25%   { width: var(--push-width); }
+    100%     { width: var(--push-width); }
   }
 
-  /* Pull reveal: 10 chars, typed between 47.5% → 57.5% */
   .reveal-pull {
-    animation: reveal-pull 8s linear infinite;
+    animation: type-pull 8s linear infinite;
   }
-  @keyframes reveal-pull {
-    0%, 47.5% { width: 0; animation-timing-function: steps(10, end); }
+  @keyframes type-pull {
+    0%, 47.5% { width: 0; }
     57.5%     { width: 10ch; }
     100%      { width: 10ch; }
   }
@@ -232,9 +346,10 @@ import TerminalWindow from './TerminalWindow.astro';
   }
 
   /* ─── Arrow ─────────────────────────────────────────── */
+  /* Width doubles as the inter-terminal gutter — wider = more editorial breathing room. */
   .flow-arrow {
     flex-shrink: 0;
-    width: 64px;
+    width: 88px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -272,20 +387,22 @@ import TerminalWindow from './TerminalWindow.astro';
   /* ─── Responsive ────────────────────────────────────── */
   @media (max-width: 680px) {
     .live-wire {
-      flex-direction: column;
+      grid-template-columns: minmax(0, 1fr);
+      grid-auto-rows: auto;
       align-items: stretch;
-      gap: 0.75rem;
+      gap: 1.25rem;
     }
     .flow-arrow {
       transform: rotate(90deg);
       margin-top: 0;
       width: 100%;
-      height: 2.5rem;
+      height: 3rem;
     }
   }
 
   /* ─── Hover to pause (mouse only) ────────────────────── */
-  /* Lets a reader freeze on any frame instead of chasing the loop. */
+  /* Lets a reader freeze on any frame. Pausing `body-cycle` also pauses rotation —
+     `animationiteration` doesn't fire on paused animations. */
   @media (hover: hover) {
     .live-wire:hover .term-body,
     .live-wire:hover .reveal-push,
@@ -300,9 +417,9 @@ import TerminalWindow from './TerminalWindow.astro';
     }
   }
 
-  /* ─── Reduced motion: hold the final state ──────────── */
+  /* ─── Reduced motion: hold the final state of scene 1 ──── */
   @media (prefers-reduced-motion: reduce) {
-    .reveal-push { width: 31ch; animation: none; }
+    .reveal-push, .reveal-push.is-typing { width: var(--push-width, 31ch); animation: none; }
     .reveal-pull { width: 10ch; animation: none; }
     .line-push-out,
     .line-pull-out { opacity: 1; animation: none; }
