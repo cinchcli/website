@@ -39,9 +39,9 @@ One color wouldn't survive both modes and every component role. Cinch uses **two
 | Token | Hex | HSL | Role |
 |-------|-----|-----|------|
 | **Porcelain Deep** (dark base) | `#4FB3A9` | `hsl(174, 40%, 51%)` | Primary brand on **dark** canvas — CTAs, focus rings, live pulse dots, pipe flow glow, selected-state left bar |
-| **Porcelain Deep · Light** | `#2F7F78` | `hsl(174, 46%, 34%)` | Primary brand on **light** canvas — darker base so foreground punch survives light mode. Same hue family, ~20% darker |
+| **Porcelain Deep · Light** | `#246C65` | `hsl(174, 50%, 28%)` | Primary brand on **light** canvas — deeper base so foreground punch survives warm bone canvas. Same hue family, ~25% darker than the dark-mode base. Lands at WCAG AA body-text contrast (5.4:1) on `#FBFBFA`. |
 | **Porcelain Deep · Hover (dark)** | `#5FC5BA` | `hsl(174, 43%, 57%)` | Hover brightening on dark (brighten pattern) |
-| **Porcelain Deep · Hover (light)** | `#1F5F59` | `hsl(174, 51%, 25%)` | Hover deepening on light (deepen pattern, inverse of dark) |
+| **Porcelain Deep · Hover (light)** | `#1A524D` | `hsl(174, 51%, 21%)` | Hover deepening on light (deepen pattern, inverse of dark) — exposed as `--accent-muted` |
 | **Porcelain Deep · Muted** | `#3E928A` | `hsl(174, 40%, 41%)` | Pressed state; between the two Deep shades |
 | **Porcelain Pastel** | `#BED9D7` | `hsl(175, 25%, 80%)` | Tint accent — hover row fills (light), ambient glow, subtle highlights |
 | **Porcelain Pastel · Hover** | `#D2E5E3` | `hsl(175, 26%, 86%)` | Lifted pastel state |
@@ -92,18 +92,17 @@ Light mode is not a "docs-only alternate" — it is a first-class parallel syste
 --border            rgba(0,0,0,0.06)         Card containment, divider default
 --border-hover      rgba(0,0,0,0.12)         Card hover
 --border-strong     rgba(0,0,0,0.15)         Explicit divider line
---accent            #2F7F78    Porcelain Deep · Light — deepens on light canvas for punch + WCAG AA body-text contrast
---accent-hover      #1F5F59    Even darker on light hover (deepen pattern, inverse of dark's brighten)
---accent-muted      #3E928A    Between Deep (dark base) and Deep·Light — use for pressed or secondary accent
+--accent            #246C65    Porcelain Deep · Light — deepens on light canvas for punch + WCAG AA body-text contrast (5.4:1)
+--accent-muted      #1A524D    Hover/pressed deepening on light (inverse of dark's brighten pattern)
 --accent-on         #FFFFFF    Text color when using --accent as background (e.g. Emphasis Pill CTA)
 --accent-tint       #BED9D7    Porcelain Pastel — hover/selected tint base (used at higher alpha)
 --bg-selected       rgba(190,217,215,0.45)   Selected clip row fill (Pastel @ 45%)
 --bg-hover          rgba(190,217,215,0.25)   Hover row fill (Pastel @ 25%)
---accent-subtle     rgba(47,127,120,0.10)    Subtle accent wash (Deep·Light @ 10%)
---glow-accent       rgba(47,127,120,0.20)    Flow glow behind live elements
+--accent-subtle     rgba(36,108,101,0.08)    Subtle accent wash (Deep·Light @ 8%)
+--glow-accent       rgba(36,108,101,0.20)    Flow glow behind live elements
 ```
 
-**Why Deep splits per mode:** Porcelain Deep `#4FB3A9` reads as "living data in motion" against `#07080a` canvas, but goes slightly washed/pastel against warm bone `#FBFBFA`. Light mode uses `#2F7F78` (same hue, ~20% darker) to restore foreground punch. Both share the Porcelain family identity; only the saturation shifts to compensate for canvas luminance.
+**Why Deep splits per mode:** Porcelain Deep `#4FB3A9` reads as "living data in motion" against `#07080a` canvas, but goes slightly washed/pastel against warm bone `#FBFBFA`. Light mode uses `#246C65` (same hue, ~25% darker) to restore foreground punch and meet WCAG AA body-text contrast on the warm canvas. Both share the Porcelain family identity; only the saturation/luminance shifts to compensate for canvas luminance.
 
 **Mode-flip rationale:**
 - Hover on dark *brightens* (Deep → Hover Deep) because dark-on-dark needs to lift.
@@ -136,40 +135,44 @@ Never reuse Porcelain Deep for semantic meaning — the brand accent is brand, n
 ## 3. Typography Rules
 
 ### Font Family
-- **Primary**: `Inter` — humanist sans-serif, used everywhere. Fallbacks: `Inter Fallback`, `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `"Segoe UI"`, sans-serif
+- **Primary (marketing site + docs)**: `Geist` — geometric sans-serif tuned for screen UI. Fallbacks: `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `"Segoe UI"`, sans-serif
+- **Primary (desktop app surfaces)**: `Inter` — humanist sans-serif, used in app chrome where macOS-native legibility matters more than display character. Fallbacks: `Inter Fallback`, `system-ui`, `-apple-system`
 - **System** (select macOS-native surfaces): `SF Pro Text` → `SF Pro Icons` → `Inter`
 - **Monospace**: `Geist Mono` — code blocks, `<kbd>`, clip previews, tabular metadata. Fallbacks: `ui-monospace`, `SFMono-Regular`, `Menlo`, `Monaco`
-- **OpenType features**: `calt`, `kern`, `liga`, `ss03` enabled globally on Inter; `ss02`, `ss08` on display text; `"liga" 0` on hero headings to keep character shapes crisp at scale
+- **OpenType features**: `calt`, `kern`, `liga`, `ss03` enabled globally; `ss02`, `ss08` on display text; `"liga" 0` on hero headings to keep character shapes crisp at scale
 - **Tabular numerals**: `font-variant-numeric: tabular-nums` on clip timestamps, sizes, row counts
 
 ### Hierarchy
 
+Display sizes use **tight (negative) tracking** because Geist sets very open by default at large sizes; without compression headlines feel airy-loose rather than confident. Body and UI sizes use **positive tracking** to keep the breathable feel that defines the brand.
+
 | Role | Size | Weight | Line Height | Letter Spacing | Notes |
 |------|------|--------|-------------|----------------|-------|
-| Display Hero | 64px | 600 | 1.10 | 0px | Inter; OpenType: `"liga" 0`, ss02, ss08 |
-| Section Display | 56px | 400 | 1.17 | 0.2px | Inter; calt, kern, liga, ss03 |
-| Section Heading | 24px | 500 | normal | 0.2px | Inter |
-| Card Heading | 22px | 400 | 1.15 | 0px | Inter |
-| Sub-heading | 20px | 500 | 1.60 | 0.2px | Relaxed line-height |
-| Body Large | 18px | 400 | 1.15 | 0.2px | Inter |
-| Body | 16px | 500 | 1.60 | 0.2px | Primary body baseline |
-| Body Tight | 16px | 400 | 1.15 | 0.1px | UI labels, clip row text |
-| Button | 16px | 600 | 1.15 | 0.3px | Semibold, slightly wider tracking |
-| Nav Link | 16px | 500 | 1.40 | 0.3px | Navigation links |
-| Caption | 14px | 500 | 1.14 | 0.2px | Metadata, source labels |
+| Display Hero (web) | clamp(40px, 8vw, 80px) | 700 | 1.1 | -0.04em (~-3.2px at 80px) | Geist; `text-wrap: balance`; `liga` 0 + ss02 + ss08 |
+| Display Hero (app) | 64px | 600 | 1.10 | 0px | Inter (app surfaces); OpenType: `"liga" 0`, ss02, ss08 |
+| Section Display | clamp(40px, 8vw, 80px) | 700 | 1.1 | -0.04em | Geist; matches Hero |
+| Section Heading (h3) | 40px | 700 | 1.1 | -0.04em | Geist; card titles, panel headings |
+| Card Heading | 22px | 600 | 1.15 | -0.025em | Geist; download platform labels |
+| Sub-heading | 20px | 500 | 1.60 | +0.2px | Relaxed line-height, positive tracking |
+| Body Large | 18px | 400 | 1.15 | +0.2px | Geist (web) / Inter (app) |
+| Body | 16px | 500 | 1.60 | +0.2px | Primary body baseline |
+| Body Tight | 16px | 400 | 1.15 | +0.1px | UI labels, clip row text |
+| Button | 16px | 600 | 1.15 | +0.3px | Semibold, slightly wider tracking |
+| Nav Link | 16px | 500 | 1.40 | +0.3px | Navigation links |
+| Caption | 14px | 500 | 1.14 | +0.2px | Metadata, source labels |
 | Caption Bold | 14px | 600 | 1.40 | 0px | Emphasized captions |
-| Small | 12px | 600 | 1.33 | 0px | Badges, tags, micro-labels |
-| Small Link | 12px | 400 | 1.50 | 0.4px | Footer, fine print |
-| Code | 14px (Geist Mono) | 500 | 1.60 | 0.3px | Code blocks |
-| Code Small | 12px (Geist Mono) | 400 | 1.60 | 0.2px | Inline code, CLI snippets, kbd |
+| Small (caps) | 12px | 700 | 1.10 | +1.8px / +0.15em | Footer column heads, eyebrow caps |
+| Small Link | 12px | 400 | 1.50 | +0.4px | Footer, fine print |
+| Code | 14px (Geist Mono) | 500 | 1.60 | +0.3px | Code blocks |
+| Code Small | 12px (Geist Mono) | 400 | 1.60 | +0.2px | Inline code, CLI snippets, kbd |
 
 ### Principles
-- **Positive tracking on dark**: +0.2px to +0.4px on body text compensates for dark-background optical tightening — the signature move that gives Cinch its breathable feel
-- **Weight 500 as baseline**: Body text uses medium weight (500), not regular (400); subtle extra heft improves legibility on dark surfaces
-- **Display restraint**: Hero at 64px/600 is confident but not oversized
-- **OpenType everywhere**: `ss03` globally on Inter lends a slightly more geometric, tool-like quality
-- **Measure**: 45–75 characters per line on long-form prose, 66 ideal
-- **`text-wrap: balance`** on headings
+- **Two tracking systems, not one.** **Display sizes** (≥22px headings and large display text) use **negative tracking** (-0.025em to -0.04em) — Geist sets loose at large sizes, and compression is what reads as "confident, modern, instrument-like" rather than "airy stock font". **Body/UI sizes** (≤20px) use **positive tracking** (+0.1px to +0.4px) — the signature breathable feel that counterbalances dense dark surfaces and improves legibility at small sizes.
+- **Weight 700 on display, 500 on body**: display sizes use bold (700) to anchor the page; body text uses medium (500) instead of regular (400) — the subtle extra heft improves legibility on warm/dark surfaces.
+- **Display scaling via clamp**: `clamp(40px, 8vw, 80px)` is the standard web display scale. The 80px ceiling assumes generous side padding; do not exceed.
+- **OpenType everywhere**: `calt`, `kern`, `liga`, `ss03` enabled globally; `"liga" 0` + `ss02` + `ss08` on hero headings to keep character shapes crisp at scale.
+- **Measure**: 45–75 characters per line on long-form prose, 66 ideal.
+- **`text-wrap: balance`** on headings; `text-wrap: pretty` on body paragraphs.
 
 ## 4. Component Stylings
 
@@ -428,3 +431,4 @@ When refining:
 | 2026-04-21 | **Light mode elevated to first-class parallel system** | Previous version treated light as a docs-only alternate. Marketing pages and Starlight docs run in light by default; desktop app in dark. Explicit per-mode tokens documented (surfaces, text, borders, hover behavior, shadow philosophy). Hover pattern flips: opacity-fade on dark → background-darken on light, because opacity-fade on light washes rather than emphasizes. |
 | 2026-04-21 | **Porcelain Deep splits per mode: `#4FB3A9` (dark) · `#2F7F78` (light)** | Live browser QA in light mode revealed `#4FB3A9` read as mint/washed-pastel against warm bone canvas — foreground punch collapsed. Shifted light-mode `--accent` to `#2F7F78` (same hue family, deeper by ~20%) to restore "pulls the eye" quality on light. Ripple effects: (1) CTA pill text flips from near-black `#07080a` (OK on `#4FB3A9`) to white `#FFFFFF` (required on `#2F7F78` for AA contrast), so added `--accent-on` token that flips with mode. (2) Code-span text using `C.accent` now meets AA body-text contrast on light canvas (`#2F7F78` = 5.4:1 vs `#4FB3A9` = 2.5:1). Both modes still share Porcelain brand family; only saturation shifts to compensate for canvas luminance. |
 | 2026-05-14 | **Marketing monospace: Geist Mono** | Website and Starlight load **Geist Mono** for `--mono`, code, kbd, and tabular metadata — pairs with **Geist** display; replaces JetBrains Mono on web. Desktop app typography is unchanged in this commit. |
+| 2026-05-16 | **Reconciled DESIGN.md to live implementation** | Design review (`/design-review`) surfaced two spec-vs-code drifts. (1) Body font: spec said "Inter primary"; web has been on Geist since 2026-04-20 + 2026-05-14. Reframed: **Geist primary on web (marketing + docs), Inter primary on desktop-app surfaces** — both share the OpenType feature set, both follow the same letter-spacing rules. (2) Letter-spacing: spec said headings at 0 to +0.2px; reality is -0.04em on display sizes and -0.025em on card headings. Reframed as a **two-tracking-system rule**: negative on display (≥22px), positive on body/UI (≤20px) — Geist's open default at large sizes was the reason compression always crept back in. (3) `--accent` value: spec said `#2F7F78`; CSS shipped `#246C65` (deeper, lands at 5.4:1 AA on warm bone vs. 3.1:1 for the spec value). Spec updated to `#246C65` because the deeper value was the deliberate tune for body-text legibility. Paired hover token renamed `--accent-muted = #1A524D`. |

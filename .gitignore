@@ -16,3 +16,7 @@ node_modules/
 .DS_Store
 .designs/
 .playwright-mcp/
+.design-audit-tmp/
+
+# Design exploration artifacts — kept locally, not committed
+src/components/landing/_preview-*.html

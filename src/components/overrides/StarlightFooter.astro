@@ -1,16 +1,24 @@
 ---
 // Starlight Footer override — adds "Was this page helpful?" before standard footer
 import Default from '@astrojs/starlight/components/Footer.astro';
+
+// Suppress the feedback prompt on the 404 page — asking whether a missing page
+// was "helpful" is nonsensical.
+const entry: { slug?: string; id?: string } | undefined = (Astro.props as any)?.entry;
+const slug = entry?.slug ?? entry?.id ?? '';
+const isNotFound = slug === '404' || Astro.url.pathname.endsWith('/404') || Astro.url.pathname.endsWith('/404/');
 ---
 
-<div class="page-feedback">
-  <p class="feedback-label">Was this page helpful?</p>
-  <div class="feedback-buttons">
-    <button class="feedback-btn" id="feedback-yes" type="button" aria-label="Yes, this page was helpful">Yes</button>
-    <button class="feedback-btn" id="feedback-no"  type="button" aria-label="No, this page was not helpful">No</button>
+{!isNotFound && (
+  <div class="page-feedback">
+    <p class="feedback-label">Was this page helpful?</p>
+    <div class="feedback-buttons">
+      <button class="feedback-btn" id="feedback-yes" type="button" aria-label="Yes, this page was helpful">Yes</button>
+      <button class="feedback-btn" id="feedback-no"  type="button" aria-label="No, this page was not helpful">No</button>
+    </div>
+    <span class="feedback-status" id="feedback-status" role="status" aria-live="polite"></span>
   </div>
-  <span class="feedback-status" id="feedback-status" role="status" aria-live="polite"></span>
-</div>
+)}
 
 <Default {...Astro.props} />
 
@@ -76,6 +84,22 @@ import Default from '@astrojs/starlight/components/Footer.astro';
   const yes    = document.getElementById('feedback-yes');
   const no     = document.getElementById('feedback-no');
   const status = document.getElementById('feedback-status');
+
+  // Defensive runtime guard: hide the feedback block on the 404 page.
+  // Starlight serves the 404 layout on any unknown URL, so the SSR slug
+  // check above can't catch dynamic 404 routes — fall back to detecting
+  // by the page's own H1 text and og:title meta.
+  (function () {
+    const h1 = document.querySelector('main h1, .sl-markdown-content h1, h1');
+    const og = document.querySelector('meta[property="og:title"]');
+    const isNotFound =
+      (h1 && h1.textContent && h1.textContent.trim() === '404') ||
+      (og && og.getAttribute('content') === '404');
+    if (isNotFound) {
+      const block = document.querySelector('.page-feedback');
+      if (block) block.remove();
+    }
+  })();
 
   function sendPageFeedback(helpful) {
     const base = String(telemetryUrl).trim().replace(/\/+$/, '');
