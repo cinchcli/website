@@ -16,9 +16,9 @@ import Footer from '../components/landing/Footer.astro';
       <header class="dl-header">
         <p class="mono-caps dl-eyebrow">Free &middot; Open source &middot; AGPL 3.0</p>
         <h1 class="dl-title">Download</h1>
-        <p class="dl-version-line">
+        <p class="dl-version-line" id="dl-version-line" hidden>
           <span class="ver-label">Latest</span>
-          <span class="ver-num" id="dl-ver">—</span>
+          <span class="ver-num" id="dl-ver"></span>
         </p>
       </header>
 
@@ -236,6 +236,10 @@ import Footer from '../components/landing/Footer.astro';
     font-family: var(--mono);
     font-size: 0.875rem;
     color: var(--text-3);
+  }
+
+  .dl-version-line[hidden] {
+    display: none;
   }
 
   .ver-label {
@@ -662,6 +666,8 @@ import Footer from '../components/landing/Footer.astro';
         dmgBtn.href = 'https://github.com/cinchcli/desktop/releases/download/desktop-v' + v + '/Cinch_' + v + '_aarch64.dmg';
         if (dmgVer) dmgVer.textContent = 'v' + v;
         if (dlVer)  dlVer.textContent  = 'v' + v;
+        var verLine = document.getElementById('dl-version-line');
+        if (verLine) verLine.hidden = false;
       })
       .catch(function () {});
   }
