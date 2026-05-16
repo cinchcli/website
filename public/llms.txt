@@ -27,7 +27,7 @@ Cinch is an open-source CLI tool that pipes remote terminal output straight to y
 - CLI Reference (pull): https://cinch.jinmu.me/docs/cli/pull/
 - CLI Reference (auth): https://cinch.jinmu.me/docs/cli/auth/
 - Self-hosting Guide: https://cinch.jinmu.me/docs/relay/self-hosting/
-- Source Code: https://github.com/JinmuGo/cinch
+- Source Code: https://github.com/cinchcli/cinch
 
 ## Installation
 
