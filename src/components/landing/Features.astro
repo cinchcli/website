@@ -7,8 +7,7 @@ import TerminalWindow from './TerminalWindow.astro';
     <div class="features-header animate-in" style="--delay: 100ms">
       <h2 class="text-display">Everything the pipe needs</h2>
       <p class="section-lead">
-        Cinch is infrastructure for moving data between machines — starting with developers,
-        extending to AI agents.
+        Cinch is infrastructure for moving data between machines.
       </p>
     </div>
 
@@ -120,7 +119,7 @@ import TerminalWindow from './TerminalWindow.astro';
               <p>Single Go binary. Deploy on any VPS, Fly.io, or Docker. Your data stays on your server and within your own infrastructure.</p>
               <ul class="feature-list">
                 <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sub-5MB binary size</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Redis or memory backend</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Postgres-backed storage</li>
                 <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Official Docker image</li>
               </ul>
             </div>
@@ -128,7 +127,7 @@ import TerminalWindow from './TerminalWindow.astro';
               <TerminalWindow title="server — deploy">
                 <div class="term-body">
                   <span class="term-line"><span class="term-prompt">$</span> docker run -d -p 8080:8080 \\</span>
-                  <span class="term-line">  -e REDIS_URL=redis://localhost:6379 \\</span>
+                  <span class="term-line">  -e DATABASE_URL=postgres://user:pass@host/cinch \\</span>
                   <span class="term-line">  cinchcli/relay:latest</span>
                   <span class="term-line"></span>
                   <span class="term-line term-success">✓ Relay started on port 8080</span>
