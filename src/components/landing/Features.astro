@@ -383,6 +383,50 @@ import TerminalWindow from './TerminalWindow.astro';
       justify-content: flex-start;
     }
   }
+
+  /* Phone — drop the horizontal-scroll model: it cropped the bezel's right edge
+     and hid 2 of 4 tabs behind a scroll. A 2×2 grid keeps every option visible. */
+  @media (max-width: 640px) {
+    .tabs-nav-container {
+      justify-content: center;
+      overflow: visible;
+      padding: 0;
+    }
+    .tabs-nav {
+      width: 100%;
+      display: block;
+    }
+    .tabs-nav-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.25rem;
+    }
+    .tab-btn {
+      white-space: normal;
+      text-align: center;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.8125rem;
+      line-height: 1.25;
+      min-height: 2.5rem;
+    }
+    .tabs-content {
+      min-height: 0;
+    }
+    .panel-info h3 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    .panel-info p {
+      font-size: 1rem;
+    }
+    .term-body {
+      padding: 1.25rem 1rem !important;
+    }
+    .term-line {
+      font-size: 0.75rem;
+      line-height: 1.65;
+    }
+  }
 </style>
 
 <script>

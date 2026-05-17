@@ -398,6 +398,24 @@ const first = SCENES[0];
       width: 100%;
       height: 3rem;
     }
+
+    /* Shrink terminal body padding + type so the widest scene
+       ("echo $DATABASE_URL | cinch push" — 31ch) fits without clipping.
+       Keep `nowrap` since the typewriter sets width in `ch` units and any
+       wrapping breaks the reveal animation. */
+    .live-wire :global(.term-body) {
+      padding: 1.5rem 1.25rem;
+      font-size: 0.75rem;
+      line-height: 1.7;
+    }
+  }
+
+  /* Even narrower phones — drop another notch so 31ch still fits at iPhone-SE width. */
+  @media (max-width: 380px) {
+    .live-wire :global(.term-body) {
+      font-size: 0.6875rem;
+      padding: 1.25rem 1rem;
+    }
   }
 
   /* ─── Hover to pause (mouse only) ────────────────────── */
