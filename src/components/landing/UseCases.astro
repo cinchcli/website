@@ -229,6 +229,52 @@ import TerminalWindow from './TerminalWindow.astro';
       font-size: 2rem;
     }
   }
+
+  /* Phone — fold the marker column away so body copy gets the full row width.
+     The "01 / 02 / 03" number plus the section's running rhythm already cue ordering;
+     a tiny dot in the gutter just steals 50–70px and clips the description. */
+  @media (max-width: 640px) {
+    .uc-rows {
+      gap: 0;
+    }
+    .uc-row {
+      gap: 2rem;
+      padding: 2.5rem 0;
+    }
+    .uc-info {
+      display: block;
+      gap: 0;
+    }
+    .uc-marker {
+      display: none;
+    }
+    .uc-content {
+      padding-bottom: 0;
+    }
+    .uc-num {
+      margin-bottom: 0.75rem;
+    }
+    .uc-title {
+      font-size: 1.625rem;
+    }
+    .uc-desc {
+      font-size: 1rem;
+      max-width: none;
+    }
+
+    /* Terminals in this section share the same nowrap-on-overflow problem as LiveWire.
+       Shrink padding + font so the lines fit; allow horizontal scroll as a graceful fallback. */
+    .uc-visual :global(.term-body) {
+      padding: 1.25rem 1rem;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .term-line {
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
 </style>
 
 <script>

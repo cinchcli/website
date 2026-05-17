@@ -207,12 +207,27 @@ const {
     padding-bottom: var(--padding-section);
   }
 
+  /* Mobile — 8rem vertical pad reads as dead space at phone heights. */
+  @media (max-width: 640px) {
+    .section-pad {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+  }
+
   .container-wide {
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .container-wide {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
   }
 
   /* ─── Double-Bezel (Doppelrand) ─── */

@@ -203,7 +203,15 @@ import LiveWire from './LiveWire.astro';
 
   @media (max-width: 768px) {
     .hero {
-      padding-top: 10rem;
+      padding-top: 8rem;
+      min-height: auto;
+    }
+    .hero-container {
+      gap: 3rem;
+    }
+    .hero-description {
+      font-size: 1.0625rem;
+      margin-bottom: 2rem;
     }
     .hero-ctas {
       width: 100%;
@@ -215,6 +223,17 @@ import LiveWire from './LiveWire.astro';
     .cta-badge {
       width: 100%;
       text-align: center;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .hero {
+      padding-top: 7rem;
+    }
+    .hero-secondary {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem;
     }
   }
 </style>
