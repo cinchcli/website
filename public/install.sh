@@ -5,14 +5,9 @@ set -e
 # Usage: curl -fsSL https://cinchcli.com/install.sh | sh
 #    or: curl -fsSL https://cinchcli.com/install.sh | sh -s cinch
 
-PAIR_TOKEN=""
 PKG="cinch"
 while [ $# -gt 0 ]; do
   case "$1" in
-    --pair)
-      PAIR_TOKEN="$2"
-      shift 2
-      ;;
     -*)
       shift
       ;;
@@ -150,8 +145,3 @@ elif [ "$DISTRO" = "rpm" ]; then
 fi
 
 install_pkg "$PKG" "$DISTRO"
-
-if [ -n "$PAIR_TOKEN" ]; then
-  echo ""
-  cinch auth pair "$PAIR_TOKEN"
-fi

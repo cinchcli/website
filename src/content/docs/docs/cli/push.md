@@ -41,7 +41,7 @@ echo "artifact url" | cinch push  # with CINCH_TOKEN + CINCH_RELAY_URL set
 | `--silent` | `-s` | bool | `false` | Suppress success output |
 | `--type` | | string | — | Force content type. Accepts `image` or any `image/*` MIME to override the image-vs-text decision. Text subtypes (`text` / `url` / `code`) are derived automatically and cannot be forced. |
 | `--text` | | bool | `false` | Force text mode, skip image auto-detection |
-| `--to` | | string | — | Send only to the device with this nickname. _Parses but is currently rejected at runtime — the `--to` plumbing is Phase 4 work._ |
+| `--to` | | string | — | Send only to the device with this nickname or hostname. Resolved via `GET /devices`. The relay returns `device_offline` if the target is not currently connected. |
 | `--token` | | string | — | Override auth token (for CI/automation; prefer `CINCH_TOKEN` env var) |
 | `--relay` | | string | — | Override relay URL (prefer `CINCH_RELAY_URL` env var) |
 
