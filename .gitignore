@@ -21,3 +21,7 @@ node_modules/
 
 # Design exploration artifacts — kept locally, not committed
 src/components/landing/_preview-*.html
+
+# Local-only files (deploy config + SEO/GEO notes)
+GEO-ANALYSIS.md
+wrangler.toml
