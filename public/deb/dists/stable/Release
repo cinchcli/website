@@ -5,14 +5,14 @@ Codename: stable
 Architectures: amd64 arm64
 Components: main
 Description: cinchcli package repository
-Date: Tue, 19 May 2026 05:08:14 +0000
+Date: Tue, 19 May 2026 11:53:33 +0000
 MD5Sum:
- 0c2c35e54028894d3dc3af6ced7d0e94 548 main/binary-arm64/Packages
- 449f57dc769443136cf3fef2e5e59e28 400 main/binary-arm64/Packages.gz
- 5d01b304d7fb6e859e631682a2ec9808 548 main/binary-amd64/Packages
- ae4211b6d6f9013e06435dfa7157d18e 400 main/binary-amd64/Packages.gz
+ f67485e6b08243a9fe9d2d754426c420 548 main/binary-arm64/Packages
+ 0426cce3264b186fdbc12321ab0064ae 403 main/binary-arm64/Packages.gz
+ de7eb6cce7ccf2364900a3f3457f23a0 548 main/binary-amd64/Packages
+ b775cf43d5d4d8cdf6da48d8c4509e76 402 main/binary-amd64/Packages.gz
 SHA256:
- 30776f24955d6b17e9720805573c150c377ead808bf52bb204abd0ee9ef2b53b 548 main/binary-arm64/Packages
- 31381ddf7df763712adb230aab11c4b369ddbbde6301f1b25f2398036523f853 400 main/binary-arm64/Packages.gz
- 9629ca846d8cbe89aef90bde1991be0d0a59eb6f206b7725d0df559c86e5330b 548 main/binary-amd64/Packages
- d62f5bdb35659f66d160fd2c46e4d2475cfab0b6a410671be9172e9225923c89 400 main/binary-amd64/Packages.gz
+ 62caf6574af13956386f248e0b0f320ed0cc85ef80fa27199fe42317ff3b4525 548 main/binary-arm64/Packages
+ 41d96396bd56c993a2f583b020a6172c6b17b90f61dd6f013f5c4a6badd56790 403 main/binary-arm64/Packages.gz
+ 7da4a200c8f26aeb656f377591ffee696e09cda600bc3d9ddb3e3f6aca7bc758 548 main/binary-amd64/Packages
+ 73ccfd71a4526f61c28e175597a91fe6de2e5227676d9110b025fc5419055ff1 402 main/binary-amd64/Packages.gz
