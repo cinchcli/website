@@ -2,7 +2,7 @@
 
 > Remote clipboard for developers. Push from any terminal, pull on any machine.
 
-Cinch is an open-source CLI tool that pipes remote terminal output straight to your local clipboard. It uses a self-hostable WebSocket relay with SQLite persistence for reliable, real-time clipboard delivery across machines.
+Cinch is an open-source CLI tool that pipes remote terminal output straight to your local clipboard. It uses a self-hostable WebSocket relay with SQLite persistence for reliable, real-time clipboard delivery across machines. Clips are end-to-end encrypted with AES-256-GCM — the relay stores ciphertext only. Licensed under AGPL-3.0.
 
 ## Core Commands
 
@@ -15,22 +15,22 @@ Cinch is an open-source CLI tool that pipes remote terminal output straight to y
 - Unix-native: composable with pipes, works with any command
 - WebSocket relay: real-time delivery with SQLite persistence
 - Self-hostable: run your own relay server via Docker or binary
-- Desktop agent: automatic clipboard sync on macOS
-- MIT licensed, fully open source
+- Desktop agent: automatic clipboard sync on macOS (Apple Silicon)
+- Fully open source (AGPL-3.0)
 
 ## Links
 
-- Homepage: https://cinch.jinmu.me
-- Documentation: https://cinch.jinmu.me/docs/
-- Getting Started: https://cinch.jinmu.me/docs/getting-started/
-- CLI Reference (push): https://cinch.jinmu.me/docs/cli/push/
-- CLI Reference (pull): https://cinch.jinmu.me/docs/cli/pull/
-- CLI Reference (auth): https://cinch.jinmu.me/docs/cli/auth/
-- Self-hosting Guide: https://cinch.jinmu.me/docs/relay/self-hosting/
+- Homepage: https://cinchcli.com
+- Documentation: https://cinchcli.com/docs/
+- Getting Started: https://cinchcli.com/docs/getting-started/
+- CLI Reference (push): https://cinchcli.com/docs/cli/push/
+- CLI Reference (pull): https://cinchcli.com/docs/cli/pull/
+- CLI Reference (auth): https://cinchcli.com/docs/cli/auth/
+- Self-hosting Guide: https://cinchcli.com/docs/relay/self-hosting/
 - Source Code: https://github.com/cinchcli/cinch
 
 ## Installation
 
 ```bash
-curl -fsSL cinch.jinmu.me/install.sh | sh
+curl -fsSL cinchcli.com/install.sh | sh
 ```

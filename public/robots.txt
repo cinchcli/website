@@ -1,4 +1,29 @@
+# Default policy
 User-agent: *
+Allow: /
+Disallow: /pagefind/
+
+# AI search crawlers — explicitly allowed for AI Overviews, ChatGPT,
+# Claude, Perplexity, and Bing Copilot citation visibility.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://cinchcli.com/sitemap-index.xml
