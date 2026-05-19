@@ -38,13 +38,25 @@ echo "artifact url" | cinch push  # with CINCH_TOKEN + CINCH_RELAY_URL set
 | Flag | Short | Type | Default | Description |
 |------|-------|------|---------|-------------|
 | `--label` | `-l` | string | — | Label for this clip (shown in desktop history) |
-| `--ttl` | `-t` | int | `0` | Auto-delete after N seconds (`0` = no expiry) |
 | `--silent` | `-s` | bool | `false` | Suppress success output |
-| `--type` | | string | — | Force MIME type (e.g. `image/png`) |
-| `--text` | | bool | `false` | Force text mode, skip binary auto-detection |
-| `--to` | | string | — | Send only to the device with this nickname |
+| `--type` | | string | — | Force content type. Accepts `image` or any `image/*` MIME to override the image-vs-text decision. Text subtypes (`text` / `url` / `code`) are derived automatically and cannot be forced. |
+| `--text` | | bool | `false` | Force text mode, skip image auto-detection |
+| `--to` | | string | — | Send only to the device with this nickname. _Parses but is currently rejected at runtime — the `--to` plumbing is Phase 4 work._ |
 | `--token` | | string | — | Override auth token (for CI/automation; prefer `CINCH_TOKEN` env var) |
 | `--relay` | | string | — | Override relay URL (prefer `CINCH_RELAY_URL` env var) |
+
+## Content types
+
+Every clip is tagged with one of four canonical `content_type` values, derived on the client by `client_core::classify::detect`:
+
+| Value | When emitted |
+|---|---|
+| `image` | PNG / JPEG / GIF / WebP magic bytes, or `--type image/*`. |
+| `url` | The whole stdin payload parses as a single URL. |
+| `code` | Matches a shebang, JSON shape, or code heuristic. |
+| `text` | Default for any non-image text payload. |
+
+There are no MIME-style strings (`text/plain`, `image/png`) on the wire — they would create skew with the relay's canonical 4-string vocabulary. See [Relay Protocol → Content types](/docs/relay/protocol/#content-types).
 
 ## Environment variables
 

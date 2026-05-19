@@ -7,7 +7,7 @@ description: Frequently asked questions about Cinch.
 
 ### What is the maximum clip size?
 
-By default, the hosted relay accepts clips up to **20 MB**. Self-hosted relays can raise this limit with the `MAX_BODY_MB` environment variable (up to whatever your server's RAM allows).
+The hosted relay accepts text clips up to **1 MB** and binary clips up to **20 MB**. Self-hosted relays inherit the same defaults; raising them is a code change in `relay/internal/relay/handler.go`.
 
 ### Which platforms does Cinch support?
 
@@ -21,7 +21,7 @@ The [desktop app](https://github.com/cinchcli/desktop) (macOS) receives clips au
 
 ### Does Cinch support binary data and images?
 
-Yes. `cinch push` reads raw bytes from stdin and auto-detects the MIME type from the first 512 bytes. Binary data, PNG/JPEG images, and arbitrary files are all supported.
+Yes. `cinch push` reads raw bytes from stdin and classifies each clip into one of four canonical content types (`image`, `text`, `url`, `code`). PNG / JPEG / GIF / WebP images are detected by magic bytes; the rest is classified by URL / shebang / JSON heuristics. See [Content types](/docs/relay/protocol/#content-types).
 
 ```bash
 cat screenshot.png | cinch push
@@ -46,7 +46,7 @@ For an additional layer of control, you can also self-host the relay so the ciph
 
 ### How long are clips kept?
 
-The hosted relay deletes clips after **7 days**. Self-hosted relays default to 7 days and can be configured with `RETENTION_DAYS`.
+The hosted relay deletes clips after **7 days** by default. Per-user retention is part of the user's plan capabilities (see `user_capabilities.retention_days` in the relay schema); a background sweep runs hourly to remove expired rows. Self-hosted relays inherit the same default.
 
 ### Is the connection encrypted?
 
@@ -81,7 +81,7 @@ jobs:
         run: echo "Build ${{ github.run_number }} passed" | cinch push --label "ci"
 ```
 
-Get your token from `cinch auth status` or generate a dedicated one with `cinch auth regenerate-pair-token`.
+Get your token from `cinch auth status`. To add a new machine in one step, use `cinch pair <ssh-target>` from a signed-in device — see [`cinch auth & cinch pair`](/docs/cli/auth/).
 
 ---
 
@@ -101,4 +101,4 @@ The relay has no recent clip to return. Push something first, or check `cinch au
 
 ### Authentication fails after re-installing
 
-Run `cinch auth logout` then re-pair with a fresh token from `cinch auth pair`.
+Run `cinch auth logout`, then sign in fresh with `cinch auth login` (or use `cinch pair <ssh-target>` from another signed-in machine to provision this one over SSH).
