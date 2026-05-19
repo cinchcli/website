@@ -1,0 +1,451 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Nav from '../components/landing/Nav.astro';
+import Footer from '../components/landing/Footer.astro';
+
+const lastUpdated = 'May 19, 2026';
+const effectiveDate = 'May 19, 2026';
+---
+<Landing
+  title="Terms of Service — Cinch"
+  description="The terms that govern your use of Cinch."
+  ogType="article"
+>
+  <Nav />
+
+  <main class="legal-page" id="main-content">
+    <article class="legal-inner">
+
+      <header class="legal-header">
+        <p class="legal-eyebrow">Legal</p>
+        <h1 class="legal-title">Terms of Service</h1>
+        <p class="legal-meta">
+          <span>Effective: {effectiveDate}</span>
+          <span class="legal-meta-sep" aria-hidden="true">·</span>
+          <span>Last updated: {lastUpdated}</span>
+        </p>
+      </header>
+
+      <section class="legal-section legal-intro">
+        <p>
+          These Terms of Service (the "Terms") govern your access to and use of the
+          Cinch command-line tool, desktop application, relay service, and the website at
+          <a href="https://cinchcli.com">cinchcli.com</a> (together, the "Service")
+          provided by the Cinch project ("Cinch", "we", "us", or "our"). Please read
+          these Terms carefully. By using the Service, you agree to be bound by them.
+        </p>
+        <p>
+          If you do not agree to these Terms, do not use the Service.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>1. About Cinch</h2>
+        <p>
+          Cinch is a clipboard synchronization tool. You install a client on each of
+          your devices, sign in once, and clips you push from one device become available
+          on the others. The Cinch client, desktop app, and relay are open source under
+          the GNU Affero General Public License v3.0. You can read, audit, modify, and
+          self-host the code from
+          <a href="https://github.com/cinchcli" target="_blank" rel="noopener noreferrer">github.com/cinchcli</a>.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>2. Eligibility</h2>
+        <p>
+          You may use the Service only if you can form a legally binding contract with
+          us under the law applicable to you, and only if your use is not prohibited by
+          law. The Service is not directed to children under 13 (or the equivalent
+          minimum age in your jurisdiction), and you must not use the Service if you
+          are under that age.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>3. Your account and authentication</h2>
+        <p>
+          To use the relay-backed parts of the Service, you sign in with a supported
+          identity provider (currently Google). When you sign in, you authorize Cinch
+          to receive the limited profile information described in our
+          <a href="/privacy">Privacy Policy</a>.
+        </p>
+        <p>
+          You are responsible for keeping your sign-in credentials and your paired
+          devices secure. Each device receives its own access token; if a device is
+          lost or stolen, you can revoke that device's access from inside the desktop
+          app or by running <code>cinch auth logout</code> on another paired device.
+          You agree to notify us promptly at
+          <a href="mailto:contact@cinchcli.com">contact@cinchcli.com</a>
+          if you suspect unauthorized use of your account.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>4. Acceptable use</h2>
+        <p>You agree not to use the Service to:</p>
+        <ul>
+          <li>violate any applicable law, regulation, or third-party right;</li>
+          <li>upload, store, or transmit content that is illegal, infringing, defamatory, fraudulent, abusive, threatening, or invasive of another's privacy;</li>
+          <li>distribute malware, viruses, ransomware, or any other malicious code;</li>
+          <li>attempt to access another user's account, devices, or clips, or otherwise interfere with the security or integrity of the Service;</li>
+          <li>send spam, conduct phishing campaigns, or use the Service to harass others;</li>
+          <li>reverse engineer, decompile, or attempt to extract source code from any component of the Service, except to the extent that this restriction is prohibited by applicable law or expressly permitted by the AGPL 3.0 license;</li>
+          <li>impose an unreasonable or disproportionate load on the relay (for example, by automating clip pushes at a rate well beyond ordinary use, or by attempting to use the Service as a generic file-transfer backbone);</li>
+          <li>use the Service to develop a competing product where doing so would violate the AGPL 3.0 license or any other applicable license terms.</li>
+        </ul>
+        <p>
+          We may apply reasonable rate limits and abuse mitigations to protect the
+          Service and its users.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>5. Your content</h2>
+        <p>
+          You retain all rights in the clips you push through the Service. You are
+          solely responsible for the content of those clips and for ensuring that you
+          have the right to copy, store, and synchronize that content under the laws
+          applicable to you.
+        </p>
+        <p>
+          To operate the Service, you grant Cinch a worldwide, non-exclusive,
+          royalty-free license to store, transmit, display to your paired devices, and
+          delete your clips, solely as necessary to provide the Service to you. We do
+          not claim ownership of your clips and we do not use your clips for any other
+          purpose. If you enable client-side encryption (recommended), the relay only
+          ever receives encrypted payloads.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>6. Service availability and modifications</h2>
+        <p>
+          We work hard to keep the Service available, but we offer it on an
+          "as-available" basis. We may add, change, suspend, or remove features at any
+          time, and we may temporarily or permanently take down all or part of the
+          Service for maintenance, security, or operational reasons. We will give
+          reasonable notice of material changes when we can.
+        </p>
+        <p>
+          Cinch is offered free of charge today. If we ever introduce paid features,
+          they will be governed by additional terms presented to you at that time.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>7. Open source software</h2>
+        <p>
+          The Cinch client, desktop app, and relay are released under the GNU Affero
+          General Public License v3.0 (AGPL 3.0). Your rights to copy, modify, and
+          redistribute that software are governed by the AGPL 3.0 license, not by these
+          Terms. These Terms apply only to your use of the Cinch-operated relay and
+          hosted Service. If you self-host the relay, you are the operator of that
+          deployment and these Terms do not govern its operation.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>8. Third-party services</h2>
+        <p>
+          The Service uses third-party services to function, including identity
+          providers (such as Google for sign-in) and hosting infrastructure. Your use
+          of those third-party services is governed by their own terms and privacy
+          policies. We are not responsible for the practices of third-party services
+          and we encourage you to review their terms.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>9. Termination</h2>
+        <p>
+          You may stop using the Service at any time. You can also delete your
+          account, which removes your account record, paired devices, and any clips
+          stored on the relay, subject to the retention rules described in our
+          <a href="/privacy">Privacy Policy</a>.
+        </p>
+        <p>
+          We may suspend or terminate your access to the Service if you violate these
+          Terms, if your use of the Service creates a security or operational risk to
+          others, or if we are required to do so by law. We will give you reasonable
+          notice when we can, unless doing so would compromise the security or
+          integrity of the Service.
+        </p>
+        <p>
+          Sections that by their nature should survive termination (including but not
+          limited to sections 5, 10, 11, 12, and 14) will survive.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>10. Disclaimer of warranties</h2>
+        <p>
+          THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTIES OF
+          ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY. TO THE FULLEST EXTENT
+          PERMITTED BY LAW, CINCH DISCLAIMS ALL WARRANTIES, INCLUDING IMPLIED
+          WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+          NON-INFRINGEMENT, AND ANY WARRANTY ARISING OUT OF COURSE OF DEALING OR USAGE
+          OF TRADE.
+        </p>
+        <p>
+          We do not warrant that the Service will be uninterrupted, error-free, secure,
+          or free of viruses or other harmful components, or that any clip you push
+          will be successfully delivered to your other devices. You use the Service at
+          your own risk.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>11. Limitation of liability</h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL CINCH OR ITS
+          MAINTAINERS, CONTRIBUTORS, OR INFRASTRUCTURE PROVIDERS BE LIABLE FOR ANY
+          INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR
+          ANY LOSS OF PROFITS, REVENUE, DATA, USE, GOODWILL, OR OTHER INTANGIBLE
+          LOSSES, ARISING OUT OF OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE
+          SERVICE, WHETHER BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE),
+          STATUTE, OR ANY OTHER LEGAL THEORY, AND WHETHER OR NOT WE HAVE BEEN
+          INFORMED OF THE POSSIBILITY OF SUCH DAMAGE.
+        </p>
+        <p>
+          IN ANY CASE, OUR TOTAL CUMULATIVE LIABILITY FOR ALL CLAIMS RELATING TO THE
+          SERVICE WILL NOT EXCEED THE GREATER OF (A) THE AMOUNTS YOU HAVE PAID US FOR
+          THE SERVICE IN THE 12 MONTHS PRECEDING THE EVENT GIVING RISE TO THE
+          LIABILITY (WHICH WILL ORDINARILY BE ZERO) AND (B) ONE HUNDRED U.S. DOLLARS
+          (USD 100).
+        </p>
+        <p>
+          Some jurisdictions do not allow the exclusion or limitation of certain
+          warranties or damages. In those jurisdictions, the above limitations apply
+          only to the extent permitted by law.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>12. Indemnification</h2>
+        <p>
+          You agree to defend, indemnify, and hold harmless Cinch and its maintainers
+          from and against any claims, damages, losses, liabilities, costs, and
+          expenses (including reasonable legal fees) arising out of or related to:
+          (i) your use of the Service in violation of these Terms; (ii) the content of
+          the clips you push through the Service; or (iii) your violation of any law
+          or third-party right.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>13. Changes to these Terms</h2>
+        <p>
+          We may update these Terms from time to time. When we do, we will revise the
+          "Last updated" date at the top of this page. If the changes are material,
+          we will provide notice by email to the address associated with your account
+          or by a prominent notice in the Service before the changes take effect.
+          Your continued use of the Service after the effective date of updated Terms
+          means you accept the updated Terms.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>14. Miscellaneous</h2>
+        <ul>
+          <li><strong>Entire agreement.</strong> These Terms, together with our <a href="/privacy">Privacy Policy</a> and any additional terms presented for specific features, form the entire agreement between you and Cinch regarding the Service.</li>
+          <li><strong>Severability.</strong> If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions will remain in full force and effect.</li>
+          <li><strong>No waiver.</strong> Our failure to enforce any provision of these Terms is not a waiver of our right to do so later.</li>
+          <li><strong>Assignment.</strong> You may not assign or transfer these Terms without our prior written consent. We may assign these Terms in connection with a merger, acquisition, or sale of assets, with notice to you.</li>
+          <li><strong>No agency.</strong> Nothing in these Terms creates an agency, partnership, joint venture, or employment relationship between you and Cinch.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>15. Contact</h2>
+        <p>
+          If you have questions about these Terms, please reach out:
+        </p>
+        <p class="legal-contact">
+          Email: <a href="mailto:contact@cinchcli.com">contact@cinchcli.com</a><br />
+          Project: <a href="https://github.com/cinchcli" target="_blank" rel="noopener noreferrer">github.com/cinchcli</a>
+        </p>
+      </section>
+
+      <nav class="legal-foot-nav" aria-label="More legal documents">
+        <a href="/privacy" class="legal-foot-link">Privacy Policy &rarr;</a>
+        <span class="legal-foot-sep" aria-hidden="true">·</span>
+        <a href="/" class="legal-foot-link">&larr; Back to cinchcli.com</a>
+      </nav>
+    </article>
+  </main>
+
+  <Footer />
+</Landing>
+
+<style>
+  .legal-page {
+    min-height: 100vh;
+    padding-top: 3.75rem;
+    position: relative;
+  }
+
+  .legal-inner {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .legal-header {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .legal-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+
+  .legal-title {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(2.75rem, 5.5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    color: var(--text-1);
+    margin: 0 0 1.25rem;
+  }
+
+  .legal-meta {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    color: var(--text-3);
+    margin: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .legal-meta-sep {
+    opacity: 0.5;
+  }
+
+  .legal-section {
+    margin-bottom: 3rem;
+  }
+
+  .legal-intro {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--text-2);
+  }
+
+  .legal-section h2 {
+    font-family: 'Geist', var(--sans);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-1);
+    margin: 0 0 1.25rem;
+    padding-top: 0.5rem;
+  }
+
+  .legal-section p,
+  .legal-section ul {
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--text-2);
+    margin: 0 0 1rem;
+  }
+
+  .legal-section ul {
+    padding-left: 1.25rem;
+  }
+
+  .legal-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-section li::marker {
+    color: var(--text-3);
+  }
+
+  .legal-section strong {
+    color: var(--text-1);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: text-decoration-color 0.2s, color 0.2s;
+  }
+
+  .legal-section a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .legal-section code {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    background: var(--bg-card-2);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    color: var(--text-1);
+  }
+
+  .legal-contact {
+    font-family: var(--mono);
+    font-size: 0.875rem !important;
+    line-height: 1.9 !important;
+    color: var(--text-2);
+    padding: 1rem 1.25rem;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .legal-foot-nav {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .legal-foot-link {
+    font-size: 0.875rem;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .legal-foot-link:hover {
+    color: var(--text-1);
+  }
+
+  .legal-foot-sep {
+    color: var(--text-3);
+    opacity: 0.4;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    .legal-inner {
+      padding: 3rem 1.25rem 5rem;
+    }
+
+    .legal-foot-sep {
+      display: none;
+    }
+  }
+</style>
