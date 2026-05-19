@@ -17,6 +17,7 @@ node_modules/
 .designs/
 .playwright-mcp/
 .design-audit-tmp/
+.seo/
 
 # Design exploration artifacts — kept locally, not committed
 src/components/landing/_preview-*.html
