@@ -1,4 +1,5 @@
 ---
+import { serializeJsonLdForHtmlScript, toJsonLdDocument } from '../lib/seo/json-ld';
 import { GITHUB_ORIGIN, defaultLandingStructuredData } from '../site/social';
 
 interface Props {
@@ -69,11 +70,12 @@ const {
   <!-- Analytics -->
   <script is:inline defer src="https://umami.jinmu.me/script.js" data-website-id="9c8818d2-8496-48cd-a55d-81e6e3979078"></script>
 
-  <!-- Structured Data -->
-  {jsonLd
-    ? <script is:inline type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
-    : <script is:inline type="application/ld+json" set:html={JSON.stringify(defaultLandingStructuredData())} />
-  }
+  <!-- Structured Data — serializeJsonLdForHtmlScript escapes '<' so embedded JSON cannot break out of script -->
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={serializeJsonLdForHtmlScript(toJsonLdDocument(jsonLd, defaultLandingStructuredData))}
+  />
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>

@@ -2,11 +2,12 @@
 import Landing from '../layouts/Landing.astro';
 import Nav from '../components/landing/Nav.astro';
 import Footer from '../components/landing/Footer.astro';
-import { repo, urls } from '../site/social';
+import { downloadPageStructuredData, repo, urls } from '../site/social';
 ---
 <Landing
   title="Download Cinch — macOS, Linux, Windows"
   description="Download the Cinch desktop app for macOS, or install the CLI on Linux and Windows. Free, open source, AGPL 3.0."
+  jsonLd={downloadPageStructuredData()}
 >
   <Nav />
 
