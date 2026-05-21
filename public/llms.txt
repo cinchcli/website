@@ -21,6 +21,7 @@ Cinch is an open-source CLI tool that pipes remote terminal output straight to y
 ## Links
 
 - Homepage: https://cinchcli.com
+- Pricing: https://cinchcli.com/pricing
 - Documentation: https://cinchcli.com/docs/
 - Getting Started: https://cinchcli.com/docs/getting-started/
 - CLI Reference (push): https://cinchcli.com/docs/cli/push/

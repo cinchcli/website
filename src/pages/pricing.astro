@@ -1,0 +1,1349 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Nav from '../components/landing/Nav.astro';
+import Footer from '../components/landing/Footer.astro';
+import { renderInnerHTML } from 'number-flow';
+import {
+  PLANS,
+  PRICING_TAGLINE,
+  VALUE_PROPS,
+  BILLING_FAQ,
+  FEATURE_ROWS,
+  SELF_HOST_SECTION,
+  CONTACT_EMAIL,
+  formatPlanPriceDisplay,
+  formatPlanPriceNote,
+  planCardBullets,
+  planPriceFlowValue,
+  PLAN_PRICE_FLOW_FORMAT,
+  maxAnnualSavingsPercent,
+  pricingPageStructuredData,
+} from '../site/pricing';
+
+const canonical = new URL('/pricing/', Astro.site).href;
+const annualSavingsLabel = maxAnnualSavingsPercent();
+
+function formatCompareCell(value: boolean | string): string {
+  if (typeof value === 'string') return value;
+  return value ? 'Included' : '—';
+}
+---
+
+<Landing
+  title="Pricing — Cinch"
+  description="Free, Pro, and Team plans for Cinch remote clipboard sync. Same encryption, unlimited pushes, and apps on every tier; paid plans add device capacity and history depth."
+  canonical={canonical}
+  jsonLd={pricingPageStructuredData()}
+>
+  <Nav />
+
+  <div class="pricing-ambient" aria-hidden="true"></div>
+
+  <article class="pricing-page mu-root">
+    <div class="pricing-layout">
+
+      <header class="pricing-hero reveal" style="--index: 0">
+        <nav class="pricing-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li aria-current="page">Pricing</li>
+          </ol>
+        </nav>
+        <h1 class="pricing-title" id="pricing-heading">Plans &amp; pricing</h1>
+        <p class="pricing-lead">{PRICING_TAGLINE}</p>
+      </header>
+
+      <section
+        class="pricing-cards-section reveal"
+        style="--index: 1"
+        aria-labelledby="pricing-plans-heading"
+        id="pricing-plans"
+        data-billing-interval="monthly"
+      >
+        <h2 class="sr-only" id="pricing-plans-heading">Plans</h2>
+
+        <div class="pricing-plans-toolbar reveal" style="--index: 1">
+          <div class="billing-toggle" role="group" aria-label="Billing period">
+            <span class="billing-toggle-indicator" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="billing-toggle-btn is-active"
+              data-billing-interval="monthly"
+              aria-pressed="true"
+            >
+              Monthly
+            </button>
+            <button
+              type="button"
+              class="billing-toggle-btn"
+              data-billing-interval="annual"
+              aria-pressed="false"
+            >
+              Yearly
+              {annualSavingsLabel > 0 && (
+                <span class="billing-toggle-save">−{annualSavingsLabel}%</span>
+              )}
+            </button>
+          </div>
+          <p class="pricing-toolbar-note">USD · 14-day refund on your first purchase</p>
+        </div>
+
+        <div class="pricing-cards-panel">
+          <number-flow-group class="pricing-price-group">
+            <ul class="pricing-grid" role="list">
+            {PLANS.map((plan, i) => {
+              const monthlyPrice = formatPlanPriceDisplay(plan, 'monthly');
+              const annualPrice = formatPlanPriceDisplay(plan, 'annual');
+              const monthlyNote = formatPlanPriceNote(plan, 'monthly');
+              const annualNote = formatPlanPriceNote(plan, 'annual');
+              const bullets = planCardBullets(plan);
+              const isFree = plan.price.monthlyUsd === 0;
+              return (
+                <li class="reveal" style={`--index: ${i + 2}`}>
+                  <article
+                    class:list={['plan-card', plan.recommended && 'plan-card--featured']}
+                    data-plan-id={plan.id}
+                    data-price-monthly={!isFree ? plan.price.monthlyUsd : undefined}
+                    data-price-annual={!isFree ? plan.price.annualMonthlyUsd : undefined}
+                  >
+                    {plan.recommended && (
+                      <p class="plan-ribbon">Popular</p>
+                    )}
+
+                    <header class="plan-card-header">
+                      <h3 class="plan-name">{plan.name}</h3>
+                      <p class="plan-tagline">{plan.tagline}</p>
+                    </header>
+
+                    <div class="plan-price-block">
+                      {isFree ? (
+                        <p class="plan-price-main">
+                          <span class="plan-price-amount">$0</span>
+                          <span class="plan-price-unit">Free forever</span>
+                        </p>
+                      ) : (
+                        <>
+                          <p class="plan-price-main">
+                            <span class="plan-price-flow-wrap">
+                              <number-flow
+                                class="plan-price-flow"
+                                data-will-change
+                                set:html={renderInnerHTML(planPriceFlowValue(plan, 'monthly'), {
+                                  locales: 'en-US',
+                                  format: PLAN_PRICE_FLOW_FORMAT,
+                                  numberPrefix: '$',
+                                })}
+                              />
+                            </span>
+                          </p>
+                          {monthlyPrice.unit && (
+                            <div class="plan-price-unit-stack">
+                              <span class="plan-price-unit" data-billing-copy="monthly">
+                                {monthlyPrice.unit}
+                              </span>
+                              <span class="plan-price-unit" data-billing-copy="annual">
+                                {annualPrice.unit}
+                              </span>
+                            </div>
+                          )}
+                          {(monthlyNote || annualNote) && (
+                            <div class="plan-price-note-stack">
+                              {monthlyNote && (
+                                <p class="plan-price-note" data-billing-copy="monthly">
+                                  {monthlyNote}
+                                </p>
+                              )}
+                              {annualNote && (
+                                <p class="plan-price-note" data-billing-copy="annual">
+                                  {annualNote}
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    <ul class="plan-features" role="list">
+                      {bullets.map((item) => (
+                        <li class="plan-feature">
+                          <span class="plan-feature-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path
+                                d="M3.25 8.25 6.5 11.5 12.75 4.75"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <footer class="plan-card-footer">
+                      {plan.cta === 'get-started' && (
+                        <a href="/docs/getting-started/" class="plan-cta plan-cta--primary">
+                          Get started free
+                        </a>
+                      )}
+                      {plan.cta === 'coming-soon' && (
+                        <p class="plan-cta plan-cta--pending" aria-disabled="true">
+                          Checkout opens soon
+                        </p>
+                      )}
+                    </footer>
+                  </article>
+                </li>
+              );
+            })}
+            </ul>
+          </number-flow-group>
+        </div>
+
+        <p class="pricing-contact-hint reveal" style="--index: 5">
+          Need Team billing before checkout goes live?
+          <a href={`mailto:${CONTACT_EMAIL}`}>Contact us</a>.
+        </p>
+      </section>
+
+      <section class="pricing-selfhost reveal" style="--index: 6" aria-labelledby="pricing-selfhost-heading">
+        <h2 class="mu-section-title" id="pricing-selfhost-heading">{SELF_HOST_SECTION.title}</h2>
+        <p class="mu-section-lead">{SELF_HOST_SECTION.lead}</p>
+        <div class="value-tile value-tile--wide selfhost-tile">
+          <ul class="plan-features selfhost-features" role="list">
+            {SELF_HOST_SECTION.bullets.map((item) => (
+              <li class="plan-feature">
+                <span class="plan-feature-icon" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path
+                      d="M3.25 8.25 6.5 11.5 12.75 4.75"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="selfhost-links">
+            <a href={SELF_HOST_SECTION.primaryCta.href}>{SELF_HOST_SECTION.primaryCta.label}</a>
+            <span class="selfhost-links-sep" aria-hidden="true">·</span>
+            <a href={SELF_HOST_SECTION.secondaryCta.href}>{SELF_HOST_SECTION.secondaryCta.label}</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="pricing-value reveal" style="--index: 7" aria-labelledby="pricing-value-heading">
+        <h2 class="mu-section-title" id="pricing-value-heading">What you pay for</h2>
+        <p class="mu-section-lead">
+          The free tier is fully functional for individual use. Paid tiers unlock capacity, not features.
+        </p>
+        <ul class="value-bento" role="list">
+          {VALUE_PROPS.map((item, i) => (
+            <li class:list={['value-tile', 'reveal', i === 0 && 'value-tile--wide']} style={`--index: ${8 + i}`}>
+              <h3 class="value-title">{item.title}</h3>
+              <p class="value-body">{item.body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="pricing-compare reveal" style="--index: 11" aria-labelledby="pricing-compare-heading">
+        <h2 class="mu-section-title" id="pricing-compare-heading">Compare plans</h2>
+        <div class="compare-panel">
+          <table class="compare-table">
+            <colgroup>
+              <col class="compare-col-feature" />
+              <col class="compare-col-plan" span="3" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col" class="compare-th-feature">Feature</th>
+                <th scope="col" class="compare-th-plan">Free</th>
+                <th scope="col" class="compare-th-plan">Pro</th>
+                <th scope="col" class="compare-th-plan">Team</th>
+              </tr>
+            </thead>
+            <tbody>
+              {FEATURE_ROWS.map((row) => {
+                const free = formatCompareCell(row.free);
+                const pro = formatCompareCell(row.pro);
+                const team = formatCompareCell(row.team);
+                return (
+                  <tr>
+                    <th scope="row" class="compare-th-feature">{row.label}</th>
+                    <td
+                      class:list={['compare-td-plan', { 'cell-included': free === 'Included' }]}
+                      data-label="Free"
+                    >
+                      {free}
+                    </td>
+                    <td
+                      class:list={['compare-td-plan', { 'cell-included': pro === 'Included' }]}
+                      data-label="Pro"
+                    >
+                      {pro}
+                    </td>
+                    <td
+                      class:list={['compare-td-plan', { 'cell-included': team === 'Included' }]}
+                      data-label="Team"
+                    >
+                      {team}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="pricing-faq reveal" style="--index: 12" aria-labelledby="pricing-faq-heading">
+        <h2 class="mu-section-title" id="pricing-faq-heading">Billing</h2>
+        <div class="faq-accordion">
+          {BILLING_FAQ.map((item, i) => (
+            <details class="faq-item reveal" style={`--index: ${13 + i}`}>
+              <summary class="faq-summary">
+                <span class="faq-question">{item.q}</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </summary>
+              <p class="faq-answer">{item.a}</p>
+            </details>
+          ))}
+        </div>
+        <p class="pricing-legal-links">
+          See also <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+        </p>
+      </section>
+    </div>
+  </article>
+  <Footer />
+</Landing>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .mu-root {
+    --mu-bg: light-dark(#f7f6f3, #0a0a0a);
+    --mu-surface: light-dark(#ffffff, #121212);
+    --mu-text: light-dark(#2f3437, #e8e8e6);
+    --mu-text-muted: light-dark(#787774, #9b9a97);
+    --mu-border: light-dark(#eaeaea, rgba(255, 255, 255, 0.09));
+    --mu-btn-bg: light-dark(#111111, #f0f0ee);
+    --mu-btn-text: light-dark(#ffffff, #111111);
+    --mu-btn-hover: light-dark(#333333, #d8d8d6);
+    --mu-pastel-blue-bg: light-dark(#e1f3fe, rgba(31, 108, 159, 0.15));
+    --mu-pastel-blue-text: light-dark(#1f6c9f, #8ec8ea);
+    --mu-pastel-green-bg: light-dark(#edf3ec, rgba(52, 101, 56, 0.15));
+    --mu-pastel-green-text: light-dark(#346538, #9bc49a);
+
+    position: relative;
+    min-height: 100vh;
+    padding-top: 5.5rem;
+    background: var(--mu-bg);
+    color: var(--mu-text);
+    font-family: 'Geist', var(--sans);
+  }
+
+  .pricing-ambient {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      light-dark(rgba(47, 52, 55, 0.04), rgba(255, 255, 255, 0.03)),
+      transparent 70%
+    );
+  }
+
+  .pricing-layout {
+    position: relative;
+    z-index: 1;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 0 max(1.5rem, env(safe-area-inset-left, 0px)) clamp(5rem, 14vw, 8rem)
+      max(1.5rem, env(safe-area-inset-right, 0px));
+  }
+
+  .pricing-hero {
+    text-align: center;
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(2rem, 5vw, 2.5rem);
+    margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+    max-width: 42rem;
+  }
+
+  .pricing-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mu-text-muted);
+  }
+
+  .pricing-breadcrumb li:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: var(--mu-text-muted);
+  }
+
+  .pricing-breadcrumb a {
+    color: var(--mu-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .pricing-breadcrumb a:hover {
+    color: var(--mu-text);
+  }
+
+  .pricing-title {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: var(--mu-text);
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+
+  .pricing-lead {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--mu-text-muted);
+    max-width: 54ch;
+    margin: 0 auto;
+    text-wrap: pretty;
+  }
+
+  .pricing-plans-toolbar {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .pricing-toolbar-note {
+    font-size: 0.8125rem;
+    color: var(--mu-text-muted);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .pricing-cards-panel {
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .mu-section-title {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--mu-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .mu-section-lead {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--mu-text-muted);
+    max-width: 48ch;
+    margin: 0 0 2rem;
+  }
+
+  .billing-toggle {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 0;
+    padding: 0.25rem;
+    min-width: min(100%, 17.5rem);
+    background: light-dark(#ebeae6, #161616);
+    border: 1px solid var(--mu-border);
+    border-radius: 9999px;
+    isolation: isolate;
+  }
+
+  .billing-toggle-indicator {
+    position: absolute;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    left: 0.25rem;
+    width: calc(50% - 0.25rem);
+    border-radius: 9999px;
+    background: var(--mu-surface);
+    box-shadow: 0 1px 4px light-dark(rgba(47, 52, 55, 0.1), rgba(0, 0, 0, 0.4));
+    transition: transform 200ms ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .pricing-cards-section[data-billing-interval='annual'] .billing-toggle-indicator {
+    transform: translateX(100%);
+  }
+
+  .billing-toggle-btn {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--mu-text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .billing-toggle-btn.is-active {
+    color: var(--mu-text);
+  }
+
+  .billing-toggle-btn:focus-visible {
+    outline: 2px solid light-dark(#111111, #e8e8e6);
+    outline-offset: 2px;
+  }
+
+  .billing-toggle-save {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.4rem;
+    border-radius: 9999px;
+    background: var(--mu-pastel-green-bg);
+    color: var(--mu-pastel-green-text);
+  }
+
+  .pricing-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 901px) {
+    .pricing-grid {
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+  }
+
+  .pricing-grid > li {
+    display: flex;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pricing-layout {
+      padding-left: max(1rem, env(safe-area-inset-left, 0px));
+      padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    }
+
+    .pricing-hero {
+      padding-top: 2rem;
+    }
+
+  }
+
+  .plan-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    min-height: 100%;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    background: var(--mu-surface);
+    border: 1px solid var(--mu-border);
+    border-radius: 16px;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (hover: hover) {
+    .plan-card:not(.plan-card--featured):hover {
+      border-color: light-dark(rgba(47, 52, 55, 0.18), rgba(255, 255, 255, 0.14));
+      box-shadow: 0 8px 24px light-dark(rgba(47, 52, 55, 0.06), rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .plan-card--featured {
+    border-width: 2px;
+    border-color: light-dark(#2f3437, rgba(255, 255, 255, 0.22));
+    box-shadow: 0 16px 40px light-dark(rgba(47, 52, 55, 0.1), rgba(0, 0, 0, 0.45));
+  }
+
+  @media (min-width: 901px) {
+    .plan-card--featured {
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem;
+      transform: scale(1.04);
+      transform-origin: center center;
+    }
+  }
+
+  .plan-ribbon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mu-pastel-green-text);
+    background: var(--mu-pastel-green-bg);
+    padding: 0.3rem 0.55rem;
+    border-radius: 9999px;
+  }
+
+  .plan-card-header {
+    margin: 0 0 1.25rem;
+  }
+
+  .plan-card--featured .plan-card-header {
+    padding-right: 4.75rem;
+  }
+
+  .plan-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 0 0.35rem;
+    color: var(--mu-text);
+  }
+
+  .plan-tagline {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--mu-text-muted);
+    margin: 0;
+  }
+
+  .pricing-price-group {
+    display: block;
+  }
+
+  .plan-price-block {
+    margin-bottom: 1.25rem;
+    min-height: 6.5rem;
+  }
+
+  .plan-price-flow-wrap {
+    display: inline-block;
+    vertical-align: baseline;
+    min-width: 2.85em;
+    overflow: hidden;
+    line-height: 0.85;
+  }
+
+  .plan-price-flow {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(2.5rem, 4vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    font-variant-numeric: tabular-nums;
+    color: var(--mu-text);
+    transform: rotate(var(--price-tilt, 0deg));
+    transform-origin: left bottom;
+  }
+
+  .plan-price-main {
+    margin: 0;
+    line-height: 1;
+  }
+
+  .plan-price-unit-stack,
+  .plan-price-note-stack {
+    display: grid;
+    grid-template: 1fr / 1fr;
+    align-items: start;
+  }
+
+  .plan-price-unit-stack {
+    margin-top: 0.35rem;
+  }
+
+  .plan-price-unit-stack > .plan-price-unit,
+  .plan-price-note-stack > .plan-price-note {
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+
+  .pricing-cards-section[data-billing-interval='monthly'] [data-billing-copy='monthly'],
+  .pricing-cards-section[data-billing-interval='annual'] [data-billing-copy='annual'] {
+    visibility: visible;
+  }
+
+  .plan-price-amount {
+    font-family: 'Geist', var(--sans);
+    font-size: clamp(2.5rem, 4vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    font-variant-numeric: tabular-nums;
+    color: var(--mu-text);
+  }
+
+  .plan-price-unit {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--mu-text-muted);
+  }
+
+  .plan-price-note {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--mu-text-muted);
+    margin: 0.65rem 0 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plan-features {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 1.25rem 0 0;
+    flex: 1;
+    border-top: 1px solid var(--mu-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .plan-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--mu-text);
+  }
+
+  .plan-feature-icon {
+    flex-shrink: 0;
+    display: flex;
+    color: var(--mu-pastel-green-text);
+    margin-top: 0.1rem;
+  }
+
+  .plan-card-footer {
+    margin-top: auto;
+    padding-top: 0.25rem;
+  }
+
+  .plan-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 2.75rem;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .plan-card:not(.plan-card--featured) .plan-cta--primary {
+    background: transparent;
+    color: var(--mu-text);
+    border: 1px solid var(--mu-border);
+  }
+
+  .plan-card--featured .plan-cta--primary {
+    background: var(--mu-btn-bg);
+    color: var(--mu-btn-text);
+    border: 1px solid var(--mu-btn-bg);
+  }
+
+  @media (hover: hover) {
+    .plan-card:not(.plan-card--featured) .plan-cta--primary:hover {
+      background: light-dark(#f3f2ef, #1a1a1a);
+      border-color: light-dark(rgba(47, 52, 55, 0.22), rgba(255, 255, 255, 0.16));
+    }
+
+    .plan-card--featured .plan-cta--primary:hover {
+      background: var(--mu-btn-hover);
+      border-color: var(--mu-btn-hover);
+    }
+  }
+
+  .plan-cta--primary:active {
+    transform: scale(0.98);
+  }
+
+  .plan-cta--primary:focus-visible {
+    outline: 2px solid light-dark(#111111, #e8e8e6);
+    outline-offset: 2px;
+  }
+
+  .plan-cta--pending {
+    background: light-dark(#f3f2ef, #1a1a1a);
+    color: var(--mu-text-muted);
+    border: 1px dashed var(--mu-border);
+    cursor: not-allowed;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .plan-card--featured .plan-cta--pending {
+    background: light-dark(#f0efec, #141414);
+    border-style: solid;
+    border-color: light-dark(rgba(47, 52, 55, 0.14), rgba(255, 255, 255, 0.12));
+  }
+
+  .mu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 5px;
+    border: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  .mu-btn:not([aria-disabled='true']) {
+    background: var(--mu-btn-bg);
+    color: var(--mu-btn-text);
+  }
+
+  .mu-btn:not([aria-disabled='true']):hover {
+    background: var(--mu-btn-hover);
+  }
+
+  .mu-btn:not([aria-disabled='true']):active {
+    transform: scale(0.98);
+  }
+
+  .mu-btn:focus-visible,
+  .faq-summary:focus-visible,
+  .strip-tile:focus-visible {
+    outline: 2px solid light-dark(#111111, #e8e8e6);
+    outline-offset: 2px;
+  }
+
+  .mu-btn--ghost,
+  .mu-btn[aria-disabled='true'] {
+    background: transparent;
+    color: var(--mu-text-muted);
+    border: 1px solid var(--mu-border);
+    cursor: not-allowed;
+  }
+
+  .pricing-contact-hint {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--mu-text-muted);
+    margin-top: 2rem;
+  }
+
+  .pricing-contact-hint a {
+    color: var(--mu-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pricing-selfhost {
+    padding: clamp(3rem, 8vw, 5rem) 0;
+    border-top: 1px solid var(--mu-border);
+  }
+
+  .selfhost-tile {
+    margin: 0;
+  }
+
+  .selfhost-features {
+    margin: 0;
+    padding: 0;
+    border-top: none;
+  }
+
+  .selfhost-links {
+    margin: 1.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--mu-text-muted);
+  }
+
+  .selfhost-links a {
+    color: var(--mu-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .selfhost-links-sep {
+    margin: 0 0.4rem;
+    color: var(--mu-text-muted);
+  }
+
+  .pricing-value,
+  .pricing-compare,
+  .pricing-faq,
+  .pricing-strip {
+    padding: clamp(3rem, 8vw, 5rem) 0;
+    border-top: 1px solid var(--mu-border);
+  }
+
+  .value-bento {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    .value-bento {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .value-tile {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    background: var(--mu-surface);
+    border: 1px solid var(--mu-border);
+    border-radius: 10px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .value-tile--wide {
+    grid-column: 1 / -1;
+  }
+
+  .value-tile:hover {
+    box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.25));
+  }
+
+  .value-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--mu-text);
+  }
+
+  .value-body {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--mu-text-muted);
+  }
+
+  .compare-panel {
+    border: 1px solid var(--mu-border);
+    border-radius: 10px;
+    background: var(--mu-surface);
+    overflow: hidden;
+  }
+
+  .compare-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .compare-col-feature {
+    width: 46%;
+  }
+
+  .compare-col-plan {
+    width: 18%;
+  }
+
+  .compare-table th,
+  .compare-table td {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--mu-border);
+    vertical-align: middle;
+  }
+
+  .compare-th-feature {
+    text-align: left;
+  }
+
+  .compare-th-plan,
+  .compare-td-plan {
+    text-align: center;
+  }
+
+  .compare-table thead th {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--mu-text-muted);
+    background: light-dark(#f9f9f8, #161616);
+  }
+
+  .compare-table tbody th {
+    font-weight: 500;
+    color: var(--mu-text);
+    line-height: 1.45;
+  }
+
+  .compare-td-plan {
+    color: var(--mu-text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .compare-td-plan.cell-included {
+    color: var(--mu-text);
+    font-weight: 500;
+  }
+
+  .compare-table tr:last-child th,
+  .compare-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  @media (max-width: 900px) {
+    .compare-panel {
+      border-radius: 10px;
+      overflow: visible;
+      background: transparent;
+      border: none;
+    }
+
+    .compare-table {
+      display: block;
+      font-size: 0.9375rem;
+    }
+
+    .compare-table colgroup {
+      display: none;
+    }
+
+    .compare-table thead {
+      display: none;
+    }
+
+    .compare-table tbody {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .compare-table tbody tr {
+      display: block;
+      background: var(--mu-surface);
+      border: 1px solid var(--mu-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .compare-table tbody th {
+      display: block;
+      padding: 1rem 1.15rem 0.65rem;
+      border-bottom: none;
+      font-size: 0.9375rem;
+      line-height: 1.4;
+    }
+
+    .compare-table tbody td {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem 1.15rem;
+      border-bottom: 1px solid var(--mu-border);
+      text-align: right;
+      white-space: normal;
+    }
+
+    .compare-table tbody td::before {
+      content: attr(data-label);
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--mu-text-muted);
+      text-align: left;
+    }
+
+    .compare-table tbody td:last-child {
+      border-bottom: none;
+      padding-bottom: 0.85rem;
+    }
+
+    .compare-table tbody tr:last-child th,
+    .compare-table tbody tr:last-child td {
+      border-bottom-color: var(--mu-border);
+    }
+  }
+
+  .faq-accordion {
+    max-width: 40rem;
+    border-top: 1px solid var(--mu-border);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--mu-border);
+  }
+
+  .faq-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.15rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--mu-text);
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    position: relative;
+    color: var(--mu-text-muted);
+  }
+
+  .faq-icon::before,
+  .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 1px;
+  }
+
+  .faq-icon::before {
+    left: 50%;
+    top: 0;
+    width: 1.5px;
+    height: 100%;
+    transform: translateX(-50%);
+  }
+
+  .faq-icon::after {
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1.5px;
+    transform: translateY(-50%);
+    transition: opacity 0.2s ease;
+  }
+
+  .faq-item[open] .faq-icon::before {
+    opacity: 0;
+  }
+
+  .faq-answer {
+    margin: 0 0 1.15rem;
+    padding-right: 2rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--mu-text-muted);
+  }
+
+  .pricing-legal-links {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: var(--mu-text-muted);
+  }
+
+  .pricing-legal-links a {
+    color: var(--mu-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .strip-bento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .strip-bento {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .strip-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: clamp(1.35rem, 3vw, 1.75rem);
+    background: var(--mu-surface);
+    border: 1px solid var(--mu-border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .strip-tile:hover {
+    box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.25));
+  }
+
+  .strip-tile:active {
+    transform: scale(0.99);
+  }
+
+  .strip-kicker {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mu-text-muted);
+  }
+
+  .strip-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--mu-text);
+  }
+
+  .strip-link {
+    font-size: 0.875rem;
+    color: var(--mu-text-muted);
+    margin-top: 0.25rem;
+  }
+
+  .strip-tile:hover .strip-link {
+    color: var(--mu-text);
+  }
+
+  .strip-tile--solo {
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--index, 0) * 35ms);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .plan-card,
+    .plan-card--featured,
+    .value-tile,
+    .strip-tile,
+    .mu-btn,
+    .billing-toggle-indicator {
+      transition: none;
+      transform: none;
+    }
+
+  }
+</style>
+
+<script>
+  import '../scripts/pricing-billing.ts';
+</script>
+
+<script is:inline>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var nodes = document.querySelectorAll('.pricing-page .reveal');
+    if (!nodes.length) return;
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+    );
+    nodes.forEach(function (el) {
+      io.observe(el);
+    });
+  })();
+</script>
