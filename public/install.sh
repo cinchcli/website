@@ -1,26 +1,36 @@
 #!/bin/sh
-set -e
+set -eu
 
-# Cinch CLI installer
-# Usage: curl -fsSL https://cinchcli.com/install.sh | sh
-#    or: curl -fsSL https://cinchcli.com/install.sh | sh -s cinch
+# Cinch CLI installer.
+#
+# Usage:
+#   curl -fsSL https://cinchcli.com/install.sh | sh
+#   curl -fsSL https://cinchcli.com/install.sh | sh -s -- --prefix=$HOME/.local
+#
+# Downloads the latest signed CLI archive from cinchcli/cinch releases on
+# GitHub, verifies the SHA-256 against the published checksum, and installs
+# `cinch` into <prefix>/bin (default: /usr/local).
+#
+# After install, `cinch self-update` keeps the binary fresh (downloads from
+# the same release URL and atomically swaps).
+#
+# On macOS the recommended install is Homebrew; this script prints the
+# canonical commands and exits.
 
-PKG="cinch"
+REPO="cinchcli/cinch"
+RELEASE_BASE="https://github.com/${REPO}/releases/latest/download"
+PREFIX="/usr/local"
+
 while [ $# -gt 0 ]; do
   case "$1" in
-    -*)
-      shift
-      ;;
-    *)
-      PKG="$1"
-      shift
-      ;;
+    --prefix=*) PREFIX="${1#--prefix=}"; shift ;;
+    --prefix)   PREFIX="$2"; shift 2 ;;
+    -h|--help)
+      sed -n '3,16p' "$0" | sed 's/^# \{0,1\}//'
+      exit 0 ;;
+    *) printf 'install.sh: unknown argument: %s\n' "$1" >&2; exit 2 ;;
   esac
 done
-
-REPO_URL="https://cinchcli.com"
-REPO_NAME="cinchcli"
-LEGACY_REPO_NAMES="jinmugo sls"
 
 info() { printf '\033[1;34m::\033[0m %s\n' "$*"; }
 err()  { printf '\033[1;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
@@ -31,117 +41,90 @@ run_root() {
   elif command -v sudo >/dev/null 2>&1; then
     sudo "$@"
   else
-    err "This installer needs root privileges. Re-run as root or install sudo."
+    err "This installer needs to write to ${PREFIX}/bin. Re-run as root, install sudo, or pass --prefix=\$HOME/.local."
   fi
 }
 
-detect_distro() {
-  if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    case "$ID $ID_LIKE" in
-      *debian*|*ubuntu*) echo "deb" ;;
-      *fedora*|*rhel*|*centos*|*rocky*|*alma*|*ol*) echo "rpm" ;;
-      *) err "Unsupported distro: $ID" ;;
-    esac
-  elif command -v apt-get >/dev/null 2>&1; then
-    echo "deb"
-  elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
-    echo "rpm"
-  else
-    err "Could not detect package manager"
-  fi
-}
-
-cleanup_legacy_repos() {
-  for name in $LEGACY_REPO_NAMES; do
-    if [ "$1" = "deb" ]; then
-      run_root rm -f "/etc/apt/keyrings/${name}.gpg"
-      run_root rm -f "/etc/apt/sources.list.d/${name}.list"
-    elif [ "$1" = "rpm" ]; then
-      run_root rm -f "/etc/yum.repos.d/${name}.repo"
-    fi
-  done
-}
-
-setup_deb() {
-  info "Setting up cinchcli apt repository..."
-
-  if ! command -v curl >/dev/null 2>&1 || ! command -v gpg >/dev/null 2>&1; then
-    run_root apt-get update -qq
-    run_root apt-get install -y -qq curl gnupg
-  fi
-
-  run_root mkdir -p /etc/apt/keyrings
-  curl -fsSL "${REPO_URL}/gpg.key" | gpg --dearmor --yes | run_root tee "/etc/apt/keyrings/${REPO_NAME}.gpg" >/dev/null
-
-  echo "deb [signed-by=/etc/apt/keyrings/${REPO_NAME}.gpg] ${REPO_URL}/deb stable main" \
-    | run_root tee "/etc/apt/sources.list.d/${REPO_NAME}.list" >/dev/null
-}
-
-setup_rpm() {
-  info "Setting up cinchcli yum/dnf repository..."
-
-  run_root mkdir -p /etc/pki/rpm-gpg
-  curl -fsSL "${REPO_URL}/gpg.key" | run_root tee "/etc/pki/rpm-gpg/RPM-GPG-KEY-${REPO_NAME}" >/dev/null
-  run_root rpm --import "/etc/pki/rpm-gpg/RPM-GPG-KEY-${REPO_NAME}" >/dev/null 2>&1 || true
-
-  cat << EOF | run_root tee "/etc/yum.repos.d/${REPO_NAME}.repo" >/dev/null
-[${REPO_NAME}]
-name=${REPO_NAME}
-baseurl=${REPO_URL}/rpm
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-${REPO_NAME}
-EOF
-
-  if command -v dnf >/dev/null 2>&1; then
-    run_root dnf clean metadata --disablerepo="*" --enablerepo="${REPO_NAME}" >/dev/null 2>&1 || true
-  else
-    run_root yum clean metadata --disablerepo="*" --enablerepo="${REPO_NAME}" >/dev/null 2>&1 || true
-  fi
-}
-
-install_pkg() {
-  if [ "$2" = "deb" ]; then
-    info "Installing $1..."
-    run_root apt-get update -qq
-    run_root apt-get install -y "$1"
-  elif [ "$2" = "rpm" ]; then
-    info "Installing $1..."
-    if command -v dnf >/dev/null 2>&1; then
-      if ! run_root dnf install -y --disablerepo='*' --enablerepo="${REPO_NAME}" "$1"; then
-        info "Retrying with system repositories for dependencies..."
-        run_root dnf install -y "$1"
-      fi
-    else
-      if ! run_root yum install -y --disablerepo='*' --enablerepo="${REPO_NAME}" "$1"; then
-        info "Retrying with system repositories for dependencies..."
-        run_root yum install -y "$1"
-      fi
-    fi
-  fi
+# Map (uname -s, uname -m) → cinch-cli release asset (Rust target triple).
+detect_triple() {
+  os="$(uname -s)"
+  arch="$(uname -m)"
+  case "${os}_${arch}" in
+    Linux_x86_64|Linux_amd64)
+      echo "x86_64-unknown-linux-gnu.tar.gz" ;;
+    Linux_aarch64|Linux_arm64)
+      echo "aarch64-unknown-linux-gnu.tar.gz" ;;
+    Darwin_arm64|Darwin_aarch64)
+      echo "aarch64-apple-darwin.tar.gz" ;;
+    *)
+      err "Unsupported platform: ${os}/${arch}. Cinch CLI is published for Linux x86_64, Linux arm64, macOS arm64, and Windows x86_64." ;;
+  esac
 }
 
 case "$(uname -s)" in
   Darwin)
-    cat <<'EOF'
-Cinch on macOS:
+    cat <<EOF
+Cinch on macOS — Homebrew is recommended:
 
-  Desktop app (recommended):  https://cinchcli.com/#install
-  CLI via Homebrew:            brew install cinchcli/tap/cinch
+  Desktop app (with embedded CLI on PATH):
+    brew install --cask cinchcli/tap/cinch
+
+  CLI only:
+    brew install cinchcli/tap/cinch
+
+To install the standalone CLI tarball anyway, re-run with FORCE_TARBALL=1:
+
+  curl -fsSL https://cinchcli.com/install.sh | FORCE_TARBALL=1 sh
 
 EOF
-    exit 0
+    if [ "${FORCE_TARBALL:-0}" != "1" ]; then
+      exit 0
+    fi
     ;;
 esac
 
-DISTRO="$(detect_distro)"
-cleanup_legacy_repos "$DISTRO"
+ASSET_SUFFIX="$(detect_triple)"
+ASSET="cinch-cli-${ASSET_SUFFIX}"
+URL="${RELEASE_BASE}/${ASSET}"
+SHA_URL="${URL}.sha256"
 
-if [ "$DISTRO" = "deb" ]; then
-  setup_deb
-elif [ "$DISTRO" = "rpm" ]; then
-  setup_rpm
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+
+info "Downloading ${ASSET}..."
+curl -fsSL --proto '=https' --tlsv1.2 -o "$WORK/$ASSET"            "$URL"
+curl -fsSL --proto '=https' --tlsv1.2 -o "$WORK/${ASSET}.sha256"   "$SHA_URL"
+
+info "Verifying SHA-256..."
+# Both `shasum -a 256 -c` (macOS, busybox) and `sha256sum -c` (Linux) accept
+# the same "<hex>  <filename>" format the workflow emits.
+cd "$WORK"
+if command -v sha256sum >/dev/null 2>&1; then
+  sha256sum -c "${ASSET}.sha256"
+elif command -v shasum >/dev/null 2>&1; then
+  shasum -a 256 -c "${ASSET}.sha256"
+else
+  err "Neither sha256sum nor shasum found; cannot verify download."
 fi
+cd - >/dev/null
 
-install_pkg "$PKG" "$DISTRO"
+info "Extracting..."
+tar -xzf "$WORK/$ASSET" -C "$WORK"
+[ -f "$WORK/cinch" ] || err "Archive did not contain a 'cinch' binary."
+chmod +x "$WORK/cinch"
+
+info "Installing to ${PREFIX}/bin/cinch..."
+run_root mkdir -p "${PREFIX}/bin"
+run_root mv "$WORK/cinch" "${PREFIX}/bin/cinch"
+
+info "Installed $("${PREFIX}/bin/cinch" --version 2>/dev/null || echo cinch)."
+cat <<EOF
+
+Next steps:
+  ${PREFIX}/bin/cinch auth login         # authenticate this machine
+  ${PREFIX}/bin/cinch --help             # see all subcommands
+  ${PREFIX}/bin/cinch self-update        # upgrade later (no need to re-run this installer)
+
+If ${PREFIX}/bin isn't on your PATH, add it to your shell's rc file:
+  export PATH="${PREFIX}/bin:\$PATH"
+EOF
