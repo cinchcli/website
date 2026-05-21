@@ -74,4 +74,4 @@ cinch pair user@remotehost
 
 This regenerates a pair token, SSHes in, installs cinch if needed, and pairs the machine with your account. No manual steps on the remote end.
 
-For automatic clipboard receiving on macOS, install the [desktop app](https://github.com/cinchcli/desktop).
+For automatic clipboard receiving on macOS, install the [desktop app](https://cinchcli.com/download/) — `brew install --cask cinchcli/tap/cinch`.

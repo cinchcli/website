@@ -7,10 +7,19 @@ export const GITHUB_ORIGIN = 'https://github.com' as const;
 
 export const SITE_ORIGIN = 'https://cinchcli.com' as const;
 
-/** Fully qualified repository roots */
+/**
+ * Fully qualified repository roots.
+ *
+ * Post Phase 4 migration, the CLI, desktop app, and shared client library
+ * all live in `cinchcli/cinch`. The legacy `cinchcli/desktop` and
+ * `cinchcli/cinch-core` repos are archived. `repo.desktop` is kept as an
+ * alias for callers that semantically want "the desktop's repo".
+ */
+const CINCH_MONOREPO = `${GITHUB_ORIGIN}/cinchcli/cinch` as const;
+
 export const repo = {
-  cinchCli: `${GITHUB_ORIGIN}/cinchcli/cinch`,
-  desktop: `${GITHUB_ORIGIN}/cinchcli/desktop`,
+  cinchCli: CINCH_MONOREPO,
+  desktop: CINCH_MONOREPO,
   website: `${GITHUB_ORIGIN}/cinchcli/website`,
   relay: `${GITHUB_ORIGIN}/cinchcli/relay`,
   vim: `${GITHUB_ORIGIN}/cinchcli/cinch.vim`,
@@ -23,8 +32,8 @@ export const urls = {
   changelog: `${repo.cinchCli}/releases`,
   cliLatestReleaseZip: `${repo.cinchCli}/releases/latest`,
   discussions: `${repo.cinchCli}/discussions`,
-  desktopLatestRelease: `${repo.desktop}/releases/latest`,
-  desktopLatestManifest: `${repo.desktop}/releases/latest/download/latest.json`,
+  desktopLatestRelease: `${repo.cinchCli}/releases/latest`,
+  desktopLatestManifest: `${repo.cinchCli}/releases/latest/download/latest.json`,
   /** Starlight docs “edit this page” */
   docsEditBase: `${repo.website}/edit/main/`,
   relayGitCloneHttps: `${repo.relay}.git`,
@@ -33,7 +42,8 @@ export const urls = {
 
 export function desktopDmgHref(version: string): string {
   const v = version.trim();
-  return `${repo.desktop}/releases/download/desktop-v${v}/Cinch_${v}_aarch64.dmg`;
+  // Monorepo release path: release/<version>/Cinch_<version>_aarch64.dmg
+  return `${repo.cinchCli}/releases/download/release/${v}/Cinch_${v}_aarch64.dmg`;
 }
 
 /** Starlight sidebar header social icons */

@@ -17,7 +17,7 @@ The CLI (`cinch push` / `cinch pull` / `cinch auth`) runs on:
 - Linux (x86_64, ARM64)
 - Windows (x86_64)
 
-The [desktop app](https://github.com/cinchcli/desktop) (macOS) receives clips automatically and copies them to your clipboard. Linux and Windows builds are planned.
+The [desktop app](https://cinchcli.com/download/) (macOS, Apple Silicon) receives clips automatically and copies them to your clipboard. Install with `brew install --cask cinchcli/tap/cinch`. Linux and Windows users get the CLI only — `cinch pull` polls or subscribes via WebSocket.
 
 ### Does Cinch support binary data and images?
 

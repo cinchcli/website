@@ -3,7 +3,7 @@ title: Relay Protocol
 description: HTTP and WebSocket API specification for the Cinch relay server.
 ---
 
-This page documents the wire protocol used between Cinch clients (the `cinch` CLI, the desktop app) and the relay server. Wire DTOs are defined as Protocol Buffers in [`cinchcli/cinch-core`](https://github.com/cinchcli/cinch-core) and shared verbatim across Rust and Go via generated bindings + a JSON wire-vector gate.
+This page documents the wire protocol used between Cinch clients (the `cinch` CLI, the desktop app) and the relay server. Wire DTOs are defined as Protocol Buffers in [`cinchcli/cinch`'s `crates/client-core/proto/cinch/v1/`](https://github.com/cinchcli/cinch/tree/main/crates/client-core/proto/cinch/v1) and shared verbatim across Rust and Go via generated bindings + a JSON wire-vector gate. The relay consumes the same bindings from the [`go/cinch/v1/`](https://github.com/cinchcli/cinch/tree/main/go/cinch/v1) module path.
 
 ## Authentication
 
