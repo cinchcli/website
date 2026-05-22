@@ -157,6 +157,19 @@ starlight-toc {
   overflow-x: auto;
 }
 
+/* Disable ligatures + stylistic sets in code — Geist Mono's calt/liga/ss03
+   collapse sequences like ` --` and `->` into glyphs that visually eat the
+   preceding space (e.g. `cinch --version` rendered as `cinch--version`). */
+.sl-markdown-content :not(pre) > code,
+.sl-markdown-content pre,
+.sl-markdown-content pre code,
+.expressive-code,
+.expressive-code pre,
+.expressive-code code {
+  font-feature-settings: 'liga' 0, 'calt' 0, 'ss03' 0;
+  font-variant-ligatures: none;
+}
+
 /* expressive-code override */
 .expressive-code .frame {
   border-radius: 10px;
