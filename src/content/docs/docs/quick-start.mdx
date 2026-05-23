@@ -1,22 +1,27 @@
 ---
 title: Quick Start
-description: Push your first clip in under 5 minutes.
+description: From Mac to any server in under 5 minutes.
 ---
 
 import { Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 
-This guide walks you through installing Cinch, authenticating, and moving your first clip end-to-end.
+Get clipboard sync between your Mac and any server you SSH into — in under 5 minutes.
 
 <Steps>
 
-1. **Install the CLI**
+1. **Install the Cinch app on your Mac**
 
    <Tabs>
    <TabItem label="macOS">
-   [Download the Desktop app](https://cinchcli.com/download) (Apple Silicon, recommended), or install the CLI via Homebrew:
    ```bash
-   brew install cinchcli/tap/cinch
+   brew install --cask cinchcli/tap/cinchcli
    ```
+   This installs `Cinch.app` to `/Applications` and puts the `cinch` CLI on your PATH. Same binary either way.
+   <Aside type="caution" title="Apple Silicon only">
+     Cinch ships arm64 builds only on macOS. Both the Cask and the CLI Formula
+     refuse to install on Intel Macs. If you're on an Intel Mac, use the
+     Linux/Windows build instead.
+   </Aside>
    </TabItem>
    <TabItem label="Linux">
    ```bash
@@ -27,6 +32,12 @@ This guide walks you through installing Cinch, authenticating, and moving your f
    <TabItem label="Windows">
    Download `cinch_Windows_x86_64.zip` from [GitHub Releases](https://github.com/cinchcli/cinch/releases/latest), extract, and add `cinch.exe` to PATH.
    </TabItem>
+   <TabItem label="CLI only (any platform with brew)">
+   ```bash
+   brew install cinchcli/tap/cinchcli
+   ```
+   Formula install — no desktop app. Useful for headless Macs or Linux brew setups.
+   </TabItem>
    <TabItem label="Docker (relay only)">
    ```bash
    docker run -d -p 8080:8080 -v cinch-data:/data \
@@ -35,63 +46,58 @@ This guide walks you through installing Cinch, authenticating, and moving your f
    </TabItem>
    </Tabs>
 
-   Verify the install:
-   ```bash
-   cinch --version
-   ```
+2. **Open Cinch and sign in**
 
-2. **Sign in**
+   Launch Cinch from `/Applications`. The app opens to an empty dashboard and walks you through signing in with GitHub or Google — a browser tab opens, you authenticate, and the tab closes.
 
-   ```bash
-   cinch auth login
-   ```
-
-   A browser window opens. Sign in with GitHub or Google.
+   You'll see a welcome card: **"✨ You're signed in. Now send your first clip."**
 
    <Aside type="note">
-   To use a self-hosted relay instead of the hosted service, pass `--relay`:
-   ```bash
-   cinch auth login --relay https://your-relay.example.com
-   ```
+   On Linux or Windows (no desktop app), run `cinch auth login` in your terminal instead. It opens the same OAuth flow in your browser.
    </Aside>
 
-3. **Push your first clip**
+3. **Send your first clip**
 
-   On machine A:
-
-   ```bash
-   echo "hello from $(hostname)" | cinch push
-   # → ✓ Pushed 28 B
-   ```
-
-4. **Pull it on the other end**
-
-   On machine B (also signed in):
+   In the welcome card, click **Copy** next to the `echo "hello cinch" | cinch push` snippet. Open a terminal, paste, and hit enter:
 
    ```bash
-   cinch pull
-   # → hello from my-server
+   echo "hello cinch" | cinch push
+   # → ✓ Pushed 12 B
    ```
 
-   Or pipe directly to the clipboard:
+   The clip appears in your dashboard within a second. That's the loop working.
+
+4. **Pair a server**
+
+   This is what Cinch is for. From your Mac terminal:
+
+   ```bash
+   cinch pair user@host
+   ```
+
+   Cinch SSHes in, installs itself on the server, and registers it under your account. No manual steps on the remote end.
+
+5. **Use it daily**
+
+   SSH into the server:
+
+   ```bash
+   echo "stuff from $(hostname)" | cinch push
+   ```
+
+   Back on your Mac, the clip appears in your dashboard **and** lands on your Mac clipboard automatically — paste it anywhere with ⌘V.
+
+   Prefer explicit pulls?
 
    ```bash
    cinch pull | pbcopy   # macOS
    cinch pull | xclip    # Linux (X11)
    ```
 
-5. **Pair a remote machine (optional)**
-
-   To set up cinch on a remote server in one command — SSH in, install, and pair:
-
-   ```bash
-   cinch pair user@remotehost
-   ```
-
 </Steps>
 
 ## What's next?
 
-- Install the [desktop app](https://cinchcli.com/download/) (`brew install --cask cinchcli/tap/cinch`) to have every push land in your Mac clipboard automatically. The Cask ships the `cinch` CLI on PATH too.
 - See the full [CLI Reference](/docs/cli/push/) for all flags.
 - [Self-host the relay](/docs/relay/self-hosting/) if you want your data on your own server.
+- Pair more servers as you go — there's no limit.
