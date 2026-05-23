@@ -6,6 +6,9 @@ import { starlightSocial, urls } from './src/site/social';
 
 export default defineConfig({
   site: 'https://cinchcli.com',
+  redirects: {
+    '/docs/getting-started': '/docs/quick-start',
+  },
   vite: {
     server: {
       proxy: {
@@ -35,7 +38,6 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Overview', slug: 'docs' },
-            { label: 'Installation', slug: 'docs/getting-started' },
             { label: 'Quick Start', slug: 'docs/quick-start' },
           ],
         },

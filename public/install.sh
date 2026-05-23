@@ -67,10 +67,10 @@ case "$(uname -s)" in
 Cinch on macOS — Homebrew is recommended:
 
   Desktop app (with embedded CLI on PATH):
-    brew install --cask cinchcli/tap/cinch
+    brew install --cask cinchcli/tap/cinchcli
 
   CLI only:
-    brew install cinchcli/tap/cinch
+    brew install cinchcli/tap/cinchcli
 
 To install the standalone CLI tarball anyway, re-run with FORCE_TARBALL=1:
 
