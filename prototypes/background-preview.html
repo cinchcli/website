@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cinch Background Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --surface: #0e0f10;
+      --surface-2: #161719;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f0ebe0;
+      --muted: #a1a1a1;
+      --faint: #6b6b6b;
+      --accent: #4fb3a9;
+      --accent-soft: rgba(79, 179, 169, 0.16);
+      --accent-line: rgba(79, 179, 169, 0.24);
+      --ease: cubic-bezier(0.32, 0.72, 0, 1);
+      --sans: "Geist", system-ui, -apple-system, sans-serif;
+      --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom, rgba(5, 5, 5, 0.16), var(--bg) 48rem),
+        linear-gradient(90deg, rgba(79, 179, 169, 0.115) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(79, 179, 169, 0.075) 1px, transparent 1px);
+      background-size: auto, 96px 96px, 96px 96px;
+      mask-image: linear-gradient(to bottom, black 0%, black 64%, transparent 96%);
+    }
+
+    .hero {
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 118px 24px 64px;
+      isolation: isolate;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-bg::before {
+      content: "";
+      position: absolute;
+      inset: -12% -8% auto;
+      height: 78%;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(79, 179, 169, 0.22), transparent 27rem),
+        radial-gradient(circle at 29% 62%, rgba(190, 217, 215, 0.09), transparent 24rem),
+        radial-gradient(circle at 72% 70%, rgba(79, 179, 169, 0.12), transparent 26rem);
+      filter: blur(4px);
+      opacity: 0.86;
+    }
+
+    .hero-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(5, 5, 5, 0.16), rgba(5, 5, 5, 0.76) 76%, var(--bg)),
+        radial-gradient(ellipse at center, transparent 0 42%, rgba(5, 5, 5, 0.62) 100%);
+    }
+
+    .pipe-field {
+      position: absolute;
+      inset: 0;
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+
+    .pipe-path {
+      fill: none;
+      stroke: var(--accent-line);
+      stroke-width: 1.2;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .pipe-path.soft {
+      stroke: rgba(190, 217, 215, 0.12);
+      stroke-width: 1;
+    }
+
+    .pipe-path.glow {
+      stroke: rgba(79, 179, 169, 0.32);
+      stroke-width: 1.35;
+      filter: drop-shadow(0 0 10px rgba(79, 179, 169, 0.32));
+    }
+
+    .pipe-node {
+      fill: var(--accent);
+      opacity: 0.7;
+      filter: drop-shadow(0 0 12px rgba(79, 179, 169, 0.5));
+    }
+
+    .packet {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px 6px rgba(79, 179, 169, 0.28);
+      offset-path: path("M -80 520 C 260 410 380 230 700 295 C 920 340 980 480 1240 410 C 1400 370 1510 315 1600 280");
+      offset-rotate: 0deg;
+      animation: packet-flow 9s var(--ease) infinite;
+    }
+
+    .packet.packet-2 {
+      width: 5px;
+      height: 5px;
+      opacity: 0.76;
+      animation-delay: -4.5s;
+      animation-duration: 11s;
+      offset-path: path("M 1560 180 C 1280 260 1070 170 860 250 C 620 342 450 548 80 620");
+    }
+
+    @keyframes packet-flow {
+      0% { offset-distance: 0%; opacity: 0; transform: scale(0.75); }
+      12% { opacity: 0.9; }
+      78% { opacity: 0.9; }
+      100% { offset-distance: 100%; opacity: 0; transform: scale(0.75); }
+    }
+
+    .nav {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: 10;
+      width: min(calc(100% - 32px), 1180px);
+      transform: translateX(-50%);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 6px;
+      background: rgba(5, 5, 5, 0.62);
+      backdrop-filter: blur(24px) saturate(170%);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      background: rgba(14, 15, 16, 0.92);
+      padding: 10px 10px 10px 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .mark {
+      width: 19px;
+      height: 19px;
+      border: 5px solid var(--text);
+      border-right-color: transparent;
+      border-radius: 999px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-links span {
+      padding: 9px 12px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #050505;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 12px 18px;
+      box-shadow: 0 18px 48px -24px rgba(79, 179, 169, 0.8);
+    }
+
+    .hero-inner {
+      width: min(1000px, 100%);
+      text-align: center;
+      padding-top: 28px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(52px, 7.6vw, 112px);
+      line-height: 1.02;
+      letter-spacing: -0.065em;
+      text-wrap: balance;
+    }
+
+    .muted {
+      color: rgba(240, 235, 224, 0.54);
+    }
+
+    .lede {
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: clamp(18px, 1.65vw, 23px);
+      line-height: 1.5;
+      max-width: 46ch;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-top: 34px;
+    }
+
+    .secondary {
+      color: var(--muted);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .terminal-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
+      align-items: center;
+      width: min(1000px, 100%);
+      margin: 76px auto 0;
+      text-align: left;
+    }
+
+    .term-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .term-label {
+      margin: 0 0 0 16px;
+      color: rgba(240, 235, 224, 0.82);
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .term {
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 13px;
+      background: rgba(14, 15, 17, 0.94);
+      box-shadow:
+        0 26px 70px -36px rgba(0,0,0,0.9),
+        0 0 56px -38px rgba(79, 179, 169, 0.9),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 39px;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.025);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #ff5f57;
+    }
+
+    .dot:nth-child(2) { background: #febc2e; }
+    .dot:nth-child(3) { background: #28c840; }
+    .dot.live { width: 7px; height: 7px; background: #4ade80; margin-left: 6px; }
+
+    .term-title {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.05em;
+    }
+
+    .term-body {
+      min-height: 142px;
+      padding: 28px 32px;
+      font-family: var(--mono);
+      font-size: 15px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .prompt { color: rgba(255,255,255,0.34); }
+    .cmd { color: rgba(255,255,255,0.86); }
+    .accent { color: var(--accent); }
+    .ok { color: #4ade80; }
+    .dim { color: rgba(255,255,255,0.3); }
+
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 36px;
+      opacity: 0.65;
+      text-shadow: 0 0 18px rgba(79, 179, 169, 0.32);
+    }
+
+    .variant-label {
+      margin: 0 0 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .glow-bg::before {
+      background:
+        radial-gradient(circle at 50% 32%, rgba(79, 179, 169, 0.3), transparent 26rem),
+        radial-gradient(circle at 50% 62%, rgba(190, 217, 215, 0.12), transparent 22rem),
+        radial-gradient(circle at 20% 44%, rgba(79, 179, 169, 0.12), transparent 26rem),
+        radial-gradient(circle at 80% 46%, rgba(79, 179, 169, 0.1), transparent 28rem);
+      filter: blur(10px);
+      opacity: 1;
+    }
+
+    .glow-bg .instrument-ring {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      width: min(980px, 82vw);
+      aspect-ratio: 1 / 0.46;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(79, 179, 169, 0.16);
+      border-radius: 50%;
+      box-shadow:
+        inset 0 0 60px rgba(79, 179, 169, 0.04),
+        0 0 90px rgba(79, 179, 169, 0.08);
+      opacity: 0.78;
+    }
+
+    .glow-bg .instrument-ring:nth-child(2) {
+      width: min(720px, 68vw);
+      transform: translate(-50%, -50%) rotate(-8deg);
+      opacity: 0.54;
+    }
+
+    .scanline {
+      position: absolute;
+      left: 50%;
+      top: 62%;
+      width: min(860px, 80vw);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(79, 179, 169, 0.55), transparent);
+      opacity: 0.8;
+      animation: scan-breathe 5s ease-in-out infinite;
+    }
+
+    @keyframes scan-breathe {
+      0%, 100% { opacity: 0.35; transform: translateX(-50%) scaleX(0.8); }
+      50% { opacity: 0.86; transform: translateX(-50%) scaleX(1); }
+    }
+
+    .map-bg::before {
+      background:
+        radial-gradient(circle at 50% 34%, rgba(79, 179, 169, 0.18), transparent 28rem),
+        radial-gradient(circle at 24% 62%, rgba(79, 179, 169, 0.08), transparent 18rem),
+        radial-gradient(circle at 78% 58%, rgba(79, 179, 169, 0.1), transparent 20rem);
+      opacity: 0.95;
+    }
+
+    .relay-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.92;
+      mix-blend-mode: screen;
+    }
+
+    .map-line {
+      stroke: rgba(79, 179, 169, 0.18);
+      stroke-width: 1.1;
+      fill: none;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .map-line.active {
+      stroke: rgba(79, 179, 169, 0.38);
+      filter: drop-shadow(0 0 10px rgba(79, 179, 169, 0.32));
+      stroke-dasharray: 10 18;
+      animation: dash-flow 12s linear infinite;
+    }
+
+    @keyframes dash-flow {
+      to { stroke-dashoffset: -180; }
+    }
+
+    .map-node {
+      fill: rgba(79, 179, 169, 0.82);
+      filter: drop-shadow(0 0 12px rgba(79, 179, 169, 0.48));
+    }
+
+    .map-node.relay {
+      fill: #bed9d7;
+      filter: drop-shadow(0 0 18px rgba(190, 217, 215, 0.52));
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        width: calc(100% - 28px);
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 114px 20px 56px;
+      }
+
+      .hero-inner {
+        padding-top: 10px;
+      }
+
+      .terminal-row {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin-top: 58px;
+      }
+
+      .flow-arrow {
+        transform: rotate(90deg);
+      }
+
+      .term-body {
+        min-height: 124px;
+        padding: 24px 22px;
+        font-size: 13px;
+      }
+
+      .actions {
+        flex-direction: column;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Preview navigation">
+    <div class="nav-inner">
+      <div class="brand"><span class="mark" aria-hidden="true"></span><span>cinch</span></div>
+      <div class="nav-links">
+        <span>Docs</span>
+        <span>Guides</span>
+        <span>Pricing</span>
+        <span>GitHub</span>
+      </div>
+      <a href="#" class="cta">Get Started <span>›</span></a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <svg class="pipe-field" viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <path class="pipe-path soft" d="M-80 180 C250 80 390 140 620 210 C850 278 1030 210 1230 148 C1410 92 1500 110 1680 172" />
+        <path class="pipe-path glow" d="M-80 520 C260 410 380 230 700 295 C920 340 980 480 1240 410 C1400 370 1510 315 1680 280" />
+        <path class="pipe-path" d="M-60 760 C220 650 460 690 650 560 C845 428 955 230 1210 238 C1425 245 1520 332 1680 290" />
+        <path class="pipe-path soft" d="M1580 180 C1280 260 1070 170 860 250 C620 342 450 548 80 620" />
+        <circle class="pipe-node" cx="700" cy="295" r="5" />
+        <circle class="pipe-node" cx="1240" cy="410" r="4" />
+        <circle class="pipe-node" cx="860" cy="250" r="3.5" />
+      </svg>
+      <span class="packet"></span>
+      <span class="packet packet-2"></span>
+    </div>
+
+    <section class="hero-inner" aria-label="Cinch hero background preview">
+      <p class="variant-label">Candidate 1 - Porcelain Pipe Field</p>
+      <h1>Your clipboard.<br><span class="muted">Across every machine.</span></h1>
+      <p class="lede">Push from any terminal — pull anywhere.</p>
+      <div class="actions">
+        <a href="#" class="cta">Get started now <span>›</span></a>
+        <a href="#" class="secondary">Download CLI</a>
+        <a href="#" class="secondary">Read the docs</a>
+      </div>
+
+      <div class="terminal-row" aria-hidden="true">
+        <div class="term-wrap">
+          <p class="term-label">Push</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">local - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Save it once</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">echo</span> <span class="accent">$DATABASE_URL</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="term-wrap">
+          <p class="term-label">Pull</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">remote - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Use it anywhere</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cinch pull</span></div>
+              <div><span class="ok">✓ received</span> <span class="dim">from relay</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="hero" id="glow">
+    <div class="hero-bg glow-bg" aria-hidden="true">
+      <span class="instrument-ring"></span>
+      <span class="instrument-ring"></span>
+      <span class="scanline"></span>
+    </div>
+
+    <section class="hero-inner" aria-label="Gradient glow background preview">
+      <p class="variant-label">Candidate 2 - Gradient Instrument Glow</p>
+      <h1>Your clipboard.<br><span class="muted">Across every machine.</span></h1>
+      <p class="lede">Push from any terminal — pull anywhere.</p>
+      <div class="actions">
+        <a href="#" class="cta">Get started now <span>›</span></a>
+        <a href="#" class="secondary">Download CLI</a>
+        <a href="#" class="secondary">Read the docs</a>
+      </div>
+
+      <div class="terminal-row" aria-hidden="true">
+        <div class="term-wrap">
+          <p class="term-label">Push</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">local - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Save it once</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">echo</span> <span class="accent">$DATABASE_URL</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="term-wrap">
+          <p class="term-label">Pull</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">remote - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Use it anywhere</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cinch pull</span></div>
+              <div><span class="ok">✓ received</span> <span class="dim">from relay</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="hero" id="relay-map">
+    <div class="hero-bg map-bg" aria-hidden="true">
+      <svg class="relay-map" viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <path class="map-line" d="M160 690 C360 520 520 440 800 450 C1080 460 1210 360 1440 210" />
+        <path class="map-line active" d="M190 610 C410 520 575 510 800 450 C1020 390 1180 430 1390 310" />
+        <path class="map-line" d="M250 240 C470 310 590 390 800 450 C1010 510 1170 610 1380 680" />
+        <path class="map-line active" d="M800 450 C760 330 830 250 930 176" />
+        <circle class="map-node" cx="190" cy="610" r="6" />
+        <circle class="map-node" cx="250" cy="240" r="4" />
+        <circle class="map-node relay" cx="800" cy="450" r="9" />
+        <circle class="map-node" cx="1390" cy="310" r="6" />
+        <circle class="map-node" cx="1380" cy="680" r="4" />
+        <circle class="map-node" cx="930" cy="176" r="4" />
+      </svg>
+    </div>
+
+    <section class="hero-inner" aria-label="Relay map background preview">
+      <p class="variant-label">Candidate 3 - Relay Map Background</p>
+      <h1>Your clipboard.<br><span class="muted">Across every machine.</span></h1>
+      <p class="lede">Push from any terminal — pull anywhere.</p>
+      <div class="actions">
+        <a href="#" class="cta">Get started now <span>›</span></a>
+        <a href="#" class="secondary">Download CLI</a>
+        <a href="#" class="secondary">Read the docs</a>
+      </div>
+
+      <div class="terminal-row" aria-hidden="true">
+        <div class="term-wrap">
+          <p class="term-label">Push</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">local - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Save it once</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">echo</span> <span class="accent">$DATABASE_URL</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="term-wrap">
+          <p class="term-label">Pull</p>
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot live"></span>
+              <span class="term-title">remote - bash</span>
+            </div>
+            <div class="term-body">
+              <div><span class="dim"># Use it anywhere</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cinch pull</span></div>
+              <div><span class="ok">✓ received</span> <span class="dim">from relay</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+</body>
+</html>

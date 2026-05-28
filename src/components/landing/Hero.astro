@@ -3,6 +3,12 @@ import LiveWire from './LiveWire.astro';
 ---
 
 <section class="hero section-pad" aria-label="Cinch introduction">
+  <div class="hero-atmosphere" aria-hidden="true">
+    <span class="instrument-ring"></span>
+    <span class="instrument-ring"></span>
+    <span class="scanline"></span>
+  </div>
+
   <div class="container-wide hero-container">
     <div class="hero-content">
       <h1 class="text-display hero-title animate-in" style="--delay: 100ms">
@@ -53,6 +59,81 @@ import LiveWire from './LiveWire.astro';
     position: relative;
     overflow: hidden;
     padding-top: 12rem;
+  }
+
+  .hero-atmosphere {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero-atmosphere::before {
+    content: "";
+    position: absolute;
+    inset: -14% -10% auto;
+    height: 80%;
+    background:
+      radial-gradient(circle at 50% 32%, light-dark(rgba(36,108,101,0.16), rgba(79,179,169,0.26)), transparent 26rem),
+      radial-gradient(circle at 50% 64%, light-dark(rgba(190,217,215,0.18), rgba(190,217,215,0.12)), transparent 22rem),
+      radial-gradient(circle at 18% 48%, light-dark(rgba(36,108,101,0.08), rgba(79,179,169,0.1)), transparent 26rem),
+      radial-gradient(circle at 82% 48%, light-dark(rgba(36,108,101,0.07), rgba(79,179,169,0.09)), transparent 28rem);
+    filter: blur(10px);
+    opacity: 0.9;
+  }
+
+  .hero-atmosphere::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 56% 40% at 50% 30%, transparent 0 58%, var(--bg) 100%),
+      linear-gradient(to bottom, transparent 0%, transparent 54%, var(--bg) 96%);
+  }
+
+  .instrument-ring {
+    position: absolute;
+    left: 50%;
+    top: 39%;
+    width: min(980px, 82vw);
+    aspect-ratio: 1 / 0.46;
+    transform: translate(-50%, -50%) rotate(3deg);
+    border: 1px solid light-dark(rgba(36,108,101,0.15), rgba(79,179,169,0.17));
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 60px light-dark(rgba(36,108,101,0.035), rgba(79,179,169,0.045)),
+      0 0 90px light-dark(rgba(36,108,101,0.07), rgba(79,179,169,0.08));
+    opacity: 0.68;
+  }
+
+  .instrument-ring:nth-child(2) {
+    width: min(720px, 68vw);
+    transform: translate(-50%, -50%) rotate(-8deg);
+    opacity: 0.48;
+  }
+
+  .scanline {
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    width: min(860px, 80vw);
+    height: 1px;
+    transform: translateX(-50%) scaleX(0.82);
+    background: linear-gradient(90deg, transparent, light-dark(rgba(36,108,101,0.46), rgba(79,179,169,0.55)), transparent);
+    opacity: 0.42;
+    animation: scan-breathe 5s ease-in-out infinite;
+  }
+
+  @keyframes scan-breathe {
+    0%, 100% {
+      opacity: 0.28;
+      transform: translateX(-50%) scaleX(0.78);
+    }
+    50% {
+      opacity: 0.72;
+      transform: translateX(-50%) scaleX(1);
+    }
   }
 
   .hero-container {
@@ -111,6 +192,7 @@ import LiveWire from './LiveWire.astro';
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
+    width: 100%;
   }
 
   .hero-ctas {
@@ -206,8 +288,35 @@ import LiveWire from './LiveWire.astro';
       padding-top: 8rem;
       min-height: auto;
     }
+    .hero-atmosphere::before {
+      inset: -8% -28% auto;
+      height: 62%;
+      opacity: 0.72;
+    }
+    .instrument-ring {
+      top: 31%;
+      width: 116vw;
+      opacity: 0.42;
+    }
+    .instrument-ring:nth-child(2) {
+      width: 88vw;
+      opacity: 0.32;
+    }
+    .scanline {
+      top: 42%;
+      width: 92vw;
+      opacity: 0.3;
+    }
     .hero-container {
       gap: 3rem;
+    }
+    .hero-content {
+      width: 100%;
+      max-width: 36rem;
+    }
+    .hero-title {
+      font-size: 2.85rem;
+      line-height: 1.04;
     }
     .hero-description {
       font-size: 1.0625rem;
@@ -230,11 +339,26 @@ import LiveWire from './LiveWire.astro';
     .hero {
       padding-top: 7rem;
     }
+    .hero-title {
+      font-size: 2.25rem;
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+    }
+    .hero-actions {
+      max-width: 20rem;
+    }
     .hero-secondary {
       flex-wrap: wrap;
       justify-content: center;
       gap: 0.25rem;
     }
   }
-</style>
 
+  @media (prefers-reduced-motion: reduce) {
+    .scanline {
+      animation: none;
+      opacity: 0.44;
+      transform: translateX(-50%) scaleX(0.9);
+    }
+  }
+</style>

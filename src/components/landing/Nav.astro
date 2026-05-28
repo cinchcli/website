@@ -88,10 +88,15 @@ import { urls } from '../../site/social';
   }
 
   .container-nav {
-    max-width: 900px;
+    width: calc(100% - 2rem);
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 0 1rem;
     pointer-events: auto;
+    transition: max-width 0.8s var(--ease-fluid);
+  }
+
+  .nav-floating.is-scrolled .container-nav {
+    max-width: 900px;
   }
 
   .nav-bezel {
@@ -255,7 +260,9 @@ import { urls } from '../../site/social';
       display: inline-flex;
     }
     .container-nav {
+      width: auto;
       max-width: 100%;
+      padding: 0 1rem;
     }
     .nav-content {
       padding-right: 0.5rem;
@@ -270,6 +277,7 @@ import { urls } from '../../site/social';
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .container-nav,
     .nav-mobile,
     .nav-toggle .icon-menu,
     .nav-toggle .icon-close {
@@ -280,8 +288,19 @@ import { urls } from '../../site/social';
 
 <script is:inline>
   (function () {
+    var nav = document.querySelector('.nav-floating');
     var toggle = document.getElementById('nav-toggle');
     var panel  = document.getElementById('nav-mobile-menu');
+
+    if (nav) {
+      function updateNavWidth() {
+        nav.classList.toggle('is-scrolled', window.scrollY > 24);
+      }
+
+      updateNavWidth();
+      window.addEventListener('scroll', updateNavWidth, { passive: true });
+    }
+
     if (!toggle || !panel) return;
 
     function setOpen(open) {
@@ -321,7 +340,6 @@ import { urls } from '../../site/social';
     function onMqChange(e) {
       if (e.matches) setOpen(false);
     }
-    if (mq.addEventListener) mq.addEventListener('change', onMqChange);
-    else if (mq.addListener)  mq.addListener(onMqChange);
+    mq.addEventListener('change', onMqChange);
   })();
 </script>

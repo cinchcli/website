@@ -180,6 +180,33 @@ const {
     overflow-x: hidden;
   }
 
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to bottom, light-dark(rgba(251,251,250,0.48), rgba(5,5,5,0.36)), var(--bg) 42rem),
+      linear-gradient(
+        90deg,
+        light-dark(rgba(36,108,101,0.12), rgba(79,179,169,0.12)) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        0deg,
+        light-dark(rgba(36,108,101,0.08), rgba(79,179,169,0.08)) 1px,
+        transparent 1px
+      );
+    background-size: auto, 96px 96px, 96px 96px;
+    mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 92%);
+  }
+
   /* ─── Typography Utility ─── */
   h1, h2, h3, h4 {
     font-weight: 700;
