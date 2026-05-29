@@ -1,5 +1,8 @@
 /**
  * Public pricing data for cinchcli.com — keep in sync with biz/PRICING.md and biz/src/types.ts PLAN_LIMITS.
+ *
+ * Product model: the AI clipboard core is free/open source. Paid plans are for
+ * the hosted relay we operate, not for locking local AI/MCP features away.
  */
 
 import { SITE_ORIGIN, urls } from './social';
@@ -48,8 +51,8 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
 export const PLANS: PlanDefinition[] = [
   {
     id: 'free',
-    name: 'Free',
-    tagline: 'For solo developers getting started.',
+    name: 'Hosted Relay Free',
+    tagline: 'Free hosted sync for personal use.',
     price: { monthlyUsd: 0, annualUsd: 0, annualMonthlyUsd: 0 },
     limits: PLAN_LIMITS.free,
     checkoutUrl: null,
@@ -57,8 +60,8 @@ export const PLANS: PlanDefinition[] = [
   },
   {
     id: 'pro',
-    name: 'Pro',
-    tagline: 'More devices and deeper relay history.',
+    name: 'Hosted Relay Plus',
+    tagline: 'More devices and deeper hosted history.',
     price: { monthlyUsd: 4, annualUsd: 36, annualMonthlyUsd: 3 },
     limits: PLAN_LIMITS.pro,
     recommended: true,
@@ -67,23 +70,23 @@ export const PLANS: PlanDefinition[] = [
   },
   {
     id: 'team',
-    name: 'Team',
-    tagline: 'Per-seat billing for shared fleets.',
-    price: { monthlyUsd: 8, annualUsd: 72, annualMonthlyUsd: 6 },
+    name: 'Commercial',
+    tagline: 'Support, private hosting, and custom terms.',
+    price: { monthlyUsd: 0, annualUsd: 0, annualMonthlyUsd: 0 },
     limits: PLAN_LIMITS.team,
     checkoutUrl: null,
-    cta: 'coming-soon',
+    cta: 'contact',
   },
 ];
 
 export const PRICING_TAGLINE =
-  'All plans include the same encryption, sync engine, and desktop / CLI features. Paid plans differ only in capacity and support response time.';
+  'Cinch is a free, open-source AI clipboard. Pay only when you want us to run the relay for you.';
 
 /** Self-host callout on /pricing (not a separate plan — works with every tier). */
 export const SELF_HOST_SECTION = {
-  title: 'Your relay, your infrastructure',
+  title: 'Self-hosting stays free',
   lead:
-    'Every plan — including Free — works with the hosted relay or a relay you run yourself. Self-hosting does not change Cinch’s price.',
+    'The CLI, local MCP server, transforms, desktop app, and relay are available without a feature paywall. Run your own relay when you want full infrastructure control.',
   bullets: [
     'Single Go binary or Docker image on any VPS',
     'Same E2EE as hosted: relay stores ciphertext only',
@@ -95,23 +98,23 @@ export const SELF_HOST_SECTION = {
 
 export const VALUE_PROPS = [
   {
-    title: 'Scale of fleet',
-    body: 'Pro lifts the device cap to 10 — laptop, work Mac, a few VMs, and a CI runner. Team removes the per-seat cap.',
+    title: 'Hosted capacity',
+    body: 'Plus lifts the hosted relay cap to 10 devices — laptop, work Mac, a few VMs, and a CI runner.',
   },
   {
     title: 'History depth',
-    body: '90 days on Pro or one year on Team of relay-backed clip history vs. 7 days on Free.',
+    body: 'Plus keeps 90 days of hosted relay history vs. 7 days on Free. Local clipboard history remains on-device and is not capped by relay retention.',
   },
   {
-    title: 'Unlimited pushes',
-    body: 'Every plan includes unlimited daily pushes — use Cinch in CI, scripts, and terminals without watching a counter.',
+    title: 'Trust by default',
+    body: 'AI clipboard features stay local and open. Hosted plans are about uptime, retention, and support, not access to your own data.',
   },
 ] as const;
 
 export const BILLING_FAQ = [
   {
     q: 'How does billing work?',
-    a: 'Free requires no card. Pro is a flat subscription for one user. Team is per seat — specify seats at checkout; add seats anytime with proration.',
+    a: 'Hosted Relay Free requires no card. Hosted Relay Plus is a flat subscription for one user. Commercial support and private hosting are handled directly.',
   },
   {
     q: 'Currency and payment',
@@ -129,20 +132,25 @@ export const BILLING_FAQ = [
 
 export const FEATURE_ROWS: PlanFeatureRow[] = [
   { label: 'End-to-end encryption', free: true, pro: true, team: true },
+  { label: 'Local MCP server for AI tools', free: true, pro: true, team: true },
+  { label: 'Local transforms and redaction', free: true, pro: true, team: true },
   { label: 'macOS desktop app', free: true, pro: true, team: true },
   { label: 'CLI (Linux / macOS / Windows)', free: true, pro: true, team: true },
   { label: 'Real-time WebSocket sync', free: true, pro: true, team: true },
   { label: 'Searchable local history (FTS5)', free: true, pro: true, team: true },
+  { label: 'Local history retention', free: 'Unlimited on device', pro: 'Unlimited on device', team: 'Unlimited on device' },
   { label: 'Self-hosted relay support', free: true, pro: true, team: true },
-  { label: 'Centralized team billing', free: false, pro: false, team: true },
-  { label: 'Shared team device pool', free: false, pro: false, team: true },
-  { label: 'Priority support', free: false, pro: 'Email (48 h)', team: 'Email (24 h)' },
+  { label: 'Hosted relay devices', free: '3', pro: '10', team: 'Custom' },
+  { label: 'Hosted relay retention', free: '7 days', pro: '90 days', team: 'Custom' },
+  { label: 'Commercial support agreement', free: false, pro: false, team: true },
+  { label: 'Private hosted relay', free: false, pro: false, team: 'Available' },
+  { label: 'Priority support', free: false, pro: 'Email (48 h)', team: 'Custom SLA' },
 ];
 
 export const CONTACT_EMAIL = 'contact@cinchcli.com' as const;
 
 export function formatDeviceLimit(n: number | null): string {
-  if (n === null) return 'Unlimited per seat';
+  if (n === null) return 'Custom';
   return String(n);
 }
 
@@ -170,7 +178,7 @@ export function planCardBullets(plan: PlanDefinition): readonly string[] {
   const core = 'macOS app, CLI, E2EE, self-host relay';
 
   if (plan.id === 'team') {
-    return [devices, retention, pushes, 'Centralized team billing', 'Priority support (24 h)', core];
+    return ['Custom hosted relay limits', 'Private hosting available', 'Commercial support terms', core];
   }
   if (plan.id === 'pro') {
     return [devices, retention, pushes, 'Email support (48 h)', core];
@@ -231,7 +239,10 @@ export function formatPlanPriceDisplay(
   plan: PlanDefinition,
   interval: BillingInterval,
 ): PriceParts {
-  const perSeat = plan.id === 'team';
+  if (plan.cta === 'contact') {
+    return { amount: 'Custom', unit: 'Contact us' };
+  }
+  const perSeat = false;
   if (plan.price.monthlyUsd === 0) {
     return { amount: '$0', unit: 'Free forever' };
   }
@@ -251,8 +262,9 @@ export function formatPlanPriceNote(
   plan: PlanDefinition,
   interval: BillingInterval,
 ): string | null {
+  if (plan.cta === 'contact') return null;
   if (plan.price.annualUsd === 0) return null;
-  const per = plan.id === 'team' ? ' per seat' : '';
+  const per = '';
   if (interval === 'monthly') {
     const pct = annualSavingsPercent(plan);
     return `$${plan.price.annualUsd}${per}/yr · save ${pct}% vs monthly`;
@@ -287,7 +299,7 @@ export function pricingPageStructuredData(): Record<string, unknown> {
         url: pricingUrl,
         name: 'Cinch Pricing',
         description:
-          'Free, Pro, and Team plans for Cinch remote clipboard sync. Same encryption and apps on every tier; paid plans add capacity.',
+          'Free open-source AI clipboard with optional paid hosted relay capacity.',
         isPartOf: { '@id': JSONLD_WEBSITE_ID },
         about: { '@id': JSONLD_CLI_ID },
       },

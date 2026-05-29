@@ -31,7 +31,7 @@ function formatCompareCell(value: boolean | string): string {
 
 <Landing
   title="Pricing — Cinch"
-  description="Free, Pro, and Team plans for Cinch remote clipboard sync. Same encryption, unlimited pushes, and apps on every tier; paid plans add device capacity and history depth."
+  description="Cinch is a free, open-source AI clipboard. Paid plans are only for hosted relay capacity, retention, and support."
   canonical={canonical}
   jsonLd={pricingPageStructuredData()}
 >
@@ -49,7 +49,7 @@ function formatCompareCell(value: boolean | string): string {
             <li aria-current="page">Pricing</li>
           </ol>
         </nav>
-        <h1 class="pricing-title" id="pricing-heading">Plans &amp; pricing</h1>
+        <h1 class="pricing-title" id="pricing-heading">Open source core. Optional hosted relay.</h1>
         <p class="pricing-lead">{PRICING_TAGLINE}</p>
       </header>
 
@@ -97,14 +97,15 @@ function formatCompareCell(value: boolean | string): string {
               const monthlyNote = formatPlanPriceNote(plan, 'monthly');
               const annualNote = formatPlanPriceNote(plan, 'annual');
               const bullets = planCardBullets(plan);
-              const isFree = plan.price.monthlyUsd === 0;
+              const isFree = plan.id === 'free';
+              const isContact = plan.cta === 'contact';
               return (
                 <li class="reveal" style={`--index: ${i + 2}`}>
                   <article
                     class:list={['plan-card', plan.recommended && 'plan-card--featured']}
                     data-plan-id={plan.id}
-                    data-price-monthly={!isFree ? plan.price.monthlyUsd : undefined}
-                    data-price-annual={!isFree ? plan.price.annualMonthlyUsd : undefined}
+                    data-price-monthly={!isFree && !isContact ? plan.price.monthlyUsd : undefined}
+                    data-price-annual={!isFree && !isContact ? plan.price.annualMonthlyUsd : undefined}
                   >
                     {plan.recommended && (
                       <p class="plan-ribbon">Popular</p>
@@ -116,7 +117,12 @@ function formatCompareCell(value: boolean | string): string {
                     </header>
 
                     <div class="plan-price-block">
-                      {isFree ? (
+                      {isContact ? (
+                        <p class="plan-price-main">
+                          <span class="plan-price-amount">Custom</span>
+                          <span class="plan-price-unit">Contact us</span>
+                        </p>
+                      ) : isFree ? (
                         <p class="plan-price-main">
                           <span class="plan-price-amount">$0</span>
                           <span class="plan-price-unit">Free forever</span>
@@ -194,6 +200,11 @@ function formatCompareCell(value: boolean | string): string {
                           Checkout opens soon
                         </p>
                       )}
+                      {plan.cta === 'contact' && (
+                        <a href={`mailto:${CONTACT_EMAIL}`} class="plan-cta plan-cta--secondary">
+                          Contact us
+                        </a>
+                      )}
                     </footer>
                   </article>
                 </li>
@@ -204,7 +215,7 @@ function formatCompareCell(value: boolean | string): string {
         </div>
 
         <p class="pricing-contact-hint reveal" style="--index: 5">
-          Need Team billing before checkout goes live?
+          Need private hosting, commercial terms, or a support agreement?
           <a href={`mailto:${CONTACT_EMAIL}`}>Contact us</a>.
         </p>
       </section>
@@ -242,7 +253,7 @@ function formatCompareCell(value: boolean | string): string {
       <section class="pricing-value reveal" style="--index: 7" aria-labelledby="pricing-value-heading">
         <h2 class="mu-section-title" id="pricing-value-heading">What you pay for</h2>
         <p class="mu-section-lead">
-          The free tier is fully functional for individual use. Paid tiers unlock capacity, not features.
+          The core product is free. Hosted plans cover the relay we operate for you.
         </p>
         <ul class="value-bento" role="list">
           {VALUE_PROPS.map((item, i) => (
@@ -265,9 +276,9 @@ function formatCompareCell(value: boolean | string): string {
             <thead>
               <tr>
                 <th scope="col" class="compare-th-feature">Feature</th>
-                <th scope="col" class="compare-th-plan">Free</th>
-                <th scope="col" class="compare-th-plan">Pro</th>
-                <th scope="col" class="compare-th-plan">Team</th>
+                <th scope="col" class="compare-th-plan">Hosted Free</th>
+                <th scope="col" class="compare-th-plan">Hosted Plus</th>
+                <th scope="col" class="compare-th-plan">Commercial</th>
               </tr>
             </thead>
             <tbody>
@@ -280,19 +291,19 @@ function formatCompareCell(value: boolean | string): string {
                     <th scope="row" class="compare-th-feature">{row.label}</th>
                     <td
                       class:list={['compare-td-plan', { 'cell-included': free === 'Included' }]}
-                      data-label="Free"
+                      data-label="Hosted Free"
                     >
                       {free}
                     </td>
                     <td
                       class:list={['compare-td-plan', { 'cell-included': pro === 'Included' }]}
-                      data-label="Pro"
+                      data-label="Hosted Plus"
                     >
                       {pro}
                     </td>
                     <td
                       class:list={['compare-td-plan', { 'cell-included': team === 'Included' }]}
-                      data-label="Team"
+                      data-label="Commercial"
                     >
                       {team}
                     </td>
@@ -847,6 +858,19 @@ function formatCompareCell(value: boolean | string): string {
     background: light-dark(#f0efec, #141414);
     border-style: solid;
     border-color: light-dark(rgba(47, 52, 55, 0.14), rgba(255, 255, 255, 0.12));
+  }
+
+  .plan-cta--secondary {
+    background: transparent;
+    color: var(--mu-text);
+    border: 1px solid var(--mu-border);
+  }
+
+  @media (hover: hover) {
+    .plan-cta--secondary:hover {
+      background: light-dark(#f3f2ef, #1a1a1a);
+      border-color: light-dark(rgba(47, 52, 55, 0.22), rgba(255, 255, 255, 0.16));
+    }
   }
 
   .mu-btn {
