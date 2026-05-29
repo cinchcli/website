@@ -9,6 +9,7 @@ on:
         type: string
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   PACKAGE_NAME: cinch
   PACKAGE_REPO: cinchcli/cinch
   PACKAGE_DESC: Remote clipboard tool. Push from SSH, pull to local.
