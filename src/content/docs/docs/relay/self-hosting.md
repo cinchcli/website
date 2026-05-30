@@ -10,7 +10,7 @@ The relay server is a single Go binary that handles HTTP push and WebSocket deli
 - A Postgres database (any 14+ release; managed services like Supabase, Neon, RDS work).
 - A persistent directory or S3-compatible bucket for binary media.
 - At least one OAuth provider (GitHub or Google) **or** the self-host username form fallback. Without OAuth credentials, sign-in still works via the username form on the browser page.
-- A reverse proxy terminating TLS (Caddy, nginx, Cloudflare Tunnel). The relay itself speaks plain HTTP.
+- A TLS terminator in front of the relay (Caddy, nginx, Cloudflare Tunnel), or a tailnet-only front door via Tailscale Serve. The relay itself speaks plain HTTP.
 
 ## Docker Compose (recommended)
 
@@ -48,6 +48,45 @@ volumes:
 ```
 
 See [Relay Configuration](/docs/relay/configuration/) for the full list of environment variables.
+
+## Optional: Tailscale (tailnet-only)
+
+If you already use Tailscale, you can keep the relay off the public internet and still serve HTTPS by putting it behind `tailscale serve` on a node in your tailnet.
+
+1) Bind the relay to localhost so it is not publicly reachable. With Docker Compose, bind the port to `127.0.0.1`:
+
+```yaml
+ports:
+  - "127.0.0.1:8080:8080"
+```
+
+2) Configure Tailscale to terminate TLS and proxy to the relay at `http://127.0.0.1:8080`.
+
+3) Set `BASE_URL` to your MagicDNS hostname:
+
+```yaml
+environment:
+  BASE_URL: https://relay.<your-tailnet>.ts.net
+```
+
+4) Point clients at the same URL:
+
+```bash
+cinch auth login --relay https://relay.<your-tailnet>.ts.net
+
+# For non-interactive usage:
+CINCH_RELAY_URL=https://relay.<your-tailnet>.ts.net cinch push
+```
+
+OAuth redirect URIs are derived from `BASE_URL`. If you enable OAuth, allow these callbacks:
+
+- `https://relay.<your-tailnet>.ts.net/auth/oauth/github/callback`
+- `https://relay.<your-tailnet>.ts.net/auth/oauth/google/callback`
+
+Notes:
+
+- The browser you use during sign-in must be connected to the same tailnet (otherwise it cannot reach the relay URL).
+- Google OAuth commonly requires domain verification; if `.ts.net` blocks you, use GitHub OAuth or the username fallback sign-in.
 
 ## Bootstrapping the first admin
 
