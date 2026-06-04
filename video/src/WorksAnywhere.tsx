@@ -5,6 +5,7 @@ import { scene } from './scene';
 import { TerminalWindow } from './components/TerminalWindow';
 import { Typewriter } from './components/Typewriter';
 import { DesktopWindow } from './components/DesktopWindow';
+import { SignalPath } from './components/SignalPath';
 import { MONO_FONT } from './fonts';
 
 export const WorksAnywhere: React.FC = () => {
@@ -18,6 +19,9 @@ export const WorksAnywhere: React.FC = () => {
           </div>
           <div style={{ color: theme.semanticOk }}>{scene.successLine}</div>
         </TerminalWindow>
+      </div>
+      <div style={{ position: 'absolute', left: 520, top: 300 }}>
+        <SignalPath width={170} height={200} />
       </div>
       <div style={{ position: 'absolute', right: 70, top: 120 }}>
         <DesktopWindow
