@@ -62,12 +62,19 @@ import TerminalWindow from './TerminalWindow.astro';
             </div>
             <div class="panel-visual">
               <div class="screenshot-frame">
-                <img 
-                  src="/images/desktop-screenshot.png" 
-                  alt="Cinch Desktop App showing remote clips" 
+                <video
                   class="desktop-screenshot"
-                  loading="lazy"
-                />
+                  data-tab-video="desktop"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  poster="/videos/works-anywhere-poster.png"
+                  aria-label="Demo: a clip sent with cinch from a remote box behind a firewall appears instantly in the cinch desktop app"
+                >
+                  <source src="/videos/works-anywhere.webm" type="video/webm" />
+                  <source src="/videos/works-anywhere.mp4" type="video/mp4" />
+                </video>
               </div>
             </div>
           </div>
@@ -373,18 +380,31 @@ import TerminalWindow from './TerminalWindow.astro';
   const buttons = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
 
-  buttons.forEach(btn => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const demoVideo = document.querySelector('video[data-tab-video="desktop"]');
+
+  function syncDemoVideo(activeTab: string | null) {
+    if (!(demoVideo instanceof HTMLVideoElement)) return;
+    if (activeTab === 'desktop' && !reduceMotion) {
+      demoVideo.play().catch(() => {});
+    } else {
+      demoVideo.pause();
+    }
+  }
+
+  buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab');
-      
-      buttons.forEach(b => b.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
+
+      buttons.forEach((b) => b.classList.remove('active'));
+      panels.forEach((p) => p.classList.remove('active'));
 
       btn.classList.add('active');
       const target = document.getElementById(`tab-${tab}`);
       if (target) {
         target.classList.add('active');
       }
+      syncDemoVideo(tab);
     });
   });
 </script>
