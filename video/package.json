@@ -1,0 +1,25 @@
+{
+  "name": "cinch-video",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:webm": "remotion render WorksAnywhere out/works-anywhere.webm --codec=vp9 --scale=2",
+    "render:mp4": "remotion render WorksAnywhere out/works-anywhere.mp4 --codec=h264 --scale=2",
+    "still:poster": "remotion still WorksAnywhere out/works-anywhere-poster.png --frame=150 --scale=2",
+    "render:all": "npm run render:webm && npm run render:mp4 && npm run still:poster && node scripts/copy-to-public.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.471",
+    "@remotion/google-fonts": "4.0.471",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.471"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}

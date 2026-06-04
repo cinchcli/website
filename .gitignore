@@ -25,3 +25,7 @@ src/components/landing/_preview-*.html
 # Local-only files (deploy config + SEO/GEO notes)
 GEO-ANALYSIS.md
 wrangler.toml
+
+# Remotion video subproject — deps and local render output
+video/node_modules/
+video/out/
