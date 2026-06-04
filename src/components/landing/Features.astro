@@ -392,6 +392,10 @@ import TerminalWindow from './TerminalWindow.astro';
     }
   }
 
+  // "Works Anywhere" (data-tab="desktop") is never the default-active tab, so the
+  // video starts paused with its poster showing; syncDemoVideo only runs on a tab
+  // click. If desktop ever becomes the default tab, call syncDemoVideo('desktop')
+  // once here so it plays on load.
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab');
