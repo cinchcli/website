@@ -64,7 +64,7 @@ function cinchSoftwareAndOrgGraph(): Record<string, unknown>[] {
       '@id': JSONLD_CLI_ID,
       name: 'Cinch CLI',
       description:
-        'Open-source remote clipboard tool for developers. Push from any terminal, pull on any machine via WebSocket relay.',
+        'The clipboard for the AI-era: a hosted relay that works on any network, with clips and agent context in Claude and Cursor. Free and open source.',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'macOS, Linux, Windows',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -78,7 +78,7 @@ function cinchSoftwareAndOrgGraph(): Record<string, unknown>[] {
       '@id': JSONLD_DESKTOP_ID,
       name: 'Cinch Desktop',
       description:
-        'macOS menubar app that receives clipboard syncs automatically via the Cinch relay.',
+        'macOS menubar app for local clipboard history and encrypted Cinch relay sync.',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'macOS',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },

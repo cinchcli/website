@@ -71,20 +71,20 @@ Cinch doesn't use terminal escape sequences at all. It's plain HTTPS:
 
 ```bash
 # On the remote machine
-echo "some output" | cinch push
+echo "some output" | cinch send
 
 # On your local machine (or another remote)
 cinch pull
 ```
 
-`cinch push` sends the clip to a relay server over HTTPS. `cinch pull` retrieves it. Because it's HTTP, it works in any environment that has outbound internet access — no PTY, no terminal support, no SSH forwarding flags required.
+`cinch send` encrypts the clip and sends it to a relay server over HTTPS. `cinch pull` retrieves it. Because it's HTTP, it works in any environment that has outbound internet access — no PTY, no terminal support, no SSH forwarding flags required.
 
 ## The Comparison
 
 The table above covers the key differences. The short version:
 
 - **OSC 52**: zero-install, works in simple interactive SSH sessions, breaks everywhere else
-- **Cinch**: one binary to install, works everywhere, supports pull (OSC 52 is push-only)
+- **Cinch**: one binary to install, works everywhere, supports pull (OSC 52 is one-way)
 
 ## When to Use OSC 52
 
@@ -108,7 +108,7 @@ Use Cinch when:
 Cinch's relay is a single Go binary you can run on any server:
 
 ```bash
-docker run -p 8080:8080 ghcr.io/jinmugo/cinch-relay:latest
+docker run -p 8080:8080 ghcr.io/cinchcli/relay:latest
 ```
 
 Your clips never leave infrastructure you control. See the [self-hosting guide](/docs/relay/self-hosting/) for full setup instructions.

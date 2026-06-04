@@ -4,7 +4,9 @@ description: How Cinch captures clips, what it skips, and how long clips are kep
 ---
 
 :::note
-This page covers the **macOS desktop app** and its local clip history. If you are using the CLI only (`cinch push` / `cinch pull`), see [Relay Configuration](/docs/relay/configuration/) for the relay-side retention model (per-user `retention_days` in `user_capabilities`).
+This page covers the **macOS desktop app** and its local clip history. If you are using the CLI only (`cinch copy` / `cinch send` / `cinch pull`), see [Relay Configuration](/docs/relay/configuration/) for the relay-side retention model (per-user `retention_days` in `user_capabilities`).
+
+Hosted relay retention remains **7 days** by default. The hosted relay is free, best-effort onboarding infrastructure with fair-use and abuse limits; self-host when you need stronger uptime expectations or custom retention.
 :::
 
 Cinch captures every text or image clip you copy on this Mac and keeps it in a local history you can search and re-use. This page explains what gets captured, what gets skipped, and how long clips live.
@@ -38,4 +40,4 @@ Local clips live in a SQLite database under `~/Library/Application Support/com.c
 
 The Cinch desktop app ships for macOS only in this release. If you use Linux or Windows, install the `cinch` CLI instead — see the [download page](https://cinchcli.com/download) for all platform options.
 
-The CLI supports push and pull on all three platforms. A Linux and Windows desktop build returns in a follow-up release.
+The CLI supports copy, send, and pull on all three platforms. A Linux and Windows desktop build returns in a follow-up release.

@@ -1,11 +1,11 @@
 ---
 title: Quick Start
-description: From Mac to any server in under 5 minutes.
+description: Set up Cinch as a remote clipboard for developer context in under 5 minutes.
 ---
 
 import { Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 
-Get clipboard sync between your Mac and any server you SSH into — in under 5 minutes.
+Set up Cinch as a remote clipboard for developer context: local history first, cross-machine clipboard when you need it, and explicit AI workflows when you ask for them.
 
 <Steps>
 
@@ -50,39 +50,40 @@ Get clipboard sync between your Mac and any server you SSH into — in under 5 m
 
    Launch Cinch from `/Applications`. The app opens to an empty dashboard and walks you through signing in with GitHub or Google — a browser tab opens, you authenticate, and the tab closes.
 
-   You'll see a welcome card: **"✨ You're signed in. Now send your first clip."**
+   You'll see a welcome card: **"✨ You're signed in. Copy your first clip."**
 
    <Aside type="note">
    On Linux or Windows (no desktop app), run `cinch auth login` in your terminal instead. It opens the same OAuth flow in your browser.
    </Aside>
 
-3. **Send your first clip**
+3. **Copy your first clip**
 
-   In the welcome card, click **Copy** next to the `echo "hello cinch" | cinch push` snippet. Open a terminal, paste, and hit enter:
+   In the welcome card, click **Copy** next to the `echo "hello cinch" | cinch copy` snippet. Open a terminal, paste, and hit enter:
 
    ```bash
-   echo "hello cinch" | cinch push
-   # → ✓ Pushed 12 B
+   echo "hello cinch" | cinch copy
+   # → ✓ Saved 12 B to local history — not sent
    ```
 
-   The clip appears in your dashboard within a second. That's the loop working.
+   It lands in your local history instantly — read it back with `cinch paste`. Nothing left your machine yet; that's what `cinch copy` is for. To share it across machines, you'll use `cinch send` next.
 
-4. **Pair a server**
+4. **Add a server to your fleet**
 
    This is what Cinch is for. From your Mac terminal:
 
    ```bash
-   cinch pair user@host
+   cinch fleet add user@host
    ```
 
-   Cinch SSHes in, installs itself on the server, and registers it under your account. No manual steps on the remote end.
+   Cinch SSHes in, installs itself on the server, and registers it in your fleet. No manual steps on the remote end.
 
 5. **Use it daily**
 
-   SSH into the server:
+   SSH into the server and pipe a log or a command output to `cinch send`:
 
    ```bash
-   echo "stuff from $(hostname)" | cinch push
+   tail -n 20 error.log | cinch send
+   # → ✓ Sent to your fleet (E2EE)
    ```
 
    Back on your Mac, the clip appears in your dashboard **and** lands on your Mac clipboard automatically — paste it anywhere with ⌘V.
@@ -94,10 +95,26 @@ Get clipboard sync between your Mac and any server you SSH into — in under 5 m
    cinch pull | xclip    # Linux (X11)
    ```
 
+6. **Prepare terminal errors for AI**
+
+   `cinch ai fix` is explicit: it only calls an AI provider when you configure or select one. Start with `--no-send` to inspect the prompt:
+
+   ```bash
+   cargo test 2>&1 | cinch ai fix --no-send
+   cinch ai fix latest --no-send
+   ```
+
+   Add the local MCP server when you want an AI tool to search your local clipboard history:
+
+   ```bash
+   claude mcp add cinch -- cinch mcp
+   ```
+
 </Steps>
 
 ## What's next?
 
-- See the full [CLI Reference](/docs/cli/push/) for all flags.
+- See the full [CLI Reference](/docs/cli/send/) for all flags.
+- Read [`cinch ai`](/docs/cli/ai/) for provider setup and the no-send privacy boundary.
 - [Self-host the relay](/docs/relay/self-hosting/) if you want your data on your own server.
-- Pair more servers as you go — there's no limit.
+- Add more machines to your fleet as you go — there's no limit.

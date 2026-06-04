@@ -63,13 +63,12 @@ Local clipboard managers like Maccy, Raycast, and Clipboard Manager store and se
 
 | | Local clipboard managers | Cinch |
 |---|---|---|
-| Local clipboard history | Yes | No (relay only) |
-| Search & recall | Yes | Via desktop app |
+| Local clipboard history | Yes | Yes |
+| Search & recall | Yes | CLI, desktop app, and MCP |
 | Remote / cross-machine | No | Yes |
 | Works on servers | No | Yes |
 | CLI / pipe interface | No | Yes |
 
 :::note
-Cinch is not a local clipboard manager replacement. If you need local history and search, use Maccy or Raycast alongside Cinch.
-The Cinch desktop app adds a clipboard history view, but its primary value is the remote relay.
+Cinch is not trying to replace every local clipboard manager workflow. Its wedge is developer context: terminal output, encrypted cross-machine sync, local search, MCP access, and transforms for AI tools.
 :::

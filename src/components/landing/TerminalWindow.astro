@@ -83,6 +83,8 @@ const { title, class: className } = Astro.props;
     font-family: var(--mono);
     font-size: 0.875rem;
     line-height: 1.85;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "calt" 0;
     color: light-dark(rgba(0, 0, 0, 0.75), rgba(255, 255, 255, 0.75));
     background: transparent;
     overflow-x: auto;
@@ -104,7 +106,7 @@ const { title, class: className } = Astro.props;
   .term-win :global(.t-c)    { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.28)); }
   .term-win :global(.t-p)    { color: light-dark(rgba(0,0,0,0.30), rgba(255,255,255,0.30)); }
   .term-win :global(.t-cmd)  { color: light-dark(rgba(0,0,0,0.82), rgba(255,255,255,0.82)); }
-  .term-win :global(.t-str)  { color: light-dark(#2F7F78, #a5d6d3); }
+  .term-win :global(.t-str)  { color: light-dark(#1F6E66, #a5d6d3); }
   .term-win :global(.t-op)   { color: var(--accent); }
   .term-win :global(.t-ok)   { color: var(--semantic-ok); }
   .term-win :global(.t-val)  { color: light-dark(rgba(0,0,0,0.58), rgba(255,255,255,0.58)); }

@@ -1,7 +1,3 @@
----
-import LiveWire from './LiveWire.astro';
----
-
 <section class="hero section-pad" aria-label="Cinch introduction">
   <div class="hero-atmosphere" aria-hidden="true">
     <span class="instrument-ring"></span>
@@ -12,12 +8,11 @@ import LiveWire from './LiveWire.astro';
   <div class="container-wide hero-container">
     <div class="hero-content">
       <h1 class="text-display hero-title animate-in" style="--delay: 100ms">
-        Your clipboard.<br/>
-        <span class="title-muted">Across every machine.</span>
+        The clipboard for the AI-era.
       </h1>
 
       <p class="hero-description animate-in" style="--delay: 200ms">
-        Push from any terminal - pull anywhere.
+        A hosted relay that just works on any network. Your clips and agent context — in Claude and Cursor.
       </p>
 
       <div class="hero-actions animate-in" style="--delay: 300ms">
@@ -44,21 +39,18 @@ import LiveWire from './LiveWire.astro';
         </div>
       </div>
     </div>
-
-    <div class="hero-visual animate-in" style="--delay: 500ms">
-      <LiveWire />
-    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    min-height: 100svh;
+    min-height: min(760px, 92svh);
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 12rem;
+    padding-top: 11rem;
+    padding-bottom: 7rem;
   }
 
   .hero-atmosphere {
@@ -143,7 +135,6 @@ import LiveWire from './LiveWire.astro';
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4rem;
   }
 
   .hero-content {
@@ -172,6 +163,11 @@ import LiveWire from './LiveWire.astro';
   .hero-title {
     margin-bottom: 1.5rem;
     text-wrap: balance;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    font-size: clamp(3rem, 6vw, 4.25rem);
+    line-height: 1.05;
+    letter-spacing: 0;
   }
 
   .title-muted {
@@ -230,6 +226,7 @@ import LiveWire from './LiveWire.astro';
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 0.875rem;
+    min-height: 44px;
     color: var(--text-2);
     text-decoration: underline;
     text-decoration-color: transparent;
@@ -257,17 +254,6 @@ import LiveWire from './LiveWire.astro';
     user-select: none;
   }
 
-  .hero-visual {
-    width: 100%;
-    max-width: 1000px;
-  }
-
-  .visual-bezel {
-    padding: 0.75rem;
-    background: light-dark(rgba(255,255,255,0.5), rgba(0,0,0,0.5));
-    backdrop-filter: blur(20px);
-  }
-
   /* ─── Entry Animations ─── */
   .animate-in {
     opacity: 0;
@@ -286,7 +272,8 @@ import LiveWire from './LiveWire.astro';
   @media (max-width: 768px) {
     .hero {
       padding-top: 8rem;
-      min-height: auto;
+      padding-bottom: 4rem;
+      min-height: min(620px, 86svh);
     }
     .hero-atmosphere::before {
       inset: -8% -28% auto;
@@ -306,9 +293,6 @@ import LiveWire from './LiveWire.astro';
       top: 42%;
       width: 92vw;
       opacity: 0.3;
-    }
-    .hero-container {
-      gap: 3rem;
     }
     .hero-content {
       width: 100%;
@@ -340,7 +324,7 @@ import LiveWire from './LiveWire.astro';
       padding-top: 7rem;
     }
     .hero-title {
-      font-size: 2.25rem;
+      font-size: 2.05rem;
       line-height: 1.08;
       margin-bottom: 1.25rem;
     }

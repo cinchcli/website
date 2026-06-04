@@ -1,24 +1,29 @@
 ---
 title: Cinch Documentation
-description: Your clipboard. Across every machine. — CLI tool, relay server, and desktop agent.
+description: Remote clipboard for developer context. Local history, cross-machine clipboard, and MCP tools.
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Your clipboard. Across every machine. This documentation covers the CLI, relay server, and desktop agent.
+Cinch is an open-source remote clipboard for developer context. Local history. Cross-machine clipboard. MCP tools.
 
 ## What is Cinch?
 
-Cinch has two distinct parts that work together:
+Cinch has three parts that work together:
 
-**The CLI tool** — a Unix pipe. Reads stdin, writes stdout. Drop it into any shell workflow:
+**Local-first clipboard history** — the CLI and desktop app write to `~/.cinch/store.db` so terminal output, copied snippets, and logs are searchable before any sync happens.
+
+**Remote clipboard / self-hostable relay** — `cinch send` and `cinch pull` can move clips between machines through a relay. Payloads are encrypted on the client; the relay stores ciphertext only.
+
+**MCP + transforms for AI workflows** — `cinch mcp` exposes clip history to MCP-aware tools, `cinch history transform` prepares text, and `cinch ai fix` turns terminal errors into AI-ready debugging prompts.
 
 ```bash
-git diff HEAD~1 | cinch push   # on your server
+git diff HEAD~1 | cinch send    # on your server
 cinch pull                      # on your local machine
+cargo test 2>&1 | cinch ai fix --no-send
 ```
 
-**The relay server** — a single Go binary that holds clips until they are pulled. Self-host it on any VPS or Docker host, or use the hosted instance at `api.cinchcli.com`.
+The hosted relay is free while Cinch grows. Treat it as best-effort onboarding infrastructure with fair-use and abuse limits. For stronger control, self-host the relay on your own VPS, Fly.io app, Docker host, or private network.
 
 ---
 
@@ -31,14 +36,14 @@ cinch pull                      # on your local machine
     [Why Cinch? →](/docs/why-cinch/)
   </Card>
   <Card title="Quick Start" icon="open-book">
-    A focused 5-minute walkthrough: install, pair your machines, push your first clip, and pull it.
+    A focused 5-minute walkthrough: install, add machines to your fleet, copy your first clip, and send it across.
 
     [Quick Start →](/docs/quick-start/)
   </Card>
   <Card title="CLI Reference" icon="document">
-    Full reference for `cinch push`, `cinch pull`, and `cinch auth`.
+    Full reference for `cinch copy`, `cinch send`, `cinch pull`, `cinch auth`, and `cinch ai`.
 
-    [CLI Reference →](/docs/cli/push/)
+    [CLI Reference →](/docs/cli/send/)
   </Card>
   <Card title="Self-hosting the Relay" icon="setting">
     Run your own relay with Docker or a single Go binary. One command to deploy.

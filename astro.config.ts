@@ -44,9 +44,11 @@ export default defineConfig({
         {
           label: 'CLI Reference',
           items: [
-            { label: 'cinch push', slug: 'docs/cli/push' },
+            { label: 'cinch copy', slug: 'docs/cli/copy' },
+            { label: 'cinch send', slug: 'docs/cli/send' },
             { label: 'cinch pull', slug: 'docs/cli/pull' },
             { label: 'cinch auth', slug: 'docs/cli/auth' },
+            { label: 'cinch ai', slug: 'docs/cli/ai' },
           ],
         },
         {
