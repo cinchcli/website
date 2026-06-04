@@ -4,6 +4,7 @@ import { theme } from './theme';
 import { scene } from './scene';
 import { TerminalWindow } from './components/TerminalWindow';
 import { Typewriter } from './components/Typewriter';
+import { DesktopWindow } from './components/DesktopWindow';
 import { MONO_FONT } from './fonts';
 
 export const WorksAnywhere: React.FC = () => {
@@ -17,6 +18,17 @@ export const WorksAnywhere: React.FC = () => {
           </div>
           <div style={{ color: theme.semanticOk }}>{scene.successLine}</div>
         </TerminalWindow>
+      </div>
+      <div style={{ position: 'absolute', right: 70, top: 120 }}>
+        <DesktopWindow
+          width={520}
+          height={560}
+          newClip={scene.newClip}
+          restingClips={scene.restingClips}
+          newRowOpacity={1}
+          newRowShift={0}
+          newRowHighlight={0}
+        />
       </div>
     </AbsoluteFill>
   );
