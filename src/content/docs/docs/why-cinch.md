@@ -12,13 +12,12 @@ But the escape sequence approach breaks in a surprisingly large number of real-w
 | Scenario | OSC 52 status |
 |---|---|
 | Interactive SSH in iTerm2 / Ghostty | Works |
-| SSH inside tmux | Broken — tmux intercepts the sequence |
-| SSH inside GNU screen | Broken |
+| SSH inside tmux / screen | Broken — multiplexer intercepts the sequence |
+| Nested SSH hops | Broken — escape codes rarely survive the jump |
 | Docker exec / docker attach | Broken — no terminal escape passthrough |
+| Vim / Neovim inside SSH | Often flaky or requires complex config |
 | CI/CD runner (GitHub Actions, etc.) | Broken — non-interactive, no PTY |
 | Older SSH servers (OpenSSH < 7.2) | Broken — clipboard support not enabled |
-| Nested SSH hops | Broken at the first hop |
-| VS Code Remote SSH | Works sometimes, broken in others |
 
 :::tip
 If you have a single SSH session in a modern terminal and no tmux, OSC 52 is fine. Use it.

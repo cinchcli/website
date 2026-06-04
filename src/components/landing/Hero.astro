@@ -12,12 +12,11 @@ import LiveWire from './LiveWire.astro';
   <div class="container-wide hero-container">
     <div class="hero-content">
       <h1 class="text-display hero-title animate-in" style="--delay: 100ms">
-        Your clipboard.<br/>
-        <span class="title-muted">Across every machine.</span>
+        The clipboard for the AI-era.
       </h1>
 
       <p class="hero-description animate-in" style="--delay: 200ms">
-        Push from any terminal - pull anywhere.
+        A hosted relay that just works on any network. Your clips and agent context — in Claude and Cursor.
       </p>
 
       <div class="hero-actions animate-in" style="--delay: 300ms">
@@ -172,6 +171,11 @@ import LiveWire from './LiveWire.astro';
   .hero-title {
     margin-bottom: 1.5rem;
     text-wrap: balance;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    font-size: clamp(3rem, 6vw, 4.25rem);
+    line-height: 1.05;
+    letter-spacing: 0;
   }
 
   .title-muted {
@@ -341,7 +345,7 @@ import LiveWire from './LiveWire.astro';
       padding-top: 7rem;
     }
     .hero-title {
-      font-size: 2.25rem;
+      font-size: 2.05rem;
       line-height: 1.08;
       margin-bottom: 1.25rem;
     }

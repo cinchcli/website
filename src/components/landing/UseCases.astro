@@ -8,7 +8,7 @@ import TerminalWindow from './TerminalWindow.astro';
     <div class="uc-header animate-in">
       <h2 class="text-display">In practice</h2>
       <p class="uc-header-desc">
-        Three moments remote-to-local copy-paste used to need a workaround.
+        Three moments your terminal — and your agents — used to fumble.
       </p>
     </div>
 
@@ -105,8 +105,12 @@ import TerminalWindow from './TerminalWindow.astro';
     margin: 0 auto 8rem;
   }
 
+  .uc-header .text-display {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+  }
+
   .uc-header-desc {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--text-2);
     margin-top: 1.5rem;
     line-height: 1.6;
@@ -182,13 +186,13 @@ import TerminalWindow from './TerminalWindow.astro';
   }
 
   .uc-title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
     letter-spacing: -0.04em;
   }
 
   .uc-desc {
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     color: var(--text-2);
     line-height: 1.6;
     max-width: 42ch;
@@ -228,7 +232,7 @@ import TerminalWindow from './TerminalWindow.astro';
       display: none;
     }
     .uc-title {
-      font-size: 2rem;
+      font-size: 1.875rem;
     }
   }
 
@@ -257,7 +261,7 @@ import TerminalWindow from './TerminalWindow.astro';
       margin-bottom: 0.75rem;
     }
     .uc-title {
-      font-size: 1.625rem;
+      font-size: 1.5rem;
     }
     .uc-desc {
       font-size: 1rem;

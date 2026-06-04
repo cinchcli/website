@@ -7,7 +7,7 @@ import TerminalWindow from './TerminalWindow.astro';
     <div class="features-header animate-in" style="--delay: 100ms">
       <h2 class="text-display">Everything the pipe needs</h2>
       <p class="section-lead">
-        Cinch is infrastructure for moving data between machines.
+        Feed your agents the right context, sync it across any network on a relay we run, and keep it all in the terminal — yours to self-host.
       </p>
     </div>
 
@@ -15,35 +15,34 @@ import TerminalWindow from './TerminalWindow.astro';
       <div class="tabs-nav-container">
         <div class="tabs-nav bezel-outer">
           <div class="tabs-nav-inner bezel-inner">
-            <button class="tab-btn active" data-tab="cli">Unix-native CLI</button>
-            <button class="tab-btn" data-tab="desktop">Desktop Agent</button>
-            <button class="tab-btn" data-tab="security">E2E Encrypted</button>
-            <button class="tab-btn" data-tab="relay">Self-Hostable</button>
+            <button class="tab-btn active" data-tab="security">Feed AI Context</button>
+            <button class="tab-btn" data-tab="desktop">Works Anywhere</button>
+            <button class="tab-btn" data-tab="cli">From the Terminal</button>
+            <button class="tab-btn" data-tab="relay">Own the Relay</button>
           </div>
         </div>
       </div>
 
       <div class="tabs-content">
-        <div class="tab-panel active" id="tab-cli">
+        <div class="tab-panel" id="tab-cli">
           <div class="panel-grid">
             <div class="panel-info">
-              <h3>Unix-native CLI</h3>
-              <p>Reads stdin, writes stdout. No SDK, no clipboard API. Drop it anywhere in an existing shell pipeline.</p>
+              <h3>Save and send where copy-paste dies</h3>
+              <p><code>cinch copy</code> saves stdout to searchable local history — even where OSC 52 silently fails. <code>cinch send</code> / <code>pull</code> move it across machines over plain HTTPS when you want.</p>
               <ul class="feature-list">
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Works with any CLI tool</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Zero-config installation</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Real-time WebSocket delivery</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Cross-machine — send and pull</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Works in tmux, nested SSH, Docker, and CI</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Searchable local history, useful offline</li>
               </ul>
             </div>
             <div class="panel-visual">
-              <TerminalWindow title="terminal — cinch push/pull">
+              <TerminalWindow title="terminal — cinch copy">
                 <div class="term-body">
-                  <span class="term-line"><span class="term-prompt">$</span> cat logs.txt | cinch push</span>
-                  <span class="term-line term-success">✓ Sent 1.2KB to relay</span>
+                  <span class="term-line"><span class="term-prompt">$</span> tail -n 20 error.log | cinch copy</span>
+                  <span class="term-line term-success">✓ Saved to local history (14 KB)</span>
                   <span class="term-line"></span>
-                  <span class="term-line"><span class="term-prompt">$</span> cinch pull --watch</span>
-                  <span class="term-line animate-pulse">Waiting for clips...</span>
-                  <span class="term-line term-success">✓ Received 1.2KB from relay</span>
+                  <span class="term-line"><span class="term-prompt">$</span> cinch history search "panic"</span>
+                  <span class="term-line">01HX... error.log: thread 'main' panicked at '...</span>
                 </div>
               </TerminalWindow>
             </div>
@@ -53,59 +52,46 @@ import TerminalWindow from './TerminalWindow.astro';
         <div class="tab-panel" id="tab-desktop">
           <div class="panel-grid">
             <div class="panel-info">
-              <h3>Desktop Agent</h3>
-              <p>Cinch lives in your menu bar. Every push lands in your system clipboard before you reach Cmd+V. No terminal required for receiving.</p>
+              <h3>A hosted relay that just works</h3>
+              <p>We run the relay, so your clips sync even behind a VPN, a firewall, or a locked-down network. No P2P, no port forwarding — sign in and it syncs.</p>
               <ul class="feature-list">
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> macOS Menubar app</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Native system notifications</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Auto-start on login</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sign in and it syncs — nothing to configure</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Works behind VPN, firewall, NAT, and CI</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Send from SSH, tmux, containers, and Vim</li>
               </ul>
             </div>
             <div class="panel-visual">
-              <div class="desktop-mockup bezel-outer">
-                <div class="desktop-inner bezel-inner">
-                  <div class="mock-menubar">
-                    <div class="mock-icons">
-                      <div class="mock-icon active"></div>
-                      <div class="mock-icon"></div>
-                      <div class="mock-icon"></div>
-                    </div>
-                  </div>
-                  <div class="mock-content">
-                    <div class="mock-notification">
-                      <div class="notif-icon"></div>
-                      <div class="notif-text">
-                        <strong>Cinch</strong>
-                        <span>Received clip: log_output.txt</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="screenshot-frame">
+                <img 
+                  src="/images/desktop-screenshot.png" 
+                  alt="Cinch Desktop App showing remote clips" 
+                  class="desktop-screenshot"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
         </div>
 
-        <div class="tab-panel" id="tab-security">
+        <div class="tab-panel active" id="tab-security">
           <div class="panel-grid">
             <div class="panel-info">
-              <h3>End-to-end encrypted</h3>
-              <p>Clips are encrypted with AES-256-GCM on your device before they leave. The relay stores ciphertext only — your key never touches the server.</p>
+              <h3>Your clipboard becomes agent context</h3>
+              <p>Wire cinch into Claude Code or Cursor once — read-only by default. Your agents pull the latest error, diff, or log straight from your clip history, no copy-paste in between.</p>
               <ul class="feature-list">
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Client-side encryption</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Zero-knowledge architecture</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Forward secrecy</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <code>claude mcp add cinch</code> — 6 read-only MCP tools</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <code>cinch ai fix</code> turns a failing test into a ready prompt</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Works with Claude, Cursor, and Codex</li>
               </ul>
             </div>
             <div class="panel-visual">
-              <TerminalWindow title="security — cinch keygen">
+              <TerminalWindow title="terminal — cinch mcp">
                 <div class="term-body">
-                  <span class="term-line"><span class="term-prompt">$</span> cinch auth login</span>
-                  <span class="term-line"><span class="term-dim">Generating local encryption key...</span></span>
-                  <span class="term-line term-success">✓ Key generated and stored securely</span>
+                  <span class="term-line"><span class="term-prompt">$</span> claude mcp add cinch -- cinch mcp</span>
+                  <span class="term-line term-success">✓ 6 read-only tools available to Claude</span>
                   <span class="term-line"></span>
-                  <span class="term-line"><span class="term-dim">Connecting to relay...</span></span>
-                  <span class="term-line term-success">✓ Authenticated with e2e enabled</span>
+                  <span class="term-line"><span class="term-prompt">$</span> cargo test 2&gt;&1 | cinch ai fix</span>
+                  <span class="term-line"><span class="term-dim">Assembled AI-ready prompt from the failure</span></span>
                 </div>
               </TerminalWindow>
             </div>
@@ -115,12 +101,12 @@ import TerminalWindow from './TerminalWindow.astro';
         <div class="tab-panel" id="tab-relay">
           <div class="panel-grid">
             <div class="panel-info">
-              <h3>Self-hostable relay</h3>
-              <p>Single Go binary. Deploy on any VPS, Fly.io, or Docker. Your data stays on your server and within your own infrastructure.</p>
+              <h3>Keep the relay under your control</h3>
+              <p>Use the hosted relay to get started, or run the same relay yourself when ciphertext, retention, and uptime belong inside your infrastructure.</p>
               <ul class="feature-list">
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sub-5MB binary size</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Postgres-backed storage</li>
-                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Official Docker image</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Single Go binary or official Docker image</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Encrypted clips with server-side retention policy</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Deploy on any VPS, Fly.io, or container host</li>
               </ul>
             </div>
             <div class="panel-visual">
@@ -148,10 +134,14 @@ import TerminalWindow from './TerminalWindow.astro';
     margin: 0 auto 4rem;
   }
 
+  .features-header .text-display {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+  }
+
   .section-lead {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--text-2);
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
   }
 
   .features-tabs {
@@ -238,12 +228,13 @@ import TerminalWindow from './TerminalWindow.astro';
   }
 
   .panel-info h3 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.02em;
   }
 
   .panel-info p {
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     color: var(--text-2);
     line-height: 1.6;
     margin-bottom: 2rem;
@@ -280,87 +271,36 @@ import TerminalWindow from './TerminalWindow.astro';
     display: block;
     font-family: var(--mono);
     line-height: 1.8;
+    font-variant-ligatures: none;
+    font-feature-settings: 'liga' 0, 'calt' 0;
   }
 
   .term-dim { color: var(--text-3); }
   .term-prompt { color: var(--accent); }
   .term-success { color: var(--semantic-ok); }
-
-  /* Desktop Mockup */
-  .desktop-mockup {
-    aspect-ratio: 16/10;
-    padding: 0.5rem;
-    background: var(--bg-card-2);
+  .term-flags {
+    display: inline-block;
+    width: 1ch;
+    text-align: center;
   }
 
-  .desktop-inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: #0e0f10;
+  .screenshot-frame {
+    width: 100%;
+    position: relative;
+    padding: 1rem;
   }
 
-  .mock-menubar {
-    height: 24px;
-    background: rgba(255,255,255,0.05);
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 0.75rem;
-  }
-
-  .mock-icons {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  .mock-icon {
-    width: 8px;
-    height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-  }
-
-  .mock-icon.active {
-    background: var(--accent);
-  }
-
-  .mock-content {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 1.5rem;
-  }
-
-  .mock-notification {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
+  .desktop-screenshot {
+    width: 100%;
+    height: auto;
+    display: block;
     border-radius: 12px;
-    padding: 0.75rem 1rem;
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 20px 50px rgba(0,0,0,0.4),
+      0 10px 20px rgba(0,0,0,0.3);
   }
-
-  .notif-icon {
-    width: 24px;
-    height: 24px;
-    background: var(--accent);
-    border-radius: 4px;
-  }
-
-  .notif-text {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.75rem;
-    line-height: 1.2;
-  }
-
-  .notif-text strong { color: white; margin-bottom: 2px; }
-  .notif-text span { color: rgba(255,255,255,0.5); }
 
   @media (max-width: 900px) {
     .panel-grid {
@@ -413,7 +353,7 @@ import TerminalWindow from './TerminalWindow.astro';
       min-height: 0;
     }
     .panel-info h3 {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
     .panel-info p {

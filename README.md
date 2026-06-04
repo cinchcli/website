@@ -1,6 +1,6 @@
 # Cinch Website
 
-Marketing and docs site for [cinchcli.com](https://cinchcli.com).
+Marketing and docs site for [cinchcli.com](https://cinchcli.com): the open-source remote clipboard for developer context, with local history, cross-machine clipboard, and MCP tools.
 
 ## Built with
 
