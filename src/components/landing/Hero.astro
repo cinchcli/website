@@ -1,7 +1,3 @@
----
-import LiveWire from './LiveWire.astro';
----
-
 <section class="hero section-pad" aria-label="Cinch introduction">
   <div class="hero-atmosphere" aria-hidden="true">
     <span class="instrument-ring"></span>
@@ -43,21 +39,18 @@ import LiveWire from './LiveWire.astro';
         </div>
       </div>
     </div>
-
-    <div class="hero-visual animate-in" style="--delay: 500ms">
-      <LiveWire />
-    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    min-height: 100svh;
+    min-height: min(760px, 92svh);
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 12rem;
+    padding-top: 11rem;
+    padding-bottom: 7rem;
   }
 
   .hero-atmosphere {
@@ -142,7 +135,6 @@ import LiveWire from './LiveWire.astro';
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4rem;
   }
 
   .hero-content {
@@ -262,17 +254,6 @@ import LiveWire from './LiveWire.astro';
     user-select: none;
   }
 
-  .hero-visual {
-    width: 100%;
-    max-width: 1000px;
-  }
-
-  .visual-bezel {
-    padding: 0.75rem;
-    background: light-dark(rgba(255,255,255,0.5), rgba(0,0,0,0.5));
-    backdrop-filter: blur(20px);
-  }
-
   /* ─── Entry Animations ─── */
   .animate-in {
     opacity: 0;
@@ -291,7 +272,8 @@ import LiveWire from './LiveWire.astro';
   @media (max-width: 768px) {
     .hero {
       padding-top: 8rem;
-      min-height: auto;
+      padding-bottom: 4rem;
+      min-height: min(620px, 86svh);
     }
     .hero-atmosphere::before {
       inset: -8% -28% auto;
@@ -311,9 +293,6 @@ import LiveWire from './LiveWire.astro';
       top: 42%;
       width: 92vw;
       opacity: 0.3;
-    }
-    .hero-container {
-      gap: 3rem;
     }
     .hero-content {
       width: 100%;

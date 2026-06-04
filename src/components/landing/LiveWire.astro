@@ -1,67 +1,86 @@
 ---
-// LiveWire — animated dual terminal showing push → pull, rotating through scenarios.
+// LiveWire — animated dual terminal showing the cinch fleet loop:
+// a MACHINE emits a clip (`cinch send` / `cinch copy`) and an AGENT reads it back
+// through the cinch MCP server, rotating through scenarios.
+//
+//   left  pane = any machine  → comment / typed command / result
+//   right pane = your agent   → typed prompt / MCP tool-call / result
 //
 // To add or edit a scenario, just edit the SCENES array below — nothing else.
-// No char counts to track, no per-scenario CSS to add. The typewriter width is
-// computed at runtime from `els.pushCmd.textContent.length` and injected as a
-// `--push-chars` CSS variable that the animation interpolates against.
+// No char counts to track, no per-scenario CSS to add. Each typewriter width is
+// computed at runtime from the rendered `textContent.length` and injected as a
+// CSS variable (`--src-width` / `--agent-width`) the animation interpolates against.
 //
 // The reveal is a smooth left-to-right slide (linear `width` growth, no `steps()`)
-// because `steps()` cannot accept a CSS variable — and demanding one keyframe per
-// char count is the friction we're getting rid of.
+// because `steps()` cannot accept a CSS variable. Rotation is synced to the
+// `body-cycle` `animationiteration` event so the swap always happens while the body
+// is at opacity 0 — invisible to the reader. Hover-pause is fully CSS-driven.
 //
-// Rotation is synced to the `body-cycle` `animationiteration` event so the swap
-// always happens at the exact moment the body is at opacity 0 — invisible to the
-// reader. Hover-pause is fully CSS-driven (no JS timer to maintain).
+// HONESTY: `cinch send` is E2EE + key-gated, and fleet reads require
+// `CINCH_MCP_FLEET=1` in the MCP server env. The happy path is real once set up —
+// the small caption under the demo states the one-time setup rather than implying
+// zero-config magic.
 import TerminalWindow from './TerminalWindow.astro';
 
 const SCENES = [
   {
-    pushComment: 'Save it once',
-    pushCmdHtml: '<span class="t-cmd">echo</span> <span class="t-var">$DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
-    pushMeta: '56 B · 12 ms',
-    pullComment: 'Use it anywhere',
-    pullOutput: 'postgres://prod:s3cr3t@db.prod.internal/app',
+    // ── Scene 1 — cross-machine: a CI box fails, your agent fixes it ──
+    srcTitle: 'ci-runner — bash',
+    srcComment: 'Tests fail on the CI box',
+    srcCmdHtml: '<span class="t-cmd">pytest</span> <span class="t-meta">2&gt;&amp;1</span> <span class="t-op">|</span> <span class="t-cmd">cinch send</span>',
+    srcOutHtml: '<span class="t-ok">✓ Sent</span> <span class="t-val">to your fleet</span> <span class="t-meta">(E2EE)</span>',
+    agentTitle: 'Claude Code',
+    agentPromptHtml: '<span class="t-cmd">fix the failure from ci-runner</span>',
+    agentToolHtml: '<span class="t-op">▸</span> <span class="t-c">cinch ·</span> <span class="t-cmd">search_clipboard</span> <span class="t-meta">scope:"fleet"</span>',
+    agentOutHtml: '<span class="t-val">→ AssertionError test_auth.py:31 — ttl in ms, not s</span>',
   },
   {
-    pushComment: 'Hand off a secret',
-    pushCmdHtml: '<span class="t-cmd">cat</span> <span class="t-str">~/.stripe-key</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
-    pushMeta: '32 B · 9 ms',
-    pullComment: 'Use it in CI',
-    pullOutput: 'sk_live_••••••••••••••••demo••••',
+    // ── Scene 2 — local, zero setup: "fix what I just copied" ──
+    srcTitle: 'local — zsh',
+    srcComment: 'Build error in your terminal',
+    srcCmdHtml: '<span class="t-cmd">cargo test</span> <span class="t-meta">2&gt;&amp;1</span> <span class="t-op">|</span> <span class="t-cmd">cinch copy</span>',
+    srcOutHtml: '<span class="t-ok">✓ Saved</span> <span class="t-meta">2.1 KB</span> <span class="t-c">· not sent</span>',
+    agentTitle: 'Cursor',
+    agentPromptHtml: '<span class="t-cmd">fix the error I just copied</span>',
+    agentToolHtml: '<span class="t-op">▸</span> <span class="t-c">cinch ·</span> <span class="t-cmd">list_recent_clipboard</span> <span class="t-meta">limit:1</span>',
+    agentOutHtml: '<span class="t-val">→ E0599: use .extend_from_slice(…)</span>',
   },
   {
-    pushComment: 'Forward your key',
-    pushCmdHtml: '<span class="t-cmd">ssh-add -L</span> <span class="t-op">|</span> <span class="t-cmd">cinch push</span>',
-    pushMeta: '380 B · 18 ms',
-    pullComment: 'Trust on the box',
-    pullOutput: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA',
+    // ── Scene 3 — fleet recall: pull an env value off another box ──
+    srcTitle: 'deploy-box — bash',
+    srcComment: 'Grab a value off the deploy box',
+    srcCmdHtml: '<span class="t-cmd">printenv</span> <span class="t-str">DATABASE_URL</span> <span class="t-op">|</span> <span class="t-cmd">cinch send</span>',
+    srcOutHtml: '<span class="t-ok">✓ Sent</span> <span class="t-val">to your fleet</span> <span class="t-meta">(E2EE)</span>',
+    agentTitle: 'Claude Code',
+    agentPromptHtml: '<span class="t-cmd">what was staging\'s DATABASE_URL?</span>',
+    agentToolHtml: '<span class="t-op">▸</span> <span class="t-c">cinch ·</span> <span class="t-cmd">search_clipboard</span> <span class="t-meta">scope:"fleet"</span>',
+    agentOutHtml: '<span class="t-val">→ postgres://stg…</span> <span class="t-meta">deploy-box · 1h ago</span>',
   },
 ];
 
 const first = SCENES[0];
 ---
 
-<div class="live-wire" aria-label="Push and pull terminal demo">
+<div class="live-wire" aria-label="Demo: a machine sends a clip, an AI agent reads it back through the cinch MCP server">
 
-  <!-- ── PUSH ─────────────────────────────────────────── -->
+  <!-- ── MACHINE (source) ─────────────────────────────── -->
   <div class="term-wrap">
-    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Push</p>
-    <TerminalWindow title="local — bash">
+    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Machine</p>
+    <TerminalWindow title={first.srcTitle}>
       <span slot="bar-extra" class="status-dot" aria-hidden="true"></span>
       <div class="term-body" data-lw-body>
         <div class="line line-comment">
           <span class="t-c line-glyph">#</span>
-          <span class="t-c" data-lw="pushComment">{first.pushComment}</span>
+          <span class="t-c" data-lw="srcComment">{first.srcComment}</span>
         </div>
-        <div class="line line-cmd line-push-cmd">
+        <div class="line line-cmd line-src-cmd">
           <span class="t-p line-glyph">$</span>
           <span class="line-rest">
-            <span class="reveal reveal-push is-typing" data-lw="pushCmd" set:html={first.pushCmdHtml}></span><span class="caret caret-push" aria-hidden="true"></span>
+            <span class="reveal reveal-src is-typing" data-lw="srcCmd" set:html={first.srcCmdHtml}></span><span class="caret caret-src" aria-hidden="true"></span>
           </span>
         </div>
-        <div class="line line-out line-push-out">
-          <span class="t-ok">✓ Pushed</span> <span class="t-meta" data-lw="pushMeta">{first.pushMeta}</span>
+        <div class="line line-out line-src-out">
+          <span data-lw="srcOut" set:html={first.srcOutHtml}></span>
         </div>
       </div>
     </TerminalWindow>
@@ -80,24 +99,23 @@ const first = SCENES[0];
     </svg>
   </div>
 
-  <!-- ── PULL ─────────────────────────────────────────── -->
+  <!-- ── AGENT (reader) ───────────────────────────────── -->
   <div class="term-wrap">
-    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Pull</p>
-    <TerminalWindow title="remote — bash">
+    <p class="mono-caps mono-caps--meta term-label" aria-hidden="true">Agent</p>
+    <TerminalWindow title={first.agentTitle}>
       <span slot="bar-extra" class="status-dot" aria-hidden="true"></span>
       <div class="term-body">
-        <div class="line line-comment">
-          <span class="t-c line-glyph">#</span>
-          <span class="t-c" data-lw="pullComment">{first.pullComment}</span>
-        </div>
-        <div class="line line-cmd line-pull-cmd">
-          <span class="t-p line-glyph">$</span>
+        <div class="line line-cmd line-agent-cmd">
+          <span class="line-glyph prompt-glyph">›</span>
           <span class="line-rest">
-            <span class="reveal reveal-pull"><span class="t-cmd">cinch pull</span></span><span class="caret caret-pull" aria-hidden="true"></span>
+            <span class="reveal reveal-agent is-typing" data-lw="agentPrompt" set:html={first.agentPromptHtml}></span><span class="caret caret-agent" aria-hidden="true"></span>
           </span>
         </div>
-        <div class="line line-out line-pull-out">
-          <span class="t-val" data-lw="pullOutput">{first.pullOutput}</span>
+        <div class="line line-out line-agent-tool">
+          <span data-lw="agentTool" set:html={first.agentToolHtml}></span>
+        </div>
+        <div class="line line-out line-agent-out">
+          <span data-lw="agentOut" set:html={first.agentOutHtml}></span>
         </div>
       </div>
     </TerminalWindow>
@@ -105,54 +123,63 @@ const first = SCENES[0];
 
 </div>
 
+<p class="lw-setup">
+  <span class="lw-setup-key">Setup</span><code>cinch login</code> on each box · <code>CINCH_MCP_FLEET=1</code> turns on cross-machine reads
+</p>
+
 <script is:inline define:vars={{ SCENES }}>
   (function () {
     const lw = document.querySelector('.live-wire');
     if (!lw) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    const titles = lw.querySelectorAll('.term-title'); // [0] = machine, [1] = agent
     const els = {
-      pushComment: lw.querySelector('[data-lw="pushComment"]'),
-      pushCmd:     lw.querySelector('[data-lw="pushCmd"]'),
-      pushMeta:    lw.querySelector('[data-lw="pushMeta"]'),
-      pullComment: lw.querySelector('[data-lw="pullComment"]'),
-      pullOutput:  lw.querySelector('[data-lw="pullOutput"]'),
+      srcComment:  lw.querySelector('[data-lw="srcComment"]'),
+      srcCmd:      lw.querySelector('[data-lw="srcCmd"]'),
+      srcOut:      lw.querySelector('[data-lw="srcOut"]'),
+      agentPrompt: lw.querySelector('[data-lw="agentPrompt"]'),
+      agentTool:   lw.querySelector('[data-lw="agentTool"]'),
+      agentOut:    lw.querySelector('[data-lw="agentOut"]'),
     };
-    const pushBody = lw.querySelector('[data-lw-body]');
-    if (!pushBody) return;
+    const body = lw.querySelector('[data-lw-body]');
+    if (!body) return;
+
+    // Restart a width-typewriter: var() inside @keyframes doesn't re-resolve
+    // mid-flight when the scene changes, so toggle the gating class (+ reflow).
+    function restart(el) {
+      el.classList.remove('is-typing');
+      void el.offsetWidth;
+      el.classList.add('is-typing');
+    }
 
     function apply(idx) {
       const s = SCENES[idx];
-      els.pushComment.textContent = s.pushComment;
-      els.pushCmd.innerHTML       = s.pushCmdHtml;
-      els.pushMeta.textContent    = s.pushMeta;
-      els.pullComment.textContent = s.pullComment;
-      els.pullOutput.textContent  = s.pullOutput;
-      // Auto-derive the typewriter target width from the rendered text length —
+      if (titles[0]) titles[0].textContent = s.srcTitle;
+      if (titles[1]) titles[1].textContent = s.agentTitle;
+      els.srcComment.textContent = s.srcComment;
+      els.srcCmd.innerHTML       = s.srcCmdHtml;
+      els.srcOut.innerHTML       = s.srcOutHtml;
+      els.agentPrompt.innerHTML  = s.agentPromptHtml;
+      els.agentTool.innerHTML    = s.agentToolHtml;
+      els.agentOut.innerHTML     = s.agentOutHtml;
+      // Auto-derive each typewriter target width from rendered text length —
       // this is what makes "just edit the SCENES array" the entire workflow.
-      // We set it as an explicit `<length>` so `@property --push-width` interpolates
-      // it correctly. The keyframes use `var(--push-width)` directly.
-      lw.style.setProperty('--push-width', els.pushCmd.textContent.length + 'ch');
-      // Restart the typewriter so the new --push-width takes effect this iteration —
-      // browsers don't reliably re-resolve `var()` references inside @keyframes once an
-      // animation is in flight, so we toggle the gating class to force a clean restart.
-      els.pushCmd.classList.remove('is-typing');
-      // Force reflow so the class removal is observed before re-adding.
-      void els.pushCmd.offsetWidth;
-      els.pushCmd.classList.add('is-typing');
+      lw.style.setProperty('--src-width',   els.srcCmd.textContent.length + 'ch');
+      lw.style.setProperty('--agent-width', els.agentPrompt.textContent.length + 'ch');
+      restart(els.srcCmd);
+      restart(els.agentPrompt);
     }
 
-    // Sync with scene 0 on mount (sets --push-width without changing anything visible).
+    // Sync with scene 0 on mount (sets the width vars without changing anything visible).
     apply(0);
 
     // Rotate scenes exactly at body-cycle iteration boundaries — body is at opacity 0
-    // there, so the textContent swap is invisible. No setInterval drift, and CSS-driven
-    // hover-pause (`animation-play-state: paused`) automatically pauses rotation too
+    // there, so every swap is invisible. CSS-driven hover-pause also pauses rotation
     // because paused animations don't fire `animationiteration`.
     let i = 0;
-    pushBody.addEventListener('animationiteration', (e) => {
-      // Only react to the body's master cycle, ignore inner animations if any bubble.
-      if (e.target !== pushBody) return;
+    body.addEventListener('animationiteration', (e) => {
+      if (e.target !== body) return; // ignore inner animations that may bubble
       i = (i + 1) % SCENES.length;
       apply(i);
     });
@@ -164,9 +191,7 @@ const first = SCENES[0];
   /* Grid (not flex) so column widths are decoupled from intrinsic content size —
      the typing `.reveal` animation can't push the terminal wider.
      Each terminal is capped at 32rem (≈ a real macOS Terminal window) and the
-     whole row pins to the start — feels like a real demo, not a stretched banner.
-     `text-align: left` neutralises the centered `Hero.astro > .hero-container`,
-     so the typing reveal, output lines, and Push/Pull labels all align flush left. */
+     whole row pins to the start — feels like a real demo, not a stretched banner. */
   .live-wire {
     display: grid;
     grid-template-columns: minmax(0, 32rem) auto minmax(0, 32rem);
@@ -174,6 +199,7 @@ const first = SCENES[0];
     align-items: center;
     gap: 0;
     width: 100%;
+    min-width: 0;
     text-align: left;
   }
 
@@ -182,6 +208,7 @@ const first = SCENES[0];
     flex-direction: column;
     gap: 0.75rem;
     min-width: 0;
+    max-width: 100%;
   }
 
   /* Pin the terminal shell to its grid column — no shrink-wrap to inner content. */
@@ -202,7 +229,7 @@ const first = SCENES[0];
     animation: body-cycle 8s linear infinite;
   }
 
-  /* Comment + command rows share a fixed glyph column so `#` and `$` align. */
+  /* Comment + command rows share a fixed glyph column so `#`, `$`, `›` align. */
   .line {
     min-height: 1.85em;
   }
@@ -221,6 +248,11 @@ const first = SCENES[0];
     text-align: right;
   }
 
+  /* The agent's prompt glyph reads in the brand accent — it's a person asking. */
+  .prompt-glyph {
+    color: var(--accent);
+  }
+
   .line-out {
     display: block;
     white-space: pre;
@@ -232,15 +264,19 @@ const first = SCENES[0];
   /* Width-based clip: the element occupies `width` from 0 → target, and `overflow:
      hidden` clips the right side as the text fills in. The caret sits right after
      the reveal so it slides forward with the visible edge naturally.
-     Target width is the typed `--push-width` length (set by JS from textContent.length).
-     `@property` registration makes the variable interpolate as a real `<length>`,
+     `@property` registration makes each width var interpolate as a real `<length>`,
      and the JS `.is-typing` toggle forces the animation to re-resolve keyframe
      values each scene — together they sidestep the "var() inside @keyframes
-     doesn't update mid-flight" quirk that left scenes 2 & 3 invisible. */
-  @property --push-width {
+     doesn't update mid-flight" quirk. */
+  @property --src-width {
     syntax: '<length>';
     inherits: true;
-    initial-value: 31ch;
+    initial-value: 34ch;
+  }
+  @property --agent-width {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 32ch;
   }
 
   .reveal {
@@ -251,23 +287,23 @@ const first = SCENES[0];
     white-space: nowrap;
   }
 
-  /* Animation is gated by `.is-typing` so JS can restart it (remove + reflow + add). */
-  .reveal-push.is-typing {
-    animation: type-push 8s linear infinite;
+  /* Each reveal is gated by `.is-typing` so JS can restart it (remove + reflow + add). */
+  .reveal-src.is-typing {
+    animation: type-src 8s linear infinite;
   }
-  @keyframes type-push {
+  @keyframes type-src {
     0%, 5%   { width: 0; }
-    31.25%   { width: var(--push-width); }
-    100%     { width: var(--push-width); }
+    31.25%   { width: var(--src-width); }
+    100%     { width: var(--src-width); }
   }
 
-  .reveal-pull {
-    animation: type-pull 8s linear infinite;
+  .reveal-agent.is-typing {
+    animation: type-agent 8s linear infinite;
   }
-  @keyframes type-pull {
-    0%, 47.5% { width: 0; }
-    57.5%     { width: 10ch; }
-    100%      { width: 10ch; }
+  @keyframes type-agent {
+    0%, 42%  { width: 0; }
+    58%      { width: var(--agent-width); }
+    100%     { width: var(--agent-width); }
   }
 
   /* ─── Caret ─────────────────────────────────────────── */
@@ -281,16 +317,16 @@ const first = SCENES[0];
     opacity: 0;
   }
 
-  /* Caret blinks; visibility window is gated by a sibling keyframe */
-  .caret-push {
+  /* Caret blinks; visibility window is gated by a sibling keyframe. */
+  .caret-src {
     animation:
       caret-blink 1s steps(2, end) infinite,
-      caret-push-show 8s steps(1, end) infinite;
+      caret-src-show 8s steps(1, end) infinite;
   }
-  .caret-pull {
+  .caret-agent {
     animation:
       caret-blink 1s steps(2, end) infinite,
-      caret-pull-show 8s steps(1, end) infinite;
+      caret-agent-show 8s steps(1, end) infinite;
   }
 
   @keyframes caret-blink {
@@ -298,43 +334,53 @@ const first = SCENES[0];
     50%  { opacity: 0; }
   }
 
-  /* Push caret visible from start through typing completion */
-  @keyframes caret-push-show {
+  /* Machine caret visible from start through its typing completion. */
+  @keyframes caret-src-show {
     0%      { visibility: visible; }
     32%     { visibility: hidden; }
     100%    { visibility: hidden; }
   }
 
-  /* Pull caret visible only during pull typing window */
-  @keyframes caret-pull-show {
+  /* Agent caret visible only during the prompt-typing window (after the handoff). */
+  @keyframes caret-agent-show {
     0%      { visibility: hidden; }
-    45%     { visibility: visible; }
-    58%     { visibility: hidden; }
+    42%     { visibility: visible; }
+    59%     { visibility: hidden; }
     100%    { visibility: hidden; }
   }
 
-  /* ─── Output lines (fade in once after typing completes) ── */
-  .line-push-out {
+  /* ─── Output lines (fade in once after their cue) ───── */
+  .line-src-out {
     opacity: 0;
-    animation: appear-push 8s linear infinite;
+    animation: appear-src 8s linear infinite;
   }
-  @keyframes appear-push {
+  @keyframes appear-src {
     0%, 33%  { opacity: 0; transform: translateY(2px); }
     35.5%    { opacity: 1; transform: translateY(0); }
     100%     { opacity: 1; transform: translateY(0); }
   }
 
-  /* The synced value materializing is the visual climax of the loop —
-     a subtle overshoot makes it land instead of just appearing. */
-  .line-pull-out {
+  /* Agent's MCP tool-call surfaces first … */
+  .line-agent-tool {
     opacity: 0;
-    animation: appear-pull 8s linear infinite;
+    animation: appear-tool 8s linear infinite;
+  }
+  @keyframes appear-tool {
+    0%, 60%  { opacity: 0; transform: translateY(2px); }
+    62.5%    { opacity: 1; transform: translateY(0); }
+    100%     { opacity: 1; transform: translateY(0); }
+  }
+
+  /* … then the result lands — the visual climax of the loop, with a subtle overshoot. */
+  .line-agent-out {
+    opacity: 0;
+    animation: appear-agent 8s linear infinite;
     transform-origin: left center;
   }
-  @keyframes appear-pull {
-    0%, 60%  { opacity: 0; transform: translateY(4px) scale(0.985); }
-    63.5%    { opacity: 1; transform: translateY(-1px) scale(1.008); }
-    66%      { opacity: 1; transform: translateY(0)   scale(1); }
+  @keyframes appear-agent {
+    0%, 66%  { opacity: 0; transform: translateY(4px) scale(0.985); }
+    69.5%    { opacity: 1; transform: translateY(-1px) scale(1.008); }
+    72%      { opacity: 1; transform: translateY(0)   scale(1); }
     100%     { opacity: 1; transform: translateY(0)   scale(1); }
   }
 
@@ -346,7 +392,8 @@ const first = SCENES[0];
   }
 
   /* ─── Arrow ─────────────────────────────────────────── */
-  /* Width doubles as the inter-terminal gutter — wider = more editorial breathing room. */
+  /* Width doubles as the inter-terminal gutter — wider = more editorial breathing room.
+     It pulses at the handoff, right as the machine settles and the agent wakes up. */
   .flow-arrow {
     flex-shrink: 0;
     width: 88px;
@@ -361,10 +408,10 @@ const first = SCENES[0];
     opacity: 0.45;
   }
   @keyframes arrow-wave {
-    0%, 32%  { opacity: 0.45; transform: translateX(0) scale(1); }
-    35%      { opacity: 1;    transform: translateX(3px) scale(1.08); }
-    40%      { opacity: 0.7;  transform: translateX(0) scale(1); }
-    44%      { opacity: 0.45; transform: translateX(0) scale(1); }
+    0%, 33%  { opacity: 0.45; transform: translateX(0) scale(1); }
+    37%      { opacity: 1;    transform: translateX(3px) scale(1.08); }
+    42%      { opacity: 0.7;  transform: translateX(0) scale(1); }
+    46%      { opacity: 0.45; transform: translateX(0) scale(1); }
     100%     { opacity: 0.45; transform: translateX(0) scale(1); }
   }
 
@@ -384,6 +431,33 @@ const first = SCENES[0];
     50%      { box-shadow: 0 0 0 4px color-mix(in srgb, var(--semantic-ok) 0%, transparent); }
   }
 
+  /* ─── Setup caption ─────────────────────────────────── */
+  /* Honest one-time setup so the happy path above isn't read as zero-config. */
+  .lw-setup {
+    margin: 1.5rem 0 0;
+    padding-left: 1rem;
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.40));
+  }
+  .lw-setup code {
+    font-family: var(--mono);
+    font-size: inherit;
+    color: light-dark(#1F6E66, #a5d6d3);
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .lw-setup-key {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.6875rem;
+    color: var(--accent);
+    margin-right: 0.6rem;
+  }
+
   /* ─── Responsive ────────────────────────────────────── */
   @media (max-width: 680px) {
     .live-wire {
@@ -400,7 +474,7 @@ const first = SCENES[0];
     }
 
     /* Shrink terminal body padding + type so the widest scene
-       ("echo $DATABASE_URL | cinch push" — 31ch) fits without clipping.
+       ("printenv DATABASE_URL | cinch send") fits without clipping.
        Keep `nowrap` since the typewriter sets width in `ch` units and any
        wrapping breaks the reveal animation. */
     .live-wire :global(.term-body) {
@@ -410,7 +484,7 @@ const first = SCENES[0];
     }
   }
 
-  /* Even narrower phones — drop another notch so 31ch still fits at iPhone-SE width. */
+  /* Even narrower phones — drop another notch so the widest scene fits at iPhone-SE width. */
   @media (max-width: 380px) {
     .live-wire :global(.term-body) {
       font-size: 0.6875rem;
@@ -423,27 +497,29 @@ const first = SCENES[0];
      `animationiteration` doesn't fire on paused animations. */
   @media (hover: hover) {
     .live-wire:hover .term-body,
-    .live-wire:hover .reveal-push,
-    .live-wire:hover .reveal-pull,
-    .live-wire:hover .caret-push,
-    .live-wire:hover .caret-pull,
-    .live-wire:hover .line-push-out,
-    .live-wire:hover .line-pull-out,
+    .live-wire:hover .reveal-src,
+    .live-wire:hover .reveal-agent,
+    .live-wire:hover .caret-src,
+    .live-wire:hover .caret-agent,
+    .live-wire:hover .line-src-out,
+    .live-wire:hover .line-agent-tool,
+    .live-wire:hover .line-agent-out,
     .live-wire:hover .flow-arrow svg,
     .live-wire:hover .status-dot {
       animation-play-state: paused;
     }
   }
 
-  /* ─── Reduced motion: hold the final state of scene 1 ──── */
+  /* ─── Reduced motion: hold the fully-resolved final state of scene 1 ──── */
   @media (prefers-reduced-motion: reduce) {
-    .reveal-push, .reveal-push.is-typing { width: var(--push-width, 31ch); animation: none; }
-    .reveal-pull { width: 10ch; animation: none; }
-    .line-push-out,
-    .line-pull-out { opacity: 1; animation: none; }
+    .reveal-src, .reveal-src.is-typing,
+    .reveal-agent, .reveal-agent.is-typing { width: auto; animation: none; }
+    .line-src-out,
+    .line-agent-tool,
+    .line-agent-out { opacity: 1; animation: none; transform: none; }
     .term-body { opacity: 1; animation: none; }
     .flow-arrow svg { animation: none; opacity: 0.7; }
-    .caret-push, .caret-pull { animation: none; opacity: 0; }
+    .caret-src, .caret-agent { animation: none; opacity: 0; }
     .status-dot { animation: none; }
   }
 </style>
