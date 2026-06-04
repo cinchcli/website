@@ -2,36 +2,21 @@
 import Landing from '../layouts/Landing.astro';
 import Nav from '../components/landing/Nav.astro';
 import Footer from '../components/landing/Footer.astro';
-import { renderInnerHTML } from 'number-flow';
 import {
   PLANS,
   PRICING_TAGLINE,
-  VALUE_PROPS,
   BILLING_FAQ,
-  FEATURE_ROWS,
   SELF_HOST_SECTION,
   CONTACT_EMAIL,
-  formatPlanPriceDisplay,
-  formatPlanPriceNote,
-  planCardBullets,
-  planPriceFlowValue,
-  PLAN_PRICE_FLOW_FORMAT,
-  maxAnnualSavingsPercent,
   pricingPageStructuredData,
 } from '../site/pricing';
 
 const canonical = new URL('/pricing/', Astro.site).href;
-const annualSavingsLabel = maxAnnualSavingsPercent();
-
-function formatCompareCell(value: boolean | string): string {
-  if (typeof value === 'string') return value;
-  return value ? 'Included' : '—';
-}
 ---
 
 <Landing
   title="Pricing — Cinch"
-  description="Cinch is a free, open-source AI clipboard. Paid plans are only for hosted relay capacity, retention, and support."
+  description="Cinch is a free, open-source remote clipboard for developer context with local history, cross-machine clipboard, and MCP tools."
   canonical={canonical}
   jsonLd={pricingPageStructuredData()}
 >
@@ -49,7 +34,7 @@ function formatCompareCell(value: boolean | string): string {
             <li aria-current="page">Pricing</li>
           </ol>
         </nav>
-        <h1 class="pricing-title" id="pricing-heading">Open source core. Optional hosted relay.</h1>
+        <h1 class="pricing-title" id="pricing-heading">Free open-source clipboard. Hosted relay included.</h1>
         <p class="pricing-lead">{PRICING_TAGLINE}</p>
       </header>
 
@@ -58,164 +43,78 @@ function formatCompareCell(value: boolean | string): string {
         style="--index: 1"
         aria-labelledby="pricing-plans-heading"
         id="pricing-plans"
-        data-billing-interval="monthly"
       >
         <h2 class="sr-only" id="pricing-plans-heading">Plans</h2>
 
         <div class="pricing-plans-toolbar reveal" style="--index: 1">
-          <div class="billing-toggle" role="group" aria-label="Billing period">
-            <span class="billing-toggle-indicator" aria-hidden="true"></span>
-            <button
-              type="button"
-              class="billing-toggle-btn is-active"
-              data-billing-interval="monthly"
-              aria-pressed="true"
-            >
-              Monthly
-            </button>
-            <button
-              type="button"
-              class="billing-toggle-btn"
-              data-billing-interval="annual"
-              aria-pressed="false"
-            >
-              Yearly
-              {annualSavingsLabel > 0 && (
-                <span class="billing-toggle-save">−{annualSavingsLabel}%</span>
-              )}
-            </button>
-          </div>
-          <p class="pricing-toolbar-note">USD · 14-day refund on your first purchase</p>
+          <p class="pricing-toolbar-note">
+            Self-host for free, use the hosted relay, or contact us for deployment help.
+          </p>
         </div>
 
         <div class="pricing-cards-panel">
-          <number-flow-group class="pricing-price-group">
-            <ul class="pricing-grid" role="list">
-            {PLANS.map((plan, i) => {
-              const monthlyPrice = formatPlanPriceDisplay(plan, 'monthly');
-              const annualPrice = formatPlanPriceDisplay(plan, 'annual');
-              const monthlyNote = formatPlanPriceNote(plan, 'monthly');
-              const annualNote = formatPlanPriceNote(plan, 'annual');
-              const bullets = planCardBullets(plan);
-              const isFree = plan.id === 'free';
-              const isContact = plan.cta === 'contact';
-              return (
-                <li class="reveal" style={`--index: ${i + 2}`}>
-                  <article
-                    class:list={['plan-card', plan.recommended && 'plan-card--featured']}
-                    data-plan-id={plan.id}
-                    data-price-monthly={!isFree && !isContact ? plan.price.monthlyUsd : undefined}
-                    data-price-annual={!isFree && !isContact ? plan.price.annualMonthlyUsd : undefined}
-                  >
-                    {plan.recommended && (
-                      <p class="plan-ribbon">Popular</p>
-                    )}
+          <ul class="pricing-grid" role="list">
+          {PLANS.map((plan, i) => (
+            <li class="reveal" style={`--index: ${i + 2}`}>
+              <article
+                class:list={['plan-card', plan.recommended && 'plan-card--featured']}
+                data-plan-id={plan.id}
+              >
+                {plan.recommended && (
+                  <p class="plan-ribbon">Hosted</p>
+                )}
 
-                    <header class="plan-card-header">
-                      <h3 class="plan-name">{plan.name}</h3>
-                      <p class="plan-tagline">{plan.tagline}</p>
-                    </header>
+                <header class="plan-card-header">
+                  <h3 class="plan-name">{plan.name}</h3>
+                  <p class="plan-tagline">{plan.tagline}</p>
+                </header>
 
-                    <div class="plan-price-block">
-                      {isContact ? (
-                        <p class="plan-price-main">
-                          <span class="plan-price-amount">Custom</span>
-                          <span class="plan-price-unit">Contact us</span>
-                        </p>
-                      ) : isFree ? (
-                        <p class="plan-price-main">
-                          <span class="plan-price-amount">$0</span>
-                          <span class="plan-price-unit">Free forever</span>
-                        </p>
-                      ) : (
-                        <>
-                          <p class="plan-price-main">
-                            <span class="plan-price-flow-wrap">
-                              <number-flow
-                                class="plan-price-flow"
-                                data-will-change
-                                set:html={renderInnerHTML(planPriceFlowValue(plan, 'monthly'), {
-                                  locales: 'en-US',
-                                  format: PLAN_PRICE_FLOW_FORMAT,
-                                  numberPrefix: '$',
-                                })}
-                              />
-                            </span>
-                          </p>
-                          {monthlyPrice.unit && (
-                            <div class="plan-price-unit-stack">
-                              <span class="plan-price-unit" data-billing-copy="monthly">
-                                {monthlyPrice.unit}
-                              </span>
-                              <span class="plan-price-unit" data-billing-copy="annual">
-                                {annualPrice.unit}
-                              </span>
-                            </div>
-                          )}
-                          {(monthlyNote || annualNote) && (
-                            <div class="plan-price-note-stack">
-                              {monthlyNote && (
-                                <p class="plan-price-note" data-billing-copy="monthly">
-                                  {monthlyNote}
-                                </p>
-                              )}
-                              {annualNote && (
-                                <p class="plan-price-note" data-billing-copy="annual">
-                                  {annualNote}
-                                </p>
-                              )}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                <div class="plan-price-block">
+                  <p class="plan-price-main">
+                    <span class="plan-price-amount">{plan.priceLabel}</span>
+                  </p>
+                  <p class="plan-price-note">{plan.priceNote}</p>
+                </div>
 
-                    <ul class="plan-features" role="list">
-                      {bullets.map((item) => (
-                        <li class="plan-feature">
-                          <span class="plan-feature-icon" aria-hidden="true">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <path
-                                d="M3.25 8.25 6.5 11.5 12.75 4.75"
-                                stroke="currentColor"
-                                stroke-width="1.75"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                <ul class="plan-features" role="list">
+                  {plan.bullets.map((item) => (
+                    <li class="plan-feature">
+                      <span class="plan-feature-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path
+                            d="M3.25 8.25 6.5 11.5 12.75 4.75"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                    <footer class="plan-card-footer">
-                      {plan.cta === 'get-started' && (
-                        <a href="/docs/quick-start/" class="plan-cta plan-cta--primary">
-                          Get started free
-                        </a>
-                      )}
-                      {plan.cta === 'coming-soon' && (
-                        <p class="plan-cta plan-cta--pending" aria-disabled="true">
-                          Checkout opens soon
-                        </p>
-                      )}
-                      {plan.cta === 'contact' && (
-                        <a href={`mailto:${CONTACT_EMAIL}`} class="plan-cta plan-cta--secondary">
-                          Contact us
-                        </a>
-                      )}
-                    </footer>
-                  </article>
-                </li>
-              );
-            })}
-            </ul>
-          </number-flow-group>
+                <footer class="plan-card-footer">
+                  {plan.cta === 'get-started' && (
+                    <a href="/docs/quick-start/" class="plan-cta plan-cta--primary">
+                      Get started
+                    </a>
+                  )}
+                  {plan.cta === 'contact' && (
+                    <a href={`mailto:${CONTACT_EMAIL}`} class="plan-cta plan-cta--secondary">
+                      Contact us
+                    </a>
+                  )}
+                </footer>
+              </article>
+            </li>
+          ))}
+          </ul>
         </div>
 
         <p class="pricing-contact-hint reveal" style="--index: 5">
-          Need private hosting, commercial terms, or a support agreement?
+          Need help self-hosting, migration, or a support agreement?
           <a href={`mailto:${CONTACT_EMAIL}`}>Contact us</a>.
         </p>
       </section>
@@ -250,76 +149,11 @@ function formatCompareCell(value: boolean | string): string {
         </div>
       </section>
 
-      <section class="pricing-value reveal" style="--index: 7" aria-labelledby="pricing-value-heading">
-        <h2 class="mu-section-title" id="pricing-value-heading">What you pay for</h2>
-        <p class="mu-section-lead">
-          The core product is free. Hosted plans cover the relay we operate for you.
-        </p>
-        <ul class="value-bento" role="list">
-          {VALUE_PROPS.map((item, i) => (
-            <li class:list={['value-tile', 'reveal', i === 0 && 'value-tile--wide']} style={`--index: ${8 + i}`}>
-              <h3 class="value-title">{item.title}</h3>
-              <p class="value-body">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section class="pricing-compare reveal" style="--index: 11" aria-labelledby="pricing-compare-heading">
-        <h2 class="mu-section-title" id="pricing-compare-heading">Compare plans</h2>
-        <div class="compare-panel">
-          <table class="compare-table">
-            <colgroup>
-              <col class="compare-col-feature" />
-              <col class="compare-col-plan" span="3" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th scope="col" class="compare-th-feature">Feature</th>
-                <th scope="col" class="compare-th-plan">Hosted Free</th>
-                <th scope="col" class="compare-th-plan">Hosted Plus</th>
-                <th scope="col" class="compare-th-plan">Commercial</th>
-              </tr>
-            </thead>
-            <tbody>
-              {FEATURE_ROWS.map((row) => {
-                const free = formatCompareCell(row.free);
-                const pro = formatCompareCell(row.pro);
-                const team = formatCompareCell(row.team);
-                return (
-                  <tr>
-                    <th scope="row" class="compare-th-feature">{row.label}</th>
-                    <td
-                      class:list={['compare-td-plan', { 'cell-included': free === 'Included' }]}
-                      data-label="Hosted Free"
-                    >
-                      {free}
-                    </td>
-                    <td
-                      class:list={['compare-td-plan', { 'cell-included': pro === 'Included' }]}
-                      data-label="Hosted Plus"
-                    >
-                      {pro}
-                    </td>
-                    <td
-                      class:list={['compare-td-plan', { 'cell-included': team === 'Included' }]}
-                      data-label="Commercial"
-                    >
-                      {team}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="pricing-faq reveal" style="--index: 12" aria-labelledby="pricing-faq-heading">
-        <h2 class="mu-section-title" id="pricing-faq-heading">Billing</h2>
+      <section class="pricing-faq reveal" style="--index: 7" aria-labelledby="pricing-faq-heading">
+        <h2 class="mu-section-title" id="pricing-faq-heading">Hosted Relay Policy</h2>
         <div class="faq-accordion">
           {BILLING_FAQ.map((item, i) => (
-            <details class="faq-item reveal" style={`--index: ${13 + i}`}>
+            <details class="faq-item reveal" style={`--index: ${8 + i}`}>
               <summary class="faq-summary">
                 <span class="faq-question">{item.q}</span>
                 <span class="faq-icon" aria-hidden="true"></span>
@@ -490,84 +324,12 @@ function formatCompareCell(value: boolean | string): string {
     margin: 0 0 2rem;
   }
 
-  .billing-toggle {
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 0;
-    padding: 0.25rem;
-    min-width: min(100%, 17.5rem);
-    background: light-dark(#ebeae6, #161616);
-    border: 1px solid var(--mu-border);
-    border-radius: 9999px;
-    isolation: isolate;
-  }
-
-  .billing-toggle-indicator {
-    position: absolute;
-    top: 0.25rem;
-    bottom: 0.25rem;
-    left: 0.25rem;
-    width: calc(50% - 0.25rem);
-    border-radius: 9999px;
-    background: var(--mu-surface);
-    box-shadow: 0 1px 4px light-dark(rgba(47, 52, 55, 0.1), rgba(0, 0, 0, 0.4));
-    transition: transform 200ms ease-in-out;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .pricing-cards-section[data-billing-interval='annual'] .billing-toggle-indicator {
-    transform: translateX(100%);
-  }
-
-  .billing-toggle-btn {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.55rem 1.1rem;
-    font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--mu-text-muted);
-    background: transparent;
-    border: none;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-
-  .billing-toggle-btn.is-active {
-    color: var(--mu-text);
-  }
-
-  .billing-toggle-btn:focus-visible {
-    outline: 2px solid light-dark(#111111, #e8e8e6);
-    outline-offset: 2px;
-  }
-
-  .billing-toggle-save {
-    font-family: var(--mono);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    padding: 0.15rem 0.4rem;
-    border-radius: 9999px;
-    background: var(--mu-pastel-green-bg);
-    color: var(--mu-pastel-green-text);
-  }
-
   .pricing-grid {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
     align-items: stretch;
   }
@@ -682,59 +444,14 @@ function formatCompareCell(value: boolean | string): string {
     margin: 0;
   }
 
-  .pricing-price-group {
-    display: block;
-  }
-
   .plan-price-block {
     margin-bottom: 1.25rem;
     min-height: 6.5rem;
   }
 
-  .plan-price-flow-wrap {
-    display: inline-block;
-    vertical-align: baseline;
-    min-width: 2.85em;
-    overflow: hidden;
-    line-height: 0.85;
-  }
-
-  .plan-price-flow {
-    font-family: 'Geist', var(--sans);
-    font-size: clamp(2.5rem, 4vw, 3.25rem);
-    font-weight: 700;
-    letter-spacing: -0.045em;
-    font-variant-numeric: tabular-nums;
-    color: var(--mu-text);
-    transform: rotate(var(--price-tilt, 0deg));
-    transform-origin: left bottom;
-  }
-
   .plan-price-main {
     margin: 0;
     line-height: 1;
-  }
-
-  .plan-price-unit-stack,
-  .plan-price-note-stack {
-    display: grid;
-    grid-template: 1fr / 1fr;
-    align-items: start;
-  }
-
-  .plan-price-unit-stack {
-    margin-top: 0.35rem;
-  }
-
-  .plan-price-unit-stack > .plan-price-unit,
-  .plan-price-note-stack > .plan-price-note {
-    grid-area: 1 / 1;
-    visibility: hidden;
-  }
-
-  .pricing-cards-section[data-billing-interval='monthly'] [data-billing-copy='monthly'],
-  .pricing-cards-section[data-billing-interval='annual'] [data-billing-copy='annual'] {
-    visibility: visible;
   }
 
   .plan-price-amount {
@@ -744,12 +461,6 @@ function formatCompareCell(value: boolean | string): string {
     letter-spacing: -0.045em;
     font-variant-numeric: tabular-nums;
     color: var(--mu-text);
-  }
-
-  .plan-price-unit {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--mu-text-muted);
   }
 
   .plan-price-note {
@@ -879,6 +590,7 @@ function formatCompareCell(value: boolean | string): string {
     justify-content: center;
     width: 100%;
     padding: 0.7rem 1rem;
+    min-height: 44px;
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -962,27 +674,10 @@ function formatCompareCell(value: boolean | string): string {
     color: var(--mu-text-muted);
   }
 
-  .pricing-value,
-  .pricing-compare,
   .pricing-faq,
   .pricing-strip {
     padding: clamp(3rem, 8vw, 5rem) 0;
     border-top: 1px solid var(--mu-border);
-  }
-
-  .value-bento {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  @media (max-width: 700px) {
-    .value-bento {
-      grid-template-columns: 1fr;
-    }
   }
 
   .value-tile {
@@ -999,167 +694,6 @@ function formatCompareCell(value: boolean | string): string {
 
   .value-tile:hover {
     box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.25));
-  }
-
-  .value-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem;
-    color: var(--mu-text);
-  }
-
-  .value-body {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    margin: 0;
-    color: var(--mu-text-muted);
-  }
-
-  .compare-panel {
-    border: 1px solid var(--mu-border);
-    border-radius: 10px;
-    background: var(--mu-surface);
-    overflow: hidden;
-  }
-
-  .compare-table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-
-  .compare-col-feature {
-    width: 46%;
-  }
-
-  .compare-col-plan {
-    width: 18%;
-  }
-
-  .compare-table th,
-  .compare-table td {
-    padding: 0.9rem 1.25rem;
-    border-bottom: 1px solid var(--mu-border);
-    vertical-align: middle;
-  }
-
-  .compare-th-feature {
-    text-align: left;
-  }
-
-  .compare-th-plan,
-  .compare-td-plan {
-    text-align: center;
-  }
-
-  .compare-table thead th {
-    font-family: var(--mono);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--mu-text-muted);
-    background: light-dark(#f9f9f8, #161616);
-  }
-
-  .compare-table tbody th {
-    font-weight: 500;
-    color: var(--mu-text);
-    line-height: 1.45;
-  }
-
-  .compare-td-plan {
-    color: var(--mu-text-muted);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .compare-td-plan.cell-included {
-    color: var(--mu-text);
-    font-weight: 500;
-  }
-
-  .compare-table tr:last-child th,
-  .compare-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  @media (max-width: 900px) {
-    .compare-panel {
-      border-radius: 10px;
-      overflow: visible;
-      background: transparent;
-      border: none;
-    }
-
-    .compare-table {
-      display: block;
-      font-size: 0.9375rem;
-    }
-
-    .compare-table colgroup {
-      display: none;
-    }
-
-    .compare-table thead {
-      display: none;
-    }
-
-    .compare-table tbody {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .compare-table tbody tr {
-      display: block;
-      background: var(--mu-surface);
-      border: 1px solid var(--mu-border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .compare-table tbody th {
-      display: block;
-      padding: 1rem 1.15rem 0.65rem;
-      border-bottom: none;
-      font-size: 0.9375rem;
-      line-height: 1.4;
-    }
-
-    .compare-table tbody td {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.55rem 1.15rem;
-      border-bottom: 1px solid var(--mu-border);
-      text-align: right;
-      white-space: normal;
-    }
-
-    .compare-table tbody td::before {
-      content: attr(data-label);
-      flex-shrink: 0;
-      font-family: var(--mono);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--mu-text-muted);
-      text-align: left;
-    }
-
-    .compare-table tbody td:last-child {
-      border-bottom: none;
-      padding-bottom: 0.85rem;
-    }
-
-    .compare-table tbody tr:last-child th,
-    .compare-table tbody tr:last-child td {
-      border-bottom-color: var(--mu-border);
-    }
   }
 
   .faq-accordion {
@@ -1337,18 +871,13 @@ function formatCompareCell(value: boolean | string): string {
     .plan-card--featured,
     .value-tile,
     .strip-tile,
-    .mu-btn,
-    .billing-toggle-indicator {
+    .mu-btn {
       transition: none;
       transform: none;
     }
 
   }
 </style>
-
-<script>
-  import '../scripts/pricing-billing.ts';
-</script>
 
 <script is:inline>
   (function () {
