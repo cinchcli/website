@@ -23,17 +23,17 @@ import TerminalWindow from './TerminalWindow.astro';
           <div class="uc-content">
             <span class="uc-num">01</span>
             <h3 class="uc-title">SSH sessions</h3>
-            <p class="uc-desc">Pipe anything into <code class="inline-code">cinch push</code> — it surfaces on your local machine. No scp, no port forwarding.</p>
+            <p class="uc-desc">Pipe anything into <code class="inline-code">cinch send</code> — it surfaces on your local machine through the relay. No scp, no port forwarding, even behind a firewall.</p>
           </div>
         </div>
         <div class="uc-visual">
           <TerminalWindow title="prod-server — ssh">
             <div class="term-body">
-              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cat</span> deploy.log <span class="t-op">|</span> <span class="t-cmd">cinch push</span></div>
-              <div class="term-line t-ok">✓ pushed 148 bytes → relay</div>
+              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cat</span> deploy.log <span class="t-op">|</span> <span class="t-cmd">cinch send</span></div>
+              <div class="term-line t-ok">✓ Sent to your fleet (E2EE)</div>
               <div class="term-line"></div>
-              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cinch push</span> &lt; config.yaml</div>
-              <div class="term-line t-ok">✓ pushed 4.8 KB — config.yaml</div>
+              <div class="term-line"><span class="t-c">user@prod:~$</span> <span class="t-cmd">cinch send</span> &lt; config.yaml</div>
+              <div class="term-line t-ok">✓ Sent to your fleet (E2EE)</div>
             </div>
           </TerminalWindow>
         </div>
@@ -58,9 +58,9 @@ import TerminalWindow from './TerminalWindow.astro';
               <div class="term-line"><span class="t-c">-- lazy.nvim plugin setup</span></div>
               <div class="term-line"><span class="t-val">&#123; </span><span class="t-str">"cinchcli/cinch.vim"</span><span class="t-val"> &#125;</span></div>
               <div class="term-line"></div>
-              <div class="term-line"><span class="t-c">-- yank any motion → auto-pushed</span></div>
+              <div class="term-line"><span class="t-c">-- yank any motion → auto-sent</span></div>
               <div class="term-line"><span class="t-cmd">yy</span> <span class="t-meta">" current line</span></div>
-              <div class="term-line t-ok">✓ pushed 42 bytes · clip #7</div>
+              <div class="term-line t-ok">✓ sent 42 bytes · clip #7</div>
             </div>
           </TerminalWindow>
         </div>
@@ -75,7 +75,7 @@ import TerminalWindow from './TerminalWindow.astro';
           <div class="uc-content">
             <span class="uc-num">03</span>
             <h3 class="uc-title">tmux &amp; screen</h3>
-            <p class="uc-desc">Even nested inside ssh → tmux → Vim, cinch.vim pushes every yank over HTTPS — from any pane.</p>
+            <p class="uc-desc">Even nested inside ssh → tmux → Vim, cinch.vim sends every yank over HTTPS — from any pane.</p>
           </div>
         </div>
         <div class="uc-visual">

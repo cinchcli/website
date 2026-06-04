@@ -12,9 +12,9 @@ steps:
   - name: Authenticate with your relay
     text: Run cinch auth login on the remote. Use the default hosted relay or point to your self-hosted one.
     code: "cinch auth login"
-  - name: Push clipboard content from the remote
-    text: Pipe any command output into cinch push. The content is sent to the relay instantly.
-    code: "cat ~/.ssh/id_ed25519.pub | cinch push"
+  - name: Send clipboard content from the remote
+    text: Pipe any command output into cinch send. The content is encrypted and sent to your fleet through the relay instantly.
+    code: "cat ~/.ssh/id_ed25519.pub | cinch send"
   - name: Pull on your local machine
     text: On your laptop or any other machine, run cinch pull. The content lands in your system clipboard.
     code: "cinch pull"
@@ -40,10 +40,10 @@ Cinch uses a different approach: a relay server over HTTPS that any machine can 
 ## How It Works
 
 ```
-remote server  →  cinch push  →  relay (HTTPS)  →  cinch pull  →  your laptop
+remote server  →  cinch send  →  relay (HTTPS)  →  cinch pull  →  your laptop
 ```
 
-The remote pushes content to a relay server over HTTPS. Your local machine pulls from the same relay. No SSH tunnel, no special configuration.
+The remote sends content to a relay server over HTTPS. Your local machine pulls from the same relay. No SSH tunnel, no special configuration.
 
 ## Setup
 
@@ -51,7 +51,7 @@ The steps above walk through the full setup. If you already have Cinch installed
 
 ```bash
 # On the remote
-some-command | cinch push
+some-command | cinch send
 
 # On your laptop
 cinch pull
@@ -61,23 +61,23 @@ cinch pull
 
 **Copy a file's contents:**
 ```bash
-cat /etc/nginx/nginx.conf | cinch push
+cat /etc/nginx/nginx.conf | cinch send
 ```
 
 **Copy command output:**
 ```bash
-docker logs my-container 2>&1 | tail -50 | cinch push
+docker logs my-container 2>&1 | tail -50 | cinch send
 ```
 
 **Copy your SSH public key:**
 ```bash
-cat ~/.ssh/id_ed25519.pub | cinch push
+cat ~/.ssh/id_ed25519.pub | cinch send
 # Then cinch pull on your laptop and paste into GitHub
 ```
 
 **Copy a one-liner from history:**
 ```bash
-history | grep "kubectl" | tail -5 | cinch push
+history | grep "kubectl" | tail -5 | cinch send
 ```
 
 ## Works Everywhere SSH Does

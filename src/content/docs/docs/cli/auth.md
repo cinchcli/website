@@ -1,6 +1,6 @@
 ---
-title: cinch auth & cinch pair
-description: Authentication, device pairing, and encryption-key recovery commands.
+title: cinch auth & cinch fleet add
+description: Authentication, adding machines to your fleet, and encryption-key recovery commands.
 ---
 
 ## `cinch auth login`
@@ -21,7 +21,7 @@ cinch auth login --relay https://your-relay.example.com
 |------|------|---------|-------------|
 | `--relay` | string | `api.cinchcli.com` | Override relay URL (skips the interactive relay-URL prompt). |
 | `--force` | bool | `false` | Force a fresh sign-in even when this machine is already authenticated. |
-| `--headless` | bool | `false` | Do not auto-open a browser. Emits a single-line stdout marker with the device-code URL so an orchestrator (e.g. `cinch pair` over SSH) can pick it up programmatically. All other output goes to stderr. |
+| `--headless` | bool | `false` | Do not auto-open a browser. Emits a single-line stdout marker with the device-code URL so an orchestrator (e.g. `cinch fleet add` over SSH) can pick it up programmatically. All other output goes to stderr. |
 | `--user <EMAIL>` | string | — | Hint your account email so any signed-in device (e.g. the Cinch.app desktop) receives a push approval prompt instead of you having to copy the code by hand. |
 
 ---
@@ -108,22 +108,22 @@ cinch auth recovery verify "word1 word2 word3 ... word24"
 
 ---
 
-## `cinch pair <ssh-target>`
+## `cinch fleet add <ssh-target>`
 
-**The fast path for remote machines.** SSHes into the target, installs cinch if needed, runs `cinch auth login --headless` on the remote, and approves the device from this local machine — all in one command. No manual steps on the remote end.
+**The fast path for remote machines.** SSHes into the target, installs cinch if needed, runs `cinch auth login --headless` on the remote, and approves the device from this local machine — all in one command. No manual steps on the remote end. (Was `cinch pair`; the old name still works as a hidden alias.)
 
 ```bash
 # Basic
-cinch pair user@remotehost
+cinch fleet add user@remotehost
 
 # SSH alias (configured in ~/.ssh/config)
-cinch pair devbox
+cinch fleet add devbox
 
 # Skip install if cinch is already on the remote
-cinch pair user@remotehost --skip-install
+cinch fleet add user@remotehost --skip-install
 
 # Use a custom relay on the remote machine
-cinch pair user@remotehost --relay-url https://custom-relay.example.com
+cinch fleet add user@remotehost --relay-url https://custom-relay.example.com
 ```
 
 | Flag | Type | Default | Description |
