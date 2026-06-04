@@ -20,11 +20,11 @@
   --sl-color-bg-sidebar:     #FFFFFF;
   --sl-color-bg-inline-code: #F7F6F3;
 
-  /* Porcelain Deep · Light — #2F7F78 */
-  --sl-color-accent-low:     rgba(47, 127, 120, 0.10);
-  --sl-color-accent:         #2F7F78;
+  /* Porcelain Deep · Light — #1F6E66 (AA-corrected per brand spec §10) */
+  --sl-color-accent-low:     rgba(31, 110, 102, 0.10);
+  --sl-color-accent:         #1F6E66;
   --sl-color-accent-high:    #1F5F59;
-  --sl-color-text-accent:    #2F7F78;
+  --sl-color-text-accent:    #1F6E66;
 
   /* Gray scale — maps to DESIGN.md text tokens */
   --sl-color-black:          #2F3437;
