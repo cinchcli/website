@@ -1,12 +1,12 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <style>
     .bg    { fill: transparent; }
-    .c-arc { stroke: #111111; }
-    .c-bar { fill: #111111; }
+    .c-arc { stroke: #0F0F12; }
+    .c-bar { fill: #0F0F12; }
     @media (prefers-color-scheme: dark) {
-      .bg    { fill: #07080a; }
-      .c-arc { stroke: #FFFFFF; }
-      .c-bar { fill: #FFFFFF; }
+      .bg    { fill: #0F0F12; }
+      .c-arc { stroke: #F0EBE0; }
+      .c-bar { fill: #F0EBE0; }
     }
   </style>
   <rect class="bg" width="180" height="180" rx="36"/>

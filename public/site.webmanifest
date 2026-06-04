@@ -4,7 +4,7 @@
   "description": "Remote clipboard for developers. Push from any terminal, pull on any machine.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#07080a",
+  "background_color": "#0F0F12",
   "theme_color": "#4FB3A9",
   "icons": [
     {
