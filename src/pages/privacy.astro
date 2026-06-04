@@ -31,12 +31,12 @@ const effectiveDate = 'May 19, 2026';
           This Privacy Policy describes how the Cinch project ("Cinch", "we", "us", or "our")
           handles information when you use the Cinch command-line tool, desktop application,
           relay service, and the website at <a href="https://cinchcli.com">cinchcli.com</a>
-          (together, the "Service"). Cinch is an open-source clipboard synchronization tool
-          released under the GNU Affero General Public License v3.0.
+          (together, the "Service"). Cinch is an open-source remote clipboard for developer context released
+          under the GNU Affero General Public License v3.0.
         </p>
         <p>
           We designed Cinch around the principle of capturing as little information about you
-          as we can while still delivering a reliable clipboard sync experience. This page
+          as we can while still delivering local clipboard history and encrypted sync. This page
           explains exactly what we collect, why we collect it, and the choices you have.
         </p>
       </section>
@@ -153,11 +153,16 @@ const effectiveDate = 'May 19, 2026';
       <section class="legal-section">
         <h2>5. Data retention</h2>
         <ul>
-          <li><strong>Clips on the relay.</strong> Server-side clips are retained according to the per-account retention window (default 30 days). An hourly sweep automatically deletes clips that exceed the window.</li>
+          <li><strong>Clips on the hosted relay.</strong> Server-side clips are retained according to the per-account retention window (default 7 days). An hourly sweep automatically deletes clips that exceed the window. The hosted relay is best-effort and subject to fair-use and abuse limits.</li>
           <li><strong>Local clip history.</strong> Clips stored locally by the desktop app live in a SQLite database under your operating system's application-data directory and are pruned according to your local retention setting (default 30 days). You can clear all local clips at any time from the Settings pane.</li>
           <li><strong>Account and device records.</strong> We keep account and device records for as long as your account is active. If you delete your account, these records and any associated clips are deleted, except where we are required to retain limited information to comply with legal obligations or to resolve disputes.</li>
           <li><strong>Operational logs.</strong> Server request logs are retained for up to 30 days and then automatically discarded.</li>
         </ul>
+        <p>
+          Cinch does not send clipboard content to AI providers during ordinary sync.
+          Provider calls happen only when you explicitly run <code>cinch ai</code>
+          without <code>--no-send</code> and have configured a provider.
+        </p>
       </section>
 
       <section class="legal-section">
