@@ -1,17 +1,14 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .bg    { fill: transparent; }
-    .c-arc { stroke: #0F0F12; }
-    .c-bar { fill: #0F0F12; }
-    @media (prefers-color-scheme: dark) {
-      .bg    { fill: #0F0F12; }
-      .c-arc { stroke: #F0EBE0; }
-      .c-bar { fill: #F0EBE0; }
-    }
-  </style>
-  <rect class="bg" width="180" height="180" rx="36"/>
-  <g transform="translate(6.95 0)">
-    <path class="c-arc" d="M130.154 60.9231C123.825 50.6639 114.323 42.7493 103.088 38.3807C91.8538 34.0121 79.5007 33.4279 67.904 36.7169C56.3073 40.0059 46.1003 46.9884 38.832 56.6047C31.5638 66.221 27.6313 77.946 27.6313 90C27.6313 102.054 31.5638 113.779 38.832 123.395C46.1003 133.012 56.3073 139.994 67.904 143.283C79.5007 146.572 91.8538 145.988 103.088 141.619C114.323 137.251 123.825 129.336 130.154 119.077" stroke-width="30.4615"/>
-    <rect class="c-bar" x="132.923" y="67.8462" width="20.7692" height="44.3077" rx="2.07692"/>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- App-icon parity: cream Cinch mark on the ink squircle, matching the macOS
+       app icon (apps/desktop/src-tauri/icons/icon.png). Squircle 824 inset 100
+       (≈9.8% margin); mark 565 centered (55% of canvas) — same proportions as
+       the bundle icon, so the browser-tab favicon reads as the same icon as the
+       Dock / PWA tile. Fixed cream-on-ink (not theme-aware) to mirror the app. -->
+  <rect x="100" y="100" width="824" height="824" rx="184" fill="#0F0F12"/>
+  <g transform="translate(153.401 153.401) scale(3.978873)">
+    <g transform="translate(6.95 0)">
+      <path d="M130.154 60.9231C123.825 50.6639 114.323 42.7493 103.088 38.3807C91.8538 34.0121 79.5007 33.4279 67.904 36.7169C56.3073 40.0059 46.1003 46.9884 38.832 56.6047C31.5638 66.221 27.6313 77.946 27.6313 90C27.6313 102.054 31.5638 113.779 38.832 123.395C46.1003 133.012 56.3073 139.994 67.904 143.283C79.5007 146.572 91.8538 145.988 103.088 141.619C114.323 137.251 123.825 129.336 130.154 119.077" stroke="#F0EBE0" stroke-width="30.4615"/>
+      <rect x="132.923" y="67.8462" width="20.7692" height="44.3077" rx="2.07692" fill="#F0EBE0"/>
+    </g>
   </g>
 </svg>
