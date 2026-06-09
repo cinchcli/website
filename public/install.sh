@@ -117,6 +117,15 @@ info "Installing to ${PREFIX}/bin/cinch..."
 run_root mkdir -p "${PREFIX}/bin"
 run_root mv "$WORK/cinch" "${PREFIX}/bin/cinch"
 
+# Short alias: link `ci` → cinch, but only when `ci` is free, so a
+# pre-existing `ci` (RCS check-in or the user's own) is never clobbered.
+if command -v ci >/dev/null 2>&1 || [ -e "${PREFIX}/bin/ci" ]; then
+  info "Skipping 'ci' alias — a 'ci' command already exists. Use 'cinch'."
+else
+  run_root ln -s cinch "${PREFIX}/bin/ci"
+  info "Also linked 'ci' as a short alias for 'cinch'."
+fi
+
 info "Installed $("${PREFIX}/bin/cinch" --version 2>/dev/null || echo cinch)."
 cat <<EOF
 
