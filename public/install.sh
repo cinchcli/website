@@ -11,7 +11,7 @@ set -eu
 # GitHub, verifies the SHA-256 against the published checksum, and installs
 # `cinch` into <prefix>/bin (default: /usr/local).
 #
-# After install, `cinch self-update` keeps the binary fresh (downloads from
+# After install, `cinch update` keeps the binary fresh (downloads from
 # the same release URL and atomically swaps).
 #
 # On macOS the recommended install is Homebrew; this script prints the
@@ -135,7 +135,7 @@ cat <<EOF
 Next steps:
   ${PREFIX}/bin/cinch auth login         # authenticate this machine
   ${PREFIX}/bin/cinch --help             # see all subcommands
-  ${PREFIX}/bin/cinch self-update        # upgrade later (no need to re-run this installer)
+  ${PREFIX}/bin/cinch update             # upgrade later (no need to re-run this installer)
 
 If ${PREFIX}/bin isn't on your PATH, add it to your shell's rc file:
   export PATH="${PREFIX}/bin:\$PATH"
