@@ -38,6 +38,12 @@ Set up Cinch as a remote clipboard for developer context: local history first, c
    ```
    Formula install — no desktop app. Useful for headless Macs or Linux brew setups.
    </TabItem>
+   <TabItem label="Nix / NixOS">
+   ```bash
+   nix profile install github:cinchcli/cinch
+   ```
+   Builds the CLI from source on Apple Silicon macOS and Linux. In a NixOS, nix-darwin, or home-manager config, add `github:cinchcli/cinch` as a flake input and install `inputs.cinch.packages.${system}.default`, or apply `inputs.cinch.overlays.default` and use `pkgs.cinch`. Upgrade with `nix flake update cinch` or `nix profile upgrade cinch` instead of `cinch update`.
+   </TabItem>
    <TabItem label="Docker (relay only)">
    ```bash
    docker run -d -p 8080:8080 -v cinch-data:/data \
